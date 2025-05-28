@@ -1,0 +1,89 @@
+package org.firstinspires.ftc.teamcode.robotoffseason.Modules;
+
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+import org.firstinspires.ftc.teamcode.robotoffseason.Modules.intake.INTUR;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.roboDrive.Wrappers.IRobotModule;
+import org.firstinspires.ftc.teamcode.robotkick.Modules.outtake.Claw;
+import org.firstinspires.ftc.teamcode.robotoffseason.Modules.intake.EXT;
+import org.firstinspires.ftc.teamcode.robotoffseason.Modules.intake.INBRAT;
+import org.firstinspires.ftc.teamcode.robotoffseason.Modules.intake.INCLAW;
+import org.firstinspires.ftc.teamcode.robotoffseason.Modules.intake.INROTATOR;
+import org.firstinspires.ftc.teamcode.robotoffseason.Modules.intake.INTUR;
+import org.firstinspires.ftc.teamcode.robotoffseason.Modules.intake.WEELIE;
+import org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.LIFT;
+import org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.LINKEAGE;
+import org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.OUTBRAT;
+import org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.OUTCLAW;
+import org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.OUTROTATIE;
+import org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.PTO;
+
+public class SaibaModules implements IRobotModule {
+
+
+    public EXT EXT;
+    public INCLAW INCLAW;
+    public INBRAT INBRAT;
+    public INROTATOR INROTATOR;
+    public INTUR INTUR;
+    public WEELIE WEELIE;
+
+    public LIFT LIFT;
+
+    public LINKEAGE LINKEAGE;
+    public OUTBRAT OUTBRAT;
+    public OUTCLAW OUTCLAW;
+    public OUTROTATIE OUTROTATIE;
+    public PTO PTO;
+
+
+
+
+    public SaibaModules(HardwareMap hardwareMap, boolean auto, LinearOpMode opMode) {
+
+        EXT = new EXT(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.intake.EXT.State.START);
+        LIFT = new LIFT(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.LIFT.State.START);
+        INCLAW = new INCLAW(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.intake.INCLAW.State.RELEASE);
+        INBRAT = new INBRAT(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.intake.INBRAT.State.UP);
+        INROTATOR = new INROTATOR(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.intake.INROTATOR.State.THIRD);
+        INTUR = new INTUR(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.intake.INTUR.State.TRANSFER);
+        WEELIE = new WEELIE(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.intake.WEELIE.State.NERIDICAT);
+
+
+        LINKEAGE = new LINKEAGE(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.LINKEAGE.State.CLOSED);
+        OUTBRAT = new OUTBRAT(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.OUTBRAT.State.TRANSFER);
+        OUTCLAW = new OUTCLAW(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.OUTCLAW.State.RELEASE);
+        OUTROTATIE = new OUTROTATIE(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.OUTROTATIE.State.COLLECT);
+      //  PTO = new PTO(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.PTO.State.FAST);
+
+
+    }
+
+    public void telemetry(Telemetry telemetry) {
+        telemetry.addData("EXTPOS",EXT.getRealCurrentPosition());
+        telemetry.addData("LIFTPOS",LIFT.getRealCurrentPosition());
+        telemetry.addData("LIFTPOS",LIFT.getState());
+        telemetry.addData("extstate",EXT.getState());
+        telemetry.addData("extstate",OUTBRAT.getState());
+        telemetry.addData("extstate",WEELIE.getState());
+    }
+
+
+    @Override
+    public void update() {
+        EXT.update();
+        LIFT.update();
+        INCLAW.update();
+        INBRAT.update();
+        INROTATOR.update();
+        INTUR.update();
+        WEELIE.update();
+ //       PTO.update();
+        LINKEAGE.update();
+        OUTBRAT.update();
+        OUTROTATIE.update();
+        OUTCLAW.update();
+    }
+}

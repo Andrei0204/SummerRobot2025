@@ -1,0 +1,208 @@
+package org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake;
+
+import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.PIDCoefficients;
+
+import org.firstinspires.ftc.teamcode.roboDrive.Wrappers.CoolMotor;
+import org.firstinspires.ftc.teamcode.roboDrive.Wrappers.IRobotModule;
+import org.firstinspires.ftc.teamcode.roboDrive.Wrappers.IStateBasedModule;
+
+@Config
+public class LIFT implements IStateBasedModule, IRobotModule {
+
+    public static double TICKSCM = 724.35;    //test
+    public static double startpos = 0;
+    public static final double finalpos = 62.5 * TICKSCM;
+    public static final double transferpos = 5.5 * TICKSCM;
+    public static final double scorespecipos = 31 * TICKSCM;
+    public static double autopose = 0;
+
+    public static double target = 0; //cm
+
+    public static double currentPosition = startpos;
+    public static double kP = 0.0001, kI = 0.17, kD = 0.000002; //TODO Valori PID!!!!
+    public static double kPjos = 0.00009, kIjos = 0.1, kDjos = 0.000004; //TODO Valori PID!!!!
+
+    private static boolean ENABLED = true;
+    public CoolMotor LIFT1 = null;
+    public CoolMotor LIFT2 = null;
+
+    public double manualPower = 0;
+    public PIDCoefficients pid = new PIDCoefficients(kP, kI, kD);
+
+    public State state;
+    public EXTRUNMODE runMode;
+
+
+    public LIFT(HardwareMap hardwareMap, State initialState) {
+        if (!ENABLED) {
+
+            LIFT1 = null;
+            LIFT2 = null;
+        } else {
+            LIFT1 = new CoolMotor(hardwareMap.get(DcMotorEx.class, "LIFT1"), CoolMotor.RunMode.RUN);
+            LIFT2 = new CoolMotor(hardwareMap.get(DcMotorEx.class, "LIFT2"), CoolMotor.RunMode.RUN);
+
+        }
+        this.state = initialState;
+    }
+
+
+    public void setManualPower(double power) {
+        this.manualPower = power;
+    }
+
+    public double getTarget() {
+        return target;
+    }
+
+    public void setTarget(double newTarget) {
+        this.target = newTarget;
+    }
+
+    public EXTRUNMODE getRunMode() {
+        return runMode;
+    }
+
+    public void setRunMode(EXTRUNMODE runMode) {
+        this.runMode = runMode;
+    }
+
+    public double getCurrentPosition() {
+        return LIFT1.getCurrentPosition();
+    }
+
+    public double getRealCurrentPosition() {
+        return LIFT1.getCurrentPosition() / TICKSCM;
+    }
+
+    public State getState() {
+        return state;
+    }
+
+    public void setState(State newState) {
+        if (state == newState) return;
+        this.state = newState;
+    }
+
+    public boolean reachedPosition(double tolerance) {
+        if (state == State.MANUAL)
+            return false;
+        return (Math.abs(target - getCurrentPosition())) / TICKSCM <= tolerance;
+    }
+
+    public void updateStateValues() {
+        State.MANUAL.position = currentPosition;
+        setTarget(currentPosition * TICKSCM);
+    }
+
+    public void setAuto(double auto) {
+        autopose = auto;
+    }
+
+    @Override
+    public void update() {
+        if (!ENABLED) return;
+        updateStateValues();
+        updateState();
+        updateHardware();
+
+    }
+
+    @Override
+    public void updateState() {
+        if (!ENABLED) return;
+        if (Math.abs(manualPower) >= 0.1) {
+            runMode = EXTRUNMODE.MANUAL;
+            setState(State.MANUAL);
+            target = currentPosition * TICKSCM;
+        } else {
+            runMode = EXTRUNMODE.PID;
+            switch (state) {
+                case START:
+                    setTarget(startpos);
+                    break;
+                case FULL:
+                    setTarget(finalpos);
+                    break;
+                case TRANSFER:
+                    setTarget(transferpos);
+                    break;
+                case SCORESPECI:
+                    setTarget(scorespecipos);
+                    break;
+                case MANUAL:
+                    setTarget(target);
+                    break;
+                case AUTO:
+                    setTarget(autopose);
+                    break;
+            }
+        }
+    }
+
+    @Override
+    public void updateHardware() {
+        pid = new PIDCoefficients(kP, kI, kD);
+        if ((target== transferpos &&  getRealCurrentPosition()>5  ) || ( target==startpos   )) {
+            pid = new PIDCoefficients(kPjos, kIjos, kDjos);
+        }
+
+        switch (runMode) {
+            case PID:
+                LIFT1.setMode(CoolMotor.RunMode.PID);
+                LIFT2.setMode(CoolMotor.RunMode.PID);
+
+                    LIFT1.setPIDF(pid,0);
+                    LIFT2.setPIDF(pid,0);
+
+
+
+                LIFT2.calculatePower(LIFT1.getCurrentPosition(), target);
+                LIFT1.calculatePower(LIFT1.getCurrentPosition(), target);
+                break;
+            case MANUAL: {
+                LIFT2.setMode(CoolMotor.RunMode.RUN);
+                LIFT1.setMode(CoolMotor.RunMode.RUN);
+                LIFT2.setPower(manualPower);
+                LIFT1.setPower(manualPower);
+                break;
+            }
+        }
+
+
+        currentPosition = LIFT1.getCurrentPosition() / TICKSCM;
+        LIFT1.update();
+        LIFT2.update();
+    }
+
+    public enum State {
+        FULL(finalpos),
+        MANUAL(currentPosition),
+        AUTO(autopose),
+        TRANSFER(transferpos),
+        SCORESPECI(transferpos),
+
+
+        START(startpos);
+
+        public final State nextState;
+        public double position;
+
+        State(double position) {
+            this.position = position;
+            this.nextState = this;
+        }
+
+        State(double position, State nextState) {
+            this.position = position;
+            this.nextState = nextState;
+        }
+    }
+
+    public enum EXTRUNMODE {
+        PID, MANUAL
+    }
+}
