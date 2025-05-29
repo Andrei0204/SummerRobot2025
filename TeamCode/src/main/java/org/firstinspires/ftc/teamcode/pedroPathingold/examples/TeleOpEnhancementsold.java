@@ -1,0 +1,62 @@
+package org.firstinspires.ftc.teamcode.pedroPathingold.examples;
+
+import static org.firstinspires.ftc.teamcode.pedroPathingold.tuning.FollowerConstantsold.leftFrontMotorName;
+import static org.firstinspires.ftc.teamcode.pedroPathingold.tuning.FollowerConstantsold.leftRearMotorName;
+import static org.firstinspires.ftc.teamcode.pedroPathingold.tuning.FollowerConstantsold.rightFrontMotorName;
+import static org.firstinspires.ftc.teamcode.pedroPathingold.tuning.FollowerConstantsold.rightRearMotorName;
+
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+
+import org.firstinspires.ftc.teamcode.pedroPathingold.follower.Followers;
+
+/**
+ * This is the TeleOpEnhancements OpMode. It is an example usage of the TeleOp enhancements that
+ * Pedro Pathing is capable of.
+ *
+ * @author Anyi Lin - 10158 Scott's Bots
+ * @author Aaron Yang - 10158 Scott's Bots
+ * @author Harrison Womack - 10158 Scott's Bots
+ * @version 1.0, 3/21/2024
+ */
+@TeleOp(name = "TeleOpEnhancementsold", group = "Test")
+public class TeleOpEnhancementsold extends OpMode {
+    private Followers follower;
+
+    private DcMotorEx leftFront;
+    private DcMotorEx leftRear;
+    private DcMotorEx rightFront;
+    private DcMotorEx rightRear;
+
+    /**
+     * This initializes the drive motors as well as the Follower and motion Vectors.
+     */
+    @Override
+    public void init() {
+        follower = new Followers(hardwareMap);
+
+        leftFront = hardwareMap.get(DcMotorEx.class, leftFrontMotorName);
+        leftRear = hardwareMap.get(DcMotorEx.class, leftRearMotorName);
+        rightRear = hardwareMap.get(DcMotorEx.class, rightRearMotorName);
+        rightFront = hardwareMap.get(DcMotorEx.class, rightFrontMotorName);
+
+        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        follower.startTeleopDrive();
+    }
+
+    /**
+     * This runs the OpMode. This is only drive control with Pedro Pathing live centripetal force
+     * correction.
+     */
+    @Override
+    public void loop() {
+        follower.setTeleOpMovementVectors(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x);
+        follower.update();
+    }
+}

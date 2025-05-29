@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.pedroPathing.localization.localizers.PinpointLocalizer;
+import org.firstinspires.ftc.teamcode.pedroPathingold.localization.localizers.PinpointLocalizer;
 import org.firstinspires.ftc.teamcode.roboDrive.Auto2.AnotherMecanumDrivePedroPP;
 import org.firstinspires.ftc.teamcode.robotkick.Modules.CeresModules;
 

@@ -10,7 +10,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.roboDrive.Wrappers.CoolMotor;
 import org.firstinspires.ftc.teamcode.roboDrive.Wrappers.IRobotModule;
@@ -18,7 +17,7 @@ import org.firstinspires.ftc.teamcode.roboDrive.math.FastTrig;
 import org.firstinspires.ftc.teamcode.roboDrive.math.Point;
 import org.firstinspires.ftc.teamcode.roboDrive.math.Vector;
 
-import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.MathFunctions;
+import org.firstinspires.ftc.teamcode.pedroPathingold.pathGeneration.MathFunctions;
 
 
 @Config
@@ -167,9 +166,9 @@ public class AnotherMecanumDrive implements IRobotModule {
     public Vector CentripetalF() {
         double curvature = BezierCurve.closestPointCurvature;
 
-        org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Vector localizerVelocity = new org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Vector(localizer.getVelocity().getMagnitude(), localizer.getVelocity().getAngle());
+        org.firstinspires.ftc.teamcode.pedroPathingold.pathGeneration.Vector localizerVelocity = new org.firstinspires.ftc.teamcode.pedroPathingold.pathGeneration.Vector(localizer.getVelocity().getMagnitude(), localizer.getVelocity().getAngle());
 
-        org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Vector centripetalVector = new org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Vector(MathFunctions.clamp(centripetalScaling * mass * Math.pow(MathFunctions.dotProduct(localizerVelocity, MathFunctions.normalizeVector(BezierCurve.getClosestPointTangentVector())), 2) * curvature, -1, 1), BezierCurve.getClosestPointTangentVector().getTheta() + Math.PI / 2 * MathFunctions.getSign(BezierCurve.getClosestPointNormalVector().getTheta()));
+        org.firstinspires.ftc.teamcode.pedroPathingold.pathGeneration.Vector centripetalVector = new org.firstinspires.ftc.teamcode.pedroPathingold.pathGeneration.Vector(MathFunctions.clamp(centripetalScaling * mass * Math.pow(MathFunctions.dotProduct(localizerVelocity, MathFunctions.normalizeVector(BezierCurve.getClosestPointTangentVector())), 2) * curvature, -1, 1), BezierCurve.getClosestPointTangentVector().getTheta() + Math.PI / 2 * MathFunctions.getSign(BezierCurve.getClosestPointNormalVector().getTheta()));
 
         Vector finalVector = new Vector(centripetalVector.getXComponent(), centripetalVector.getYComponent());
 

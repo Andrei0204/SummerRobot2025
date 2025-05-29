@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.pedroPathing.localization.localizers.PinpointLocalizer;
+import org.firstinspires.ftc.teamcode.pedroPathingold.localization.localizers.PinpointLocalizer;
 import org.firstinspires.ftc.teamcode.roboDrive.Wrappers.CoolMotor;
 import org.firstinspires.ftc.teamcode.roboDrive.Wrappers.IRobotModule;
 import org.firstinspires.ftc.teamcode.roboDrive.math.Vector;

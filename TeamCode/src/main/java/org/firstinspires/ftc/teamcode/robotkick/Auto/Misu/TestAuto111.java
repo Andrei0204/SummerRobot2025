@@ -1,25 +1,16 @@
 package org.firstinspires.ftc.teamcode.robotkick.Auto.Misu;
 
-import static org.firstinspires.ftc.teamcode.robotkick.Modules.outtake.Lift.State.AUTO;
-import static org.firstinspires.ftc.teamcode.robotkick.Modules.outtake.Lift.State.DOWN;
-import static org.firstinspires.ftc.teamcode.robotkick.Modules.outtake.Lift.State.SECOND;
-
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.pedroPathing.localization.localizers.PinpointLocalizer;
+import org.firstinspires.ftc.teamcode.pedroPathingold.localization.localizers.PinpointLocalizer;
 import org.firstinspires.ftc.teamcode.roboDrive.Auto2.AnotherMecanumDrivePedroPP;
 import org.firstinspires.ftc.teamcode.roboDrive.gamepads.StickyGamepad;
 import org.firstinspires.ftc.teamcode.robotkick.Modules.CeresModules;
 import org.firstinspires.ftc.teamcode.robotkick.Modules.misc.Limelight;
-import org.firstinspires.ftc.teamcode.robotkick.Modules.outtake.Claw;
-import org.firstinspires.ftc.teamcode.robotkick.Modules.outtake.Lift;
-import org.firstinspires.ftc.teamcode.robotkick.Modules.outtake.Pivot;
-import org.firstinspires.ftc.teamcode.robotkick.Modules.outtake.PivotS;
-import org.firstinspires.ftc.teamcode.robotkick.Modules.outtake.Rotator;
 
 @Autonomous(name = "TestAuto111", group = "1AutoNou")
 

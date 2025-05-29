@@ -2,18 +2,14 @@ package org.firstinspires.ftc.teamcode.robotkick.Auto.Misu;
 
 import static org.firstinspires.ftc.teamcode.robotkick.Modules.outtake.Lift.State.AUTO;
 import static org.firstinspires.ftc.teamcode.robotkick.Modules.outtake.Lift.State.DOWN;
-import static org.firstinspires.ftc.teamcode.robotkick.Modules.outtake.Lift.State.SECOND;
-
-import android.icu.text.CaseMap;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.PIDCoefficients;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.pedroPathing.localization.localizers.PinpointLocalizer;
+import org.firstinspires.ftc.teamcode.pedroPathingold.localization.localizers.PinpointLocalizer;
 import org.firstinspires.ftc.teamcode.roboDrive.Auto2.AnotherMecanumDrivePedroPP;
 import org.firstinspires.ftc.teamcode.robotkick.Modules.CeresModules;
 import org.firstinspires.ftc.teamcode.robotkick.Modules.outtake.Claw;

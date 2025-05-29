@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.roboDrive;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 
 import org.firstinspires.ftc.teamcode.roboDrive.math.Point;
-import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Vector;
+import org.firstinspires.ftc.teamcode.pedroPathingold.pathGeneration.Vector;
 
 
 public class BezierPath {
@@ -14,8 +14,8 @@ public class BezierPath {
     public double heading;
     public static double closestPointTValue;
     public static double closestPointCurvature;
-    public static org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Vector closestPointTangentVector;
-    public static org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Vector closestPointNormalVector;
+    public static org.firstinspires.ftc.teamcode.pedroPathingold.pathGeneration.Vector closestPointTangentVector;
+    public static org.firstinspires.ftc.teamcode.pedroPathingold.pathGeneration.Vector closestPointNormalVector;
     public boolean tangential;
 
     public BezierPath(Pose2d p0, Pose2d p1, Pose2d p2, Pose2d p3, double heading) {
@@ -68,8 +68,8 @@ public class BezierPath {
         closestPointTValue = lower + 0.5 * (upper - lower);
         closestPointTValue += 0.1;
         closestPointTValue = Math.min(closestPointTValue, 1);
-        closestPointTangentVector = new org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Vector(curve.get1stDerivativePose(closestPointTValue).getX(), curve.get1stDerivativePose(closestPointTValue).getY());
-        closestPointNormalVector = new org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Vector(curve.get2ndDerivativePose(closestPointTValue).getX(), curve.get2ndDerivativePose(closestPointTValue).getY());
+        closestPointTangentVector = new org.firstinspires.ftc.teamcode.pedroPathingold.pathGeneration.Vector(curve.get1stDerivativePose(closestPointTValue).getX(), curve.get1stDerivativePose(closestPointTValue).getY());
+        closestPointNormalVector = new org.firstinspires.ftc.teamcode.pedroPathingold.pathGeneration.Vector(curve.get2ndDerivativePose(closestPointTValue).getX(), curve.get2ndDerivativePose(closestPointTValue).getY());
 
         closestPointCurvature = curve.getRadius(closestPointTValue);
         returnPoint = getPoint(closestPointTValue);
