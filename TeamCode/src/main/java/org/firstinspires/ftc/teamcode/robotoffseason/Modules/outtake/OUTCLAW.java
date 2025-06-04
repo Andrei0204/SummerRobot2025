@@ -10,8 +10,8 @@ public class OUTCLAW implements IStateBasedModule, IRobotModule {
 
     public double clawpos;
     public final double clawRelease = 0.98,
-            clawSecure = 0.64,
-            clawInterior=0.67;
+            clawSecure = 0.63 ,
+            clawInterior=0.65;
 
 
     public Servo Claw;

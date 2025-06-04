@@ -41,7 +41,7 @@ public class SaibaModules implements IRobotModule {
 
 
 
-    public SaibaModules(HardwareMap hardwareMap, boolean auto, LinearOpMode opMode) {
+    public SaibaModules(HardwareMap hardwareMap) {
 
         EXT = new EXT(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.intake.EXT.State.START);
         LIFT = new LIFT(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.LIFT.State.START);
@@ -60,6 +60,28 @@ public class SaibaModules implements IRobotModule {
 
 
     }
+    public SaibaModules(HardwareMap hardwareMap,int auto) {
+
+        if(auto==1) {
+
+
+            EXT = new EXT(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.intake.EXT.State.ZERO);
+            LIFT = new LIFT(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.LIFT.State.START);
+            INCLAW = new INCLAW(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.intake.INCLAW.State.RELEASE);
+            INBRAT = new INBRAT(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.intake.INBRAT.State.MIDDLE);
+            INROTATOR = new INROTATOR(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.intake.INROTATOR.State.SECOND);
+            INTUR = new INTUR(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.intake.INTUR.State.DIAG);
+            WEELIE = new WEELIE(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.intake.WEELIE.State.NERIDICAT);
+
+
+            LINKEAGE = new LINKEAGE(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.LINKEAGE.State.CLOSED);
+            OUTBRAT = new OUTBRAT(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.OUTBRAT.State.MID);
+            OUTCLAW = new OUTCLAW(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.OUTCLAW.State.SECURE);
+            OUTROTATIE = new OUTROTATIE(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.OUTROTATIE.State.COLLECT);
+            //  PTO = new PTO(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.PTO.State.FAST);
+        }
+
+    }
 
     public void telemetry(Telemetry telemetry) {
         telemetry.addData("EXTPOS",EXT.getRealCurrentPosition());
@@ -68,6 +90,11 @@ public class SaibaModules implements IRobotModule {
         telemetry.addData("extstate",EXT.getState());
         telemetry.addData("extstate",OUTBRAT.getState());
         telemetry.addData("extstate",WEELIE.getState());
+        telemetry.addData("tare", OUTROTATIE.getState());
+        telemetry.addData("tare", OUTROTATIE.rotatie.getPosition());
+        telemetry.addData("dr", OUTBRAT.outdr.getPosition());
+        telemetry.addData("st", OUTBRAT.outst.getPosition());
+
     }
 
 

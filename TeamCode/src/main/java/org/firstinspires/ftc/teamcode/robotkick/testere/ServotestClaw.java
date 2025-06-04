@@ -10,15 +10,15 @@ import com.qualcomm.robotcore.hardware.Servo;
 @TeleOp
 public class ServotestClaw extends LinearOpMode {
     Servo test;
-    public static double pos =0.8;
+    public static double pos =0.69;
     @Override
     public void runOpMode() throws InterruptedException {
-        test =hardwareMap.get(Servo.class,"Claw");
+        test =hardwareMap.get(Servo.class,"intur");
 
         test.setPosition(pos);
         waitForStart();
         while (opModeIsActive()) { // singurul while
-               test.setPosition(pos);
+           test.setPosition(pos);
             telemetry.addData("power",test.getPosition());
 
             telemetry.update();

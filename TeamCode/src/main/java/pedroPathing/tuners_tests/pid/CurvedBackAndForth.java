@@ -58,6 +58,7 @@ public class CurvedBackAndForth extends OpMode {
 
         follower.followPath(forwards);
 
+
         telemetryA = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
         telemetryA.addLine("This will run the robot in a curve going " + DISTANCE + " inches"
                             + " to the left and the same number of inches forward. The robot will go"

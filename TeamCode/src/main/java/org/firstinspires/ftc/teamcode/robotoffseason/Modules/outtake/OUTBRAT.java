@@ -13,10 +13,10 @@ import org.firstinspires.ftc.teamcode.roboDrive.Wrappers.ServoFunny;
 public class OUTBRAT implements IStateBasedModule, IRobotModule {
     public double rotpose;
     public static final double transferpos = 1 ;
-    public static final double specimenpos = 0.06;
-    public static final double scorespecipos = 0.7;
-    public static final double samplepos = 0.34;
-    public static final double midpos = 0.94;
+    public static final double specimenpos = 0.0;
+    public static final double scorespecipos = 0.68;
+    public static final double samplepos = 0.36;
+    public static final double midpos = 0.93;
     public static double auto=0.28;
     public static double profileMaxVelocity = 16, profileAcceleration = 12, profileDeceleration = 5;
 
@@ -27,9 +27,9 @@ public class OUTBRAT implements IStateBasedModule, IRobotModule {
     public OUTBRAT(HardwareMap hardwareMap, State initialState) {
         outdr = hardwareMap.get(ServoImplEx.class, "outdr");
         outst = hardwareMap.get(ServoImplEx.class, "outst");
-        outst.setPwmRange(new PwmControl.PwmRange(500,2500));
-        outdr.setPwmRange(new PwmControl.PwmRange(500,2500));
-
+//        outst.setPwmRange(new PwmControl.PwmRange(500,2500));
+//        outdr.setPwmRange(new PwmControl.PwmRange(500,2500));
+//
         this.OutbratState = initialState;
 
     }

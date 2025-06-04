@@ -28,7 +28,7 @@ public class TeleopOf extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException
     {
-         modules = new SaibaModules(hardwareMap, false, this);
+         modules = new SaibaModules(hardwareMap);
         Wheels = new SampleMecanumDrive(hardwareMap);
         Drive = new AnotherMecanumDrivePedroPP(Wheels,  AnotherMecanumDrivePedroPP.RunMode.VectorAndSlows, true);
         Control = new MisuDrivetrainBigPedroPP(gamepad1, Drive);
@@ -55,7 +55,7 @@ public class TeleopOf extends LinearOpMode {
             modulesControl.update();
             if(modulesControl.stickyGamepad2.a)
                 telemetry.addData("idk anymore",modulesControl.clawintake);
-            telemetry.addData("statespeci",modulesControl.statecollectspeci);
+
             modules.telemetry(telemetry);
             telemetry.update();
 

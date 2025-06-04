@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.teamcode.roboDrive.Wrappers.CoolMotor;
 import org.firstinspires.ftc.teamcode.roboDrive.Wrappers.IRobotModule;
@@ -13,17 +14,17 @@ import org.firstinspires.ftc.teamcode.roboDrive.Wrappers.IStateBasedModule;
 public class LIFT implements IStateBasedModule, IRobotModule {
 
     public static double TICKSCM = 724.35;    //test
-    public static double startpos = 0;
-    public static final double finalpos = 62.5 * TICKSCM;
-    public static final double transferpos = 5.5 * TICKSCM;
-    public static final double scorespecipos = 31 * TICKSCM;
+    public static double startpos = -1;
+    public static final double finalpos = 55 * TICKSCM;
+    public static final double transferpos = 4 * TICKSCM;
+    public static final double scorespecipos = 30    * TICKSCM;
     public static double autopose = 0;
 
     public static double target = 0; //cm
 
     public static double currentPosition = startpos;
-    public static double kP = 0.0001, kI = 0.17, kD = 0.000002; //TODO Valori PID!!!!
-    public static double kPjos = 0.00009, kIjos = 0.1, kDjos = 0.000004; //TODO Valori PID!!!!
+    public static double kP = 0.0001, kI = 0.17, kD = 0.000002,f=-0; //TODO Valori PID!!!!
+    public static double kPjos = 0.00011, kIjos = 0.1, kDjos = 0.000004; //TODO Valori PID!!!!
 
     private static boolean ENABLED = true;
     public CoolMotor LIFT1 = null;
@@ -35,7 +36,7 @@ public class LIFT implements IStateBasedModule, IRobotModule {
     public State state;
     public EXTRUNMODE runMode;
 
-
+    VoltageSensor voltage=null;
     public LIFT(HardwareMap hardwareMap, State initialState) {
         if (!ENABLED) {
 
@@ -44,6 +45,7 @@ public class LIFT implements IStateBasedModule, IRobotModule {
         } else {
             LIFT1 = new CoolMotor(hardwareMap.get(DcMotorEx.class, "LIFT1"), CoolMotor.RunMode.RUN);
             LIFT2 = new CoolMotor(hardwareMap.get(DcMotorEx.class, "LIFT2"), CoolMotor.RunMode.RUN);
+            voltage = hardwareMap.voltageSensor.iterator().next();
 
         }
         this.state = initialState;
@@ -146,8 +148,10 @@ public class LIFT implements IStateBasedModule, IRobotModule {
     @Override
     public void updateHardware() {
         pid = new PIDCoefficients(kP, kI, kD);
+        double actualKs = f * 12.0 / voltage.getVoltage();
         if ((target== transferpos &&  getRealCurrentPosition()>5  ) || ( target==startpos   )) {
             pid = new PIDCoefficients(kPjos, kIjos, kDjos);
+            actualKs=0;
         }
 
         switch (runMode) {
@@ -155,13 +159,13 @@ public class LIFT implements IStateBasedModule, IRobotModule {
                 LIFT1.setMode(CoolMotor.RunMode.PID);
                 LIFT2.setMode(CoolMotor.RunMode.PID);
 
-                    LIFT1.setPIDF(pid,0);
-                    LIFT2.setPIDF(pid,0);
+                LIFT1.setPIDF(pid,actualKs);
+                LIFT2.setPIDF(pid,actualKs);
 
 
 
-                LIFT2.calculatePower(LIFT1.getCurrentPosition(), target);
-                LIFT1.calculatePower(LIFT1.getCurrentPosition(), target);
+                LIFT2.calculatePowerFF(LIFT1.getCurrentPosition(), target);
+                LIFT1.calculatePowerFF(LIFT1.getCurrentPosition(), target);
                 break;
             case MANUAL: {
                 LIFT2.setMode(CoolMotor.RunMode.RUN);

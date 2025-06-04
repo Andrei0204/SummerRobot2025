@@ -117,6 +117,11 @@ public class CoolMotor {
         pidController.setPID(pidCoefficients.p, pidCoefficients.i, pidCoefficients.d);
         power = feedforward + pidController.calculate(current,target);
     }
+    public void calculatePowerFF(double current, double target){
+        if(runMode == RunMode.RUN) return;
+        pidController.setPID(pidCoefficients.p, pidCoefficients.i, pidCoefficients.d);
+        power = (1-feedforward) * pidController.calculate(current,target);
+    }
     public void calculatePowerMax(double current, double target,double max){
         if(runMode == RunMode.RUN) return;
         pidController.setPID(pidCoefficients.p, pidCoefficients.i, pidCoefficients.d);
