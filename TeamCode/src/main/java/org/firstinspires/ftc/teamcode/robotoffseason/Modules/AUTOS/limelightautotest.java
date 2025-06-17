@@ -50,7 +50,7 @@ public class limelightautotest extends OpMode {
     Limelight limelight = null;
     private final Pose startPose = new Pose(0, 0, 0);
     private Path scorePreload;
-    double y = 0;
+
     public static double  d = 12;
     public static double  h = -1;
     public static double  k = 1;
@@ -67,13 +67,11 @@ public class limelightautotest extends OpMode {
         switch (pathState) {
             case -1:
 
-                if (y == 0 && follower.poseUpdater.getAcceleration().getMagnitude() <3 ) {
+                if (LL.getY() == 0 && follower.poseUpdater.getAcceleration().getMagnitude() <3 ) {
                     LL = new Pose2d(0, 0, 0);
-
-                    y = limelight.getDEGREES("red",0).getY();
                     LL = limelight.getdistanceVector(0, "red");
                 }
-                if (y != 0) {
+                if (LL.getY() != 0) {
                     modules.INBRAT.setState(INBRAT.State.SEMIDOWN);
                     modules.INTUR.setState(INTUR.State.AUTOSPECI);
                     modules.INTUR.setangle(150);
@@ -144,7 +142,6 @@ public class limelightautotest extends OpMode {
         telemetry.addData("path state", pathState);
         telemetry.addData("x", follower.getPose().getX());
         telemetry.addData("y", follower.getPose().getY());
-        telemetry.addData("y", y);
         telemetry.addData("heading", follower.getPose().getHeading());
         telemetry.addData("sex", LL);
         telemetry.update();
