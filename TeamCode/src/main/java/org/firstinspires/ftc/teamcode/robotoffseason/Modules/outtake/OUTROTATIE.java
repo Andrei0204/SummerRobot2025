@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.roboDrive.Wrappers.IStateBasedModule;
 
 public class OUTROTATIE implements IStateBasedModule, IRobotModule {
     public double rotpose;
-    public static final double specimen = 0.3;
+    public static final double specimen = 0.27;
     public static final double scorespeci = 0.55;
     public static final double collect = 0.00;
     public static final double samplepos = 0;

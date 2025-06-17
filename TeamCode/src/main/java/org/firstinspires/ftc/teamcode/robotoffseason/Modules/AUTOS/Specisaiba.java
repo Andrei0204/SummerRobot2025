@@ -47,7 +47,7 @@ public class Specisaiba extends OpMode {
     private final Pose startPose = new Pose(8, 65, 0);
 
     /** Scoring Pose of our robot. It is facing the submersible at a -45 degree (315 degree) angle. */
-    private final Pose scorePose = new Pose(42.5, 69, 0);
+    private final Pose scorePose = new Pose(38.5, 69, 0);
 
 
     private final Pose BS1C1 = new Pose(21, 42, 0);
@@ -56,7 +56,7 @@ public class Specisaiba extends OpMode {
 
     private final Pose S1C1 = new Pose(60, 35, 0);
     private final Pose S1C2 = new Pose(71 , 19, 0);
-    private final Pose S1FIN = new Pose(13 , 23, 0);
+    private final Pose S1FIN = new Pose(20 , 23, 0);
 
 
 
@@ -66,16 +66,17 @@ public class Specisaiba extends OpMode {
     private final Pose BS2FIN = new Pose(53, 14, 0);
 
 
-    private final Pose S2FIN = new Pose(13, 14, 0);
+    private final Pose S2FIN = new Pose(20, 14, 0);
 
     private final Pose BS3C1 = new Pose(72, 17, 0);
     private final Pose BS3FIN = new Pose(53,  8, 0);
-    private final Pose S3FIN = new Pose(11.3, 8, 0);
+    private final Pose S3FIN = new Pose(10.8, 8, 0);
 
     private final Pose SP1C1 = new Pose(34, 64, 0);
-    private final Pose SP1FIN = new Pose(39 , 67, 0);
+    private final Pose SP1FIN = new Pose(39 , 66, 0);
 
-    private final Pose COLLECT = new Pose(10.5 , 35, 0);
+    private final Pose COLLECT = new Pose(16.5 , 33, 0);
+    private final Pose COLLECTWALL = new Pose(12 , 33.3, 0);
 
     private final Pose COLLECTC1 = new Pose(31 , 49, 0);
     private final Pose COLLECTC2 = new Pose(31 , 33, 0);
@@ -101,7 +102,8 @@ public class Specisaiba extends OpMode {
 //    private final Pose parkControlPose = new Pose(60, 98, Math.toRadians(90));
 
     /* These are our Paths and PathChains that we will define in buildPaths() */
-    private Path scorePreload;
+    private PathChain scorePreload;
+    private PathChain gotohuman2;
     private PathChain firstsample,secondsample,thirdsample,firstspeci,gotohuman,score;
     private PathChain grabPickup1, grabPickup2, grabPickup3, scorePickup1, scorePickup2, scorePickup3;
 
@@ -125,8 +127,11 @@ public class Specisaiba extends OpMode {
          * Here is a explanation of the difference between Paths and PathChains <https://pedropathing.com/commonissues/pathtopathchain.html> */
 
         /* This is our scorePreload path. We are using a BezierLine, which is a straight line. */
-        scorePreload = new Path(new BezierLine(new Point(startPose), new Point(scorePose)));
-        scorePreload.setLinearHeadingInterpolation(startPose.getHeading(), scorePose.getHeading());
+        scorePreload=follower.pathBuilder()
+                .addPath(new BezierLine(new Point(startPose), new Point(scorePose)))
+                .setConstantHeadingInterpolation(0)
+                .build();
+
 
         /* Here is an example for Constant Interpolation
         scorePreload.setConstantInterpolation(startPose.getHeading()); */
@@ -145,7 +150,7 @@ public class Specisaiba extends OpMode {
         secondsample = follower.pathBuilder()
                 .addPath(new BezierCurve(new Point(S1FIN), new Point(BS2C1),new Point(BS2FIN)))
                 .setConstantHeadingInterpolation(0)
-                .addPath(new BezierLine(new Point(BS2FIN),new Point(S2FIN)))
+                .addPath(new BezierCurve(new Point(BS2FIN),new Point(S2FIN)))
                 .setConstantHeadingInterpolation(0)
 
                 .build();
@@ -166,11 +171,16 @@ public class Specisaiba extends OpMode {
                 .setConstantHeadingInterpolation(0)
                 .build();
         score=follower.pathBuilder()
-                .addPath(new BezierLine(new Point(COLLECT),new Point(SP1FIN)))
+                .addPath(new BezierLine(new Point(COLLECTWALL),new Point(SP1FIN)))
                 .setConstantHeadingInterpolation(0)
                 .build();
-
-
+        gotohuman2=follower.pathBuilder()
+//            .addPath(new BezierLine(COLLECT,COLLECTWALL))
+//                .setConstantHeadingInterpolation(0)
+//                .build();
+                .addPath(new BezierLine(COLLECT,COLLECTWALL))
+                .setConstantHeadingInterpolation(0)
+                .build();
 
 
 
@@ -292,9 +302,9 @@ public class Specisaiba extends OpMode {
                 }
                 break;
             case 6: //CICLAT
-                if(follower.getPose().getY()>40)
+                if(follower.getPose().getY()>35)
                     modules.OUTBRAT.setState(OUTBRAT.State.SCORESPECI);
-                if (follower.getPose().getY() > 60) {
+                if (follower.getPose().getY() > 59 ) {
 
                     modules.LINKEAGE.setState(LINKEAGE.State.OPEN);
 
@@ -314,8 +324,15 @@ public class Specisaiba extends OpMode {
                 break;
             case 7:
                 if(!follower.isBusy()) {
-                    setPathState(8);
+                    follower.followPath(gotohuman2,true);
+                    setPathState(-7);
                     actionTimer.reset();
+                }
+            break;
+            case -7:
+                if(!follower.isBusy())
+                {
+                    setPathState(8);
                 }
                 break;
             case 8:

@@ -135,6 +135,12 @@ public class CoolMotor {
         motor.setPowerAsync(power);
         if(!async) motor.updatePowerAsync();
     }
+    public void makeFloat(){
+         motor.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+    }
+    public void makeBrake(){
+        motor.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    }
 
     public double getCurrentPosition(){
         return motor.getCurrentPosition();

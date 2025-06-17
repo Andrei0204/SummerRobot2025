@@ -12,7 +12,7 @@ public class INTUR implements IStateBasedModule, IRobotModule {
     public static final double diagonal = 0.35;
     public static final double throwpos = 0.55;
     public static final double FRONT = 0.69;
-    public static double auto=0.28;
+    public static double auto=0.69;
 
     public Servo intur;
     public State InturState;
@@ -28,6 +28,19 @@ public class INTUR implements IStateBasedModule, IRobotModule {
 
     public void setAuto(double auto){
         this.auto =auto;
+
+    }
+    public void setangle(double angle)
+    {
+        double rightmax=0.45;
+        double leftmax=0.92;
+        double middle=0.69;
+        double tickstodegree=0.0036;
+        this.auto =middle +angle*tickstodegree;
+        if(auto>leftmax)
+            auto=leftmax;
+        if(auto<rightmax)
+            auto=rightmax;
 
     }
     public void setState(State State) {

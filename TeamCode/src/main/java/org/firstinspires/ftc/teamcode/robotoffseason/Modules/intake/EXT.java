@@ -22,7 +22,7 @@ public class EXT implements IStateBasedModule, IRobotModule {
     public static double target = 0; //cm
 
     public static double currentPosition = startpos;
-    public static double kP = 0.005 , kI = 0.0002, kD = 0.0005; //TODO Valori PID!!!!
+    public static double kP = 0.0065 , kI = 0.0002, kD = 0.0005; //TODO Valori PID!!!!
     private static boolean ENABLED = true;
     public final CoolMotor EXT;
     public double manualPower = 0;
@@ -38,6 +38,7 @@ public class EXT implements IStateBasedModule, IRobotModule {
             EXT = null;
         } else {
             EXT = new CoolMotor(hardwareMap.get(DcMotorEx.class, "EXT"), CoolMotor.RunMode.RUN,true);
+            EXT.makeFloat();
 
         }
         this.state = initialState;

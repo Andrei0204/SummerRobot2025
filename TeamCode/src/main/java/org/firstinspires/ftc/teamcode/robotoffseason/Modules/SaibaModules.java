@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.teamcode.robotoffseason.Modules.intake.INTUR;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.roboDrive.Wrappers.IRobotModule;
-import org.firstinspires.ftc.teamcode.robotkick.Modules.outtake.Claw;
+
 import org.firstinspires.ftc.teamcode.robotoffseason.Modules.intake.EXT;
 import org.firstinspires.ftc.teamcode.robotoffseason.Modules.intake.INBRAT;
 import org.firstinspires.ftc.teamcode.robotoffseason.Modules.intake.INCLAW;
@@ -68,8 +68,10 @@ public class SaibaModules implements IRobotModule {
             EXT = new EXT(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.intake.EXT.State.ZERO);
             LIFT = new LIFT(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.LIFT.State.START);
             INCLAW = new INCLAW(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.intake.INCLAW.State.RELEASE);
+//            INBRAT = new INBRAT(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.intake.INBRAT.State.UP);
             INBRAT = new INBRAT(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.intake.INBRAT.State.MIDDLE);
             INROTATOR = new INROTATOR(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.intake.INROTATOR.State.SECOND);
+//            INTUR = new INTUR(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.intake.INTUR.State.FRONT);
             INTUR = new INTUR(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.intake.INTUR.State.DIAG);
             WEELIE = new WEELIE(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.intake.WEELIE.State.NERIDICAT);
 

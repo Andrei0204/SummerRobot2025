@@ -5,7 +5,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.roboDrive.Wrappers.IRobotModule;
 import org.firstinspires.ftc.teamcode.roboDrive.gamepads.StickyGamepad;
-import org.firstinspires.ftc.teamcode.robotkick.Modules.outtake.Rotator;
 import org.firstinspires.ftc.teamcode.robotoffseason.Modules.SaibaModules;
 import org.firstinspires.ftc.teamcode.robotoffseason.Modules.intake.EXT;
 import org.firstinspires.ftc.teamcode.robotoffseason.Modules.intake.INBRAT;
@@ -85,13 +84,14 @@ public class SaibaControl implements IRobotModule {
 
     public void EXTCONTROL() {
         if (Math.abs(gamepad2.left_stick_y) > 0.1) {
+            modules.EXT.setRunMode(EXT.EXTRUNMODE.MANUAL);
+            modules.EXT.setState(EXT.State.MANUAL);
             modules.EXT.setManualPower(-gamepad2.left_stick_y);
             if (modules.EXT.manualPower < 0 && (modules.EXT.getRealCurrentPosition()) < 7)
                 modules.EXT.setManualPower(0);
             if (modules.EXT.manualPower > 0 && (modules.EXT.getRealCurrentPosition()) > 48)
                 modules.EXT.setManualPower(0);
-            modules.EXT.setRunMode(EXT.EXTRUNMODE.MANUAL);
-            modules.EXT.setState(EXT.State.MANUAL);
+
         } else {
             modules.EXT.setManualPower(0);
             modules.EXT.setRunMode(EXT.EXTRUNMODE.PID);
@@ -105,22 +105,22 @@ public class SaibaControl implements IRobotModule {
     }
 
     public void LIFTCONTROL() {
-//        if (modules.LIFT.getRealCurrentPosition() > 30) {
-//            if (Math.abs(gamepad2.right_trigger - gamepad2.left_trigger) > 0.1) {
-//
-//                modules.LIFT.setManualPower(gamepad2.right_trigger - gamepad2.left_trigger);
-//                if (modules.LIFT.manualPower < 0 && (modules.LIFT.getRealCurrentPosition()) < 0)
-//                    modules.LIFT.setManualPower(0);
-//                if (modules.LIFT.manualPower > 0 && (modules.LIFT.getRealCurrentPosition()) > 72)
-//                    modules.LIFT.setManualPower(0);
-//
-//                modules.LIFT.setRunMode(LIFT.EXTRUNMODE.MANUAL);
-//                modules.LIFT.setState(LIFT.State.MANUAL);
-//            } else {
-//                modules.LIFT.setManualPower(0);
-//                modules.LIFT.setRunMode(LIFT.EXTRUNMODE.PID);
-//            }
-//        }
+        if (modules.LIFT.getRealCurrentPosition() > 10) {
+            if (Math.abs(gamepad2.right_trigger - gamepad2.left_trigger) > 0.1) {
+
+                modules.LIFT.setManualPower(gamepad2.right_trigger - gamepad2.left_trigger);
+                if (modules.LIFT.manualPower < 0 && (modules.LIFT.getRealCurrentPosition()) < 0)
+                    modules.LIFT.setManualPower(0);
+                if (modules.LIFT.manualPower > 0 && (modules.LIFT.getRealCurrentPosition()) > 72)
+                    modules.LIFT.setManualPower(0);
+
+                modules.LIFT.setRunMode(LIFT.EXTRUNMODE.MANUAL);
+                modules.LIFT.setState(LIFT.State.MANUAL);
+            } else {
+                modules.LIFT.setManualPower(0);
+                modules.LIFT.setRunMode(LIFT.EXTRUNMODE.PID);
+            }
+        }
     }
 
     public void SAMPLECONTROL() {
@@ -209,12 +209,8 @@ public class SaibaControl implements IRobotModule {
             if (sateOutSpeci ==StateOutSpeci.SCORING && outtimer.milliseconds() > 100 && gamepad2.right_stick_y < -0.8) {
                 modules.LINKEAGE.setState(LINKEAGE.State.OPEN);
             }
-            if (gamepad1.a) {
-                modules.OUTCLAW.setState(OUTCLAW.State.RELEASE);
-                modules.LINKEAGE.setState(LINKEAGE.State.CLOSED);
-            }
 
-            if (sateOutSpeci ==StateOutSpeci.SCORING && outtimer.milliseconds() > 100 && gamepad2.a ) {
+            if (sateOutSpeci ==StateOutSpeci.SCORING && outtimer.milliseconds() > 100 && gamepad1.a ) {
                 modules.OUTCLAW.setState(OUTCLAW.State.RELEASE);
 
                 modules.LIFT.setState(LIFT.State.START);
@@ -384,7 +380,7 @@ public class SaibaControl implements IRobotModule {
     void COLLECTWITHOUTCLAW() {
         if (gamepad2.right_bumper) {
             if (modules.INROTATOR.rotpose < 0.78)
-                modules.INROTATOR.setCustom(modules.INROTATOR.rotpose + 0.03);
+                modules.INROTATOR.setCustom(modules.INROTATOR.rotpose + 0.06);
             if (modules.INROTATOR.rotpose > 0.78)
                 modules.INROTATOR.setState(INROTATOR.State.FIFTH);
             else
@@ -394,7 +390,7 @@ public class SaibaControl implements IRobotModule {
         }
         if (gamepad2.left_bumper) {
             if (modules.INROTATOR.rotpose > 0.2)
-                modules.INROTATOR.setCustom(modules.INROTATOR.rotpose - 0.03);
+                modules.INROTATOR.setCustom(modules.INROTATOR.rotpose - 0.06);
             if (modules.INROTATOR.rotpose < 0.2)
                 modules.INROTATOR.setState(INROTATOR.State.FIRST);
             else
@@ -405,7 +401,7 @@ public class SaibaControl implements IRobotModule {
         if (gamepad2.y) {
 
             modules.INROTATOR.setState(INROTATOR.State.THIRD);
-            modules.INROTATOR.setCustom(Rotator.trdpos);
+            modules.INROTATOR.setCustom(INROTATOR.trdpos);
         }
 
 
@@ -416,7 +412,7 @@ public class SaibaControl implements IRobotModule {
 //                modules.INBRAT.setState(INBRAT.State.DOWNEXT);
         if (gamepad2.right_bumper) {
             if (modules.INROTATOR.rotpose < 0.78)
-                modules.INROTATOR.setCustom(modules.INROTATOR.rotpose + 0.03);
+                modules.INROTATOR.setCustom(modules.INROTATOR.rotpose + 0.06);
             if (modules.INROTATOR.rotpose > 0.78)
                 modules.INROTATOR.setState(INROTATOR.State.FIFTH);
             else
@@ -426,7 +422,7 @@ public class SaibaControl implements IRobotModule {
         }
         if (gamepad2.left_bumper) {
             if (modules.INROTATOR.rotpose > 0.2)
-                modules.INROTATOR.setCustom(modules.INROTATOR.rotpose - 0.03);
+                modules.INROTATOR.setCustom(modules.INROTATOR.rotpose - 0.06);
             if (modules.INROTATOR.rotpose < 0.2)
                 modules.INROTATOR.setState(INROTATOR.State.FIRST);
             else
@@ -437,7 +433,7 @@ public class SaibaControl implements IRobotModule {
         if (gamepad2.y) {
 
             modules.INROTATOR.setState(INROTATOR.State.THIRD);
-            modules.INROTATOR.setCustom(Rotator.trdpos);
+            modules.INROTATOR.setCustom(INROTATOR.trdpos);
         }
 
 
@@ -500,13 +496,15 @@ public class SaibaControl implements IRobotModule {
         stickyGamepad1.update();
         stickyGamepad2.update();
 
-        EXTCONTROL();
-//        LIFTCONTROL();
+
+//
         if (scoremode==Scoremode.SAMPLE)
             SAMPLECONTROL();
         else
             SPECICONTROL();
         OuttakeControl();
+        EXTCONTROL();
+        LIFTCONTROL();
 
     }
 }

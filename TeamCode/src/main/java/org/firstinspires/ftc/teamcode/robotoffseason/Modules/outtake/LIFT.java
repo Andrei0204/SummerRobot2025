@@ -14,17 +14,18 @@ import org.firstinspires.ftc.teamcode.roboDrive.Wrappers.IStateBasedModule;
 public class LIFT implements IStateBasedModule, IRobotModule {
 
     public static double TICKSCM = 724.35;    //test
-    public static double startpos = -1;
+    public static double startpos = -0.5/TICKSCM;
     public static final double finalpos = 55 * TICKSCM;
-    public static final double transferpos = 4 * TICKSCM;
-    public static final double scorespecipos = 30    * TICKSCM;
+    public static final double transferpos = 0 * TICKSCM;
+    public static final double scorespecipos = 27        * TICKSCM;
+    public static final double lowbasket =   16  * TICKSCM;
     public static double autopose = 0;
 
     public static double target = 0; //cm
 
     public static double currentPosition = startpos;
-    public static double kP = 0.0001, kI = 0.17, kD = 0.000002,f=-0; //TODO Valori PID!!!!
-    public static double kPjos = 0.00011, kIjos = 0.1, kDjos = 0.000004; //TODO Valori PID!!!!
+    public static double kP = 0.00013, kI = 0.19, kD = 0.000002,f=-0; //TODO Valori PID!!!!
+    public static double kPjos = 0.00014, kIjos = 0.1, kDjos = 0.000004; //TODO Valori PID!!!!
 
     private static boolean ENABLED = true;
     public CoolMotor LIFT1 = null;
@@ -149,7 +150,7 @@ public class LIFT implements IStateBasedModule, IRobotModule {
     public void updateHardware() {
         pid = new PIDCoefficients(kP, kI, kD);
         double actualKs = f * 12.0 / voltage.getVoltage();
-        if ((target== transferpos &&  getRealCurrentPosition()>5  ) || ( target==startpos   )) {
+        if ((target== transferpos ) || ( target==startpos   )) {
             pid = new PIDCoefficients(kPjos, kIjos, kDjos);
             actualKs=0;
         }

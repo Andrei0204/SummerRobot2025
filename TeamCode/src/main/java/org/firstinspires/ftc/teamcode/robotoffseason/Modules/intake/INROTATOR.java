@@ -13,7 +13,7 @@ public class INROTATOR implements IStateBasedModule, IRobotModule {
     public static final double trdpos = 0.495;
     public static final double fthpos = 0.637;
     public static final double fifthpos=0.78;
-    public static final double specimenpos=1;
+    public static final double specimenpos=0.83;
     public static double custom=0.47;
 
     public Servo rotator;
@@ -29,6 +29,12 @@ public class INROTATOR implements IStateBasedModule, IRobotModule {
     }
     public void setCustom(double custom){
         this.custom=custom;
+    }
+    public void setAngle(double angle)
+    {
+        double mid=0.495;
+        double ticksdegree=0.003;
+        custom = mid + ticksdegree*angle;
     }
     public void setState(State State) {
         switch (State) {

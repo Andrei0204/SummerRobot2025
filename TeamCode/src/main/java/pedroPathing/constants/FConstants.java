@@ -22,32 +22,34 @@ public class FConstants {
 
         FollowerConstants.mass = 14;
 
-        FollowerConstants.xMovement = 79.51564452330476;
-        FollowerConstants.yMovement = 62.9375577677488;
+        FollowerConstants.xMovement = 79.99129657890144;
+        FollowerConstants.yMovement = 63.812485788349434;
 
+        FollowerConstants.forwardZeroPowerAcceleration = -26.08515405921818;
+        FollowerConstants.lateralZeroPowerAcceleration = -62.52399299835914;
 
-        FollowerConstants.forwardZeroPowerAcceleration = -26.29257022249727;
-        FollowerConstants.lateralZeroPowerAcceleration = -62.249022998734375;
-
-    FollowerConstants.translationalPIDFCoefficients.setCoefficients(0.25 ,0,0.01      ,0);
+        FollowerConstants.translationalPIDFCoefficients.setCoefficients(0.05,0,0.01,0);
         FollowerConstants.useSecondaryTranslationalPID = false;
         FollowerConstants.secondaryTranslationalPIDFCoefficients.setCoefficients(0.1,0,0.01,0); // Not being used, @see useSecondaryTranslationalPID
 
-        FollowerConstants.headingPIDFCoefficients.setCoefficients(1.8,0,0.1,0);
+        FollowerConstants.headingPIDFCoefficients.setCoefficients(1.5 ,0,0.001 ,0);
         FollowerConstants.useSecondaryHeadingPID = false;
         FollowerConstants.secondaryHeadingPIDFCoefficients.setCoefficients(2,0,0.1,0); // Not being used, @see useSecondaryHeadingPID
 
-        FollowerConstants.drivePIDFCoefficients.setCoefficients(0.006,0,0.002,0.6,0);
-        FollowerConstants.useSecondaryDrivePID = false;
-        FollowerConstants.secondaryDrivePIDFCoefficients.setCoefficients(0.1,0,0,0.6,0); // Not being used, @see useSecondaryDrivePID
-
-        FollowerConstants.zeroPowerAccelerationMultiplier = 5;
-        FollowerConstants.centripetalScaling = 0.0008;
-        FollowerConstants.driveKalmanFilterParameters.dataCovariance=3  ;
+        FollowerConstants.drivePIDFCoefficients.setCoefficients(0.016,0,0.000018,0.6,0);//0.015
+        FollowerConstants.useSecondaryDrivePID = true;
+        FollowerConstants.secondaryDrivePIDFCoefficients.setCoefficients(0.01,0,
+                0.00018
+                ,0.6,0); // Not being used, @see useSecondaryDrivePID
+//0.012
+        FollowerConstants.useVoltageCompensationInAuto=true;
+        FollowerConstants.driveKalmanFilterParameters.dataCovariance=1.5;
         FollowerConstants.driveKalmanFilterParameters.modelCovariance=6;
+        FollowerConstants.zeroPowerAccelerationMultiplier = 4.5;//5
+        FollowerConstants.centripetalScaling = 0.0005;
 
         FollowerConstants.pathEndTimeoutConstraint = 100;
-        FollowerConstants.pathEndTValueConstraint = 0.995;
+        FollowerConstants.pathEndTValueConstraint = 0.990;
         FollowerConstants.pathEndVelocityConstraint = 0.1;
         FollowerConstants.pathEndTranslationalConstraint = 0.1;
         FollowerConstants.pathEndHeadingConstraint = 0.007;
