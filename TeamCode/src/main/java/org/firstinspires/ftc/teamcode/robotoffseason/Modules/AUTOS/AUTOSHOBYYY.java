@@ -100,6 +100,9 @@ public class AUTOSHOBYYY extends OpMode {
     private final Pose COLLECT = new Pose(14, 33, 0);
     private final Pose COLLECTWALL = new Pose(13.3, 33.3, 0);
 
+    private final Pose COLLECT21 = new Pose(21, 17, 0);
+    private final Pose COLLECTWALL21 = new Pose(20.3, 17.3, 0);
+
     private final Pose COLLECTC1 = new Pose(31, 49, 0);
     private final Pose COLLECTC2 = new Pose(31, 33, 0);
 //    private final Pose COLLECTC1 = new Pose(37 , 47, 0);
@@ -126,7 +129,7 @@ public class AUTOSHOBYYY extends OpMode {
 
     /* These are our Paths and PathChains that we will define in buildPaths() */
     private PathChain scorePreload;
-    private PathChain gotohuman2;
+    private PathChain gotohuman2,gotohuman21;
     private PathChain firstsample, secondsample, thirdsample, firstspeci, gotohuman, score, scorefst;
     private PathChain grabPickup1, grabPickup2, grabPickup3, scorePickup1, scorePickup2, scorePickup3;
     private Path collectsample;
@@ -208,6 +211,15 @@ public class AUTOSHOBYYY extends OpMode {
 //                .setConstantHeadingInterpolation(0)
 //                .build();
                 .addPath(new BezierLine(COLLECT, COLLECTWALL))
+//                .setLinearHeadingInterpolation(Math.toRadians(15),0)
+                .setConstantHeadingInterpolation(0)
+
+                .build();
+        gotohuman21 = follower.pathBuilder()
+//            .addPath(new BezierLine(COLLECT,COLLECTWALL))
+//                .setConstantHeadingInterpolation(0)
+//                .build();
+                .addPath(new BezierLine(COLLECT21, COLLECTWALL21))
 //                .setLinearHeadingInterpolation(Math.toRadians(15),0)
                 .setConstantHeadingInterpolation(0)
 
@@ -311,10 +323,13 @@ public class AUTOSHOBYYY extends OpMode {
                     modules.INTUR.setState(INTUR.State.THROW);
                 if (!follower.isBusy()) {
 
-                    follower.followPath(gotohuman2, true);
-                    setPathState(-10);
+                    follower.followPath(gotohuman21, true);
+                    //setPathState(101);
                 }
                 break;
+
+
+
             case -10:
 
                 if (!follower.isBusy()) {

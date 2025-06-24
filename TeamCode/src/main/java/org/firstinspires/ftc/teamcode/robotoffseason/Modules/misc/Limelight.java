@@ -40,7 +40,7 @@ public class Limelight {
     public void pipeline() {
         limelight.pipelineSwitch(7);
     }
-
+//TODO DETECTIE STIU CE ARE!!!;
     public Pose2d getdistanceVector(double heading, String f) {
         result = limelight.getLatestResult();
         if (result != null) {

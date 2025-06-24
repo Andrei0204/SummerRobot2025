@@ -14,10 +14,10 @@ import org.firstinspires.ftc.teamcode.roboDrive.Wrappers.IStateBasedModule;
 public class LIFT implements IStateBasedModule, IRobotModule {
 
     public static double TICKSCM = 724.35;    //test
-    public static double startpos = -0.5/TICKSCM;
-    public static final double finalpos = 55 * TICKSCM;
-    public static final double transferpos = 0 * TICKSCM;
-    public static final double scorespecipos = 26        * TICKSCM;
+    public static double startpos = -0.1*TICKSCM;
+    public static final double finalpos = 58 * TICKSCM;
+    public static final double transferpos = 2 * TICKSCM;
+    public static final double scorespecipos = 23        * TICKSCM;
     public static final double lowbasket =   16  * TICKSCM;
     public static double autopose = 0;
 

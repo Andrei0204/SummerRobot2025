@@ -72,7 +72,8 @@ public class Specisaibavarsob extends OpMode {
                 if (!follower.isBusy()
                 ) {
                     follower.followPath(firstsample, true);
-                    setPathState(2);
+
+                        setPathState(2);
                 }
                 break;
             case 2:
@@ -85,7 +86,7 @@ public class Specisaibavarsob extends OpMode {
                     if (!follower.isBusy() && modules.EXT.getRealCurrentPosition() > 46) {
                         modules.INBRAT.setState(INBRAT.State.DOWN);
                         actionTimer.reset();
-                        setPathState(3);
+                         setPathState(3);
                     }
                 }
                 break;

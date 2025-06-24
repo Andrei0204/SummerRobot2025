@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -9,13 +10,13 @@ import org.firstinspires.ftc.teamcode.roboDrive.Wrappers.CoolServo;
 import org.firstinspires.ftc.teamcode.roboDrive.Wrappers.IRobotModule;
 import org.firstinspires.ftc.teamcode.roboDrive.Wrappers.IStateBasedModule;
 import org.firstinspires.ftc.teamcode.roboDrive.Wrappers.ServoFunny;
-
+@Config
 public class OUTBRAT implements IStateBasedModule, IRobotModule {
     public double rotpose;
     public static final double transferpos = 1 ;
-    public static final double specimenpos = 0.0;
+    public static final double specimenpos = 0;
     public static final double scorespecipos = 0.68;
-    public static final double samplepos = 0.36;
+    public static  double samplepos = 0.34 ;
     public static final double midpos = 0.93;
     public static double auto=0.28;
     public static double profileMaxVelocity = 16, profileAcceleration = 12, profileDeceleration = 5;
