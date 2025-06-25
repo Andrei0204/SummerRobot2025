@@ -27,9 +27,9 @@ public class Limelight {
     public static double disty = 0;
     public static double i = 1;
 
-    public static double camerangle = -33;
-    public static double h = 24;
-    public static double hsample =4 ;
+    public static double camerangle = 46.5;
+    public static double h = 21.5;
+    public static double hsample =0 ;
 
     public Limelight(HardwareMap hardwareMap) {
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
@@ -61,20 +61,20 @@ public class Limelight {
 
     private void detectie(String f) {
 
-            x = result.getTx();
-            y = -result.getTy();
-            distx =-((h-hsample)/Math.tan(Math.toRadians(y + camerangle)));
-            disty = distx*Math.tan(Math.toRadians( (x )));
+        x = -result.getTx();
+        y = -result.getTy();
+        distx =((h-hsample)*Math.tan(Math.toRadians(y + camerangle)));
+        disty = -distx*Math.tan(Math.toRadians( (x )));
 
     }
 
     public Pose2d getDEGREES(String f,double robotpos) {
         result = limelight.getLatestResult();
         if (result != null) {
-                        x = result.getTx();
-                        y = -result.getTy();
-                        distx =-((h-hsample)/Math.tan(Math.toRadians(y + camerangle)));
-                        disty = distx*Math.tan(Math.toRadians( (x )));
+            x = -result.getTx();
+            y = -result.getTy();
+            distx =((h-hsample)*Math.tan(Math.toRadians(y + camerangle)));
+            disty = distx*Math.tan(Math.toRadians( (x )));
                         return new Pose2d(y, x, 0);
                 }
         return new Pose2d(0, 0, 0);

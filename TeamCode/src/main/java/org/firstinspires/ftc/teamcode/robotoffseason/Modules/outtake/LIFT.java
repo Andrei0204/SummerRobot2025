@@ -17,7 +17,7 @@ public class LIFT implements IStateBasedModule, IRobotModule {
     public static double startpos = -0.1*TICKSCM;
     public static final double finalpos = 58 * TICKSCM;
     public static final double transferpos = 2 * TICKSCM;
-    public static final double scorespecipos = 23        * TICKSCM;
+    public static  double scorespecipos = 28     * TICKSCM;
     public static final double lowbasket =   16  * TICKSCM;
     public static double autopose = 0;
 

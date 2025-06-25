@@ -40,6 +40,7 @@ public class limelightautotest extends OpMode {
     private Follower follower;
     private Timer opmodeTimer;
     private ElapsedTime pathtimer, actionTimer;
+    double fmm=0;
     /**
                  * This is the variable where we store the state of our auto.
      * It is used by the pathUpdate method.
@@ -51,9 +52,10 @@ public class limelightautotest extends OpMode {
     private final Pose startPose = new Pose(0, 0, 0);
     private Path scorePreload;
 
-    public static double  d = 12;
+    public static double  d = 8;
     public static double  h = -1;
     public static double  k = 1;
+    public static double  pi =-1 ;
     private PathChain gotohuman2;
     private PathChain firstsample, secondsample, thirdsample, firstspeci, gotohuman, score;
     private PathChain grabPickup1, grabPickup2, grabPickup3, scorePickup1, scorePickup2, scorePickup3;
@@ -68,6 +70,9 @@ public class limelightautotest extends OpMode {
             case -1:
 
                 if (LL.getY() == 0 && follower.poseUpdater.getAcceleration().getMagnitude() <3 ) {
+                    limelight = new Limelight(hardwareMap);
+                    limelight.pipeline();
+                    limelight.limelight.start();
                     LL = new Pose2d(0, 0, 0);
                     LL = limelight.getdistanceVector(0, "red");
                 }
@@ -77,16 +82,18 @@ public class limelightautotest extends OpMode {
                     modules.INTUR.setangle(150);
                     modules.INROTATOR.setState(INROTATOR.State.FOURTH);
                     modules.EXT.setState(EXT.State.AUTO);
-                    scorePreload = new Path(new BezierLine(follower.getPose(), new Pose(follower.getPose().getX(),
-                            follower.getPose().getY() +k*(LL.getY()+h)/2.54) ));
-                    scorePreload.setConstantHeadingInterpolation(0);
-                    if((k*(LL.getY()+h)/2.54)>-2)
-                        d=d-2;
-                    else
-                        d=12;
-                    modules.EXT.setAuto((LL.getX()+d - 15) * EXT.TICKSCM);
+                    fmm =follower.getPose().getY() +k*LL.getY()/2.54+h;
+                    firstsample = follower.pathBuilder()
+                            .addPath(new BezierLine(follower.getPose(), new Pose(follower.getPose().getX(),
+                                    follower.getPose().getY() +k*LL.getY()/2.54+h)))
+                            .setConstantHeadingInterpolation(0)
+                            .setPathEndTimeoutConstraint(500)
+                            .build();
 
-                    follower.followPath(scorePreload, true);
+                    modules.EXT.setAuto((Math.abs(LL.getX())+d - 15) * EXT.TICKSCM);
+
+                    follower.followPath(firstsample, true);
+                    limelight.limelight.stop();
                     setPathState(-22);
                 }
 
@@ -94,28 +101,19 @@ public class limelightautotest extends OpMode {
             case-22:
                 if(modules.EXT.getTarget()/EXT.TICKSCM-3 <modules.EXT.getRealCurrentPosition()&&!follower.isBusy())
                 {
-                    modules.INBRAT.setState(INBRAT.State.DOWN);
                     setPathState(-33);
                 }
                 break;
             case-33:
+
                 if(pathtimer.milliseconds()>300)
+                    modules.INBRAT.setState(INBRAT.State.DOWN);
+                if(pathtimer.milliseconds()>500)
+
                     modules.INCLAW.setState(INCLAW.State.SECURE);
-                if(pathtimer.milliseconds()>600 )
+                if(pathtimer.milliseconds()>800 )
                     modules.INBRAT.setState(INBRAT.State.UP);
                 break;
-            case 0:
-                LL = new Pose2d(0, 0, 0);
-                if (gamepad1.a)
-                    LL = limelight.getdistanceVector(0, "red");
-                if (LL.getX() != 0 && LL.getY() != 0) {
-                    scorePreload = new Path(new BezierLine(follower.getPose(), new Pose(follower.getPose().getX() + LL.getX(), follower.getPose().getY() + LL.getY())));
-                    scorePreload.setConstantHeadingInterpolation(0);
-                    follower.followPath(scorePreload, true);
-                    setPathState(2);
-                }
-                break;
-
         }
     }
 
@@ -144,6 +142,7 @@ public class limelightautotest extends OpMode {
         telemetry.addData("y", follower.getPose().getY());
         telemetry.addData("heading", follower.getPose().getHeading());
         telemetry.addData("sex", LL);
+        telemetry.addData("sex", fmm);
         telemetry.update();
         modules.update();
     }
@@ -153,7 +152,7 @@ public class limelightautotest extends OpMode {
      **/
     @Override
     public void init() {
-        d=12;
+
         modules = new SaibaModules(hardwareMap, 1);
         modules.EXT.EXT.resetEncoder();
         modules.LIFT.LIFT1.resetEncoder();
@@ -162,8 +161,7 @@ public class limelightautotest extends OpMode {
         actionTimer = new ElapsedTime();
         opmodeTimer = new Timer();
         opmodeTimer.resetTimer();
-        limelight = new Limelight(hardwareMap);
-        limelight.pipeline();
+
 
         follower = new Follower(hardwareMap, FConstants.class, LConstants.class);
         follower.setStartingPose(startPose);

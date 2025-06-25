@@ -91,9 +91,9 @@ public class SensorLimelight3A extends LinearOpMode {
     public static double disty = 0;
     public static double d = 1;
 
-    public static double camerangle = -33;
-    public static double h = 26;
-    public static double hsample = 4;
+    public static double camerangle = 46.5;
+    public static double h = 21.5;
+    public static double hsample = 0;
 
     public static double gradevar = Math.PI / 6;
     boolean pressed = false;
@@ -147,9 +147,9 @@ public class SensorLimelight3A extends LinearOpMode {
     }
 
     public void detectie() {
-        x = result.getTx();
+        x = -result.getTx();
         y = -result.getTy();
-        distx =-((h-hsample)/Math.tan(Math.toRadians(y + camerangle)));
+        distx =((h-hsample)*Math.tan(Math.toRadians(y + camerangle)));
         disty = distx*Math.tan(Math.toRadians( (x )));
 
 

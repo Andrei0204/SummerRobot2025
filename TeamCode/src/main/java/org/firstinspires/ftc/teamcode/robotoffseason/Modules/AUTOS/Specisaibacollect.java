@@ -46,8 +46,8 @@ public class Specisaibacollect extends OpMode {
     private int pathState;
 
     double y = 0;
-    public static double d = 12;
-    public static double h = -1;
+    public static double d = 10;
+    public static double h = 1;
     public static double k = 1;
     Pose2d LL = new Pose2d(0, 0, 0);
     public static double cycles = 0;
@@ -81,7 +81,7 @@ public class Specisaibacollect extends OpMode {
     private final Pose S1C1 = new Pose(60, 36, 0);
     private final Pose S1C2 = new Pose(71, 18, 0);
     //    private final Pose S1FIN = new Pose(20 , 23, 0);
-    private final Pose S1FIN = new Pose(18, 23, 0);
+    private final Pose S1FIN = new Pose(17, 23, 0);
 
 
     private final Pose BS2C1 = new Pose(70, 25, 0);
@@ -89,17 +89,18 @@ public class Specisaibacollect extends OpMode {
 
 
     //    private final Pose S2FIN = new Pose(20, 14, 0);
-    private final Pose S2FIN = new Pose(18, 14, 0);
+    private final Pose S2FIN = new Pose(19, 14, 0);
 
-    private final Pose BS3C1 = new Pose(72, 17, 0);
-    private final Pose BS3FIN = new Pose(53, 8, 0);
-    private final Pose S3FIN = new Pose(11.7, 8, 0);
+//    private final Pose BS3C1 = new Pose(72, 17, 0);
+    private final Pose BS3C1 = new Pose(70, 15, 0);
+    private final Pose BS3FIN = new Pose(50, 7, 0);
+    private final Pose S3FIN = new Pose(11.7, 7, 0);
 
     private final Pose SP1C1 = new Pose(34, 64, 0);
     private final Pose SP1FIN = new Pose(39.5, 66, 0);
 
-    private final Pose COLLECT = new Pose(14, 33, 0);
-    private final Pose COLLECTWALL = new Pose(13.3, 33.3, 0);
+    private final Pose COLLECT = new Pose(15, 33, 0);
+    private final Pose COLLECTWALL = new Pose(13.6, 33.3, 0);
 
     private final Pose COLLECTC1 = new Pose(31, 49, 0);
     private final Pose COLLECTC2 = new Pose(31, 33, 0);
@@ -259,9 +260,9 @@ public class Specisaibacollect extends OpMode {
                 break;
             case -1:
 
-                if (LL.getY() == 0 && follower.poseUpdater.getAcceleration().getMagnitude() <2.5 && pathtimer.milliseconds()>150) {
+                if (LL.getY() == 0 && follower.poseUpdater.getAcceleration().getMagnitude() <2 && pathtimer.milliseconds()>150) {
                     LL = new Pose2d(0, 0, 0);
-                    LL = limelight.getdistanceVector(0, "red");
+                    LL = limelight.getdistanceVector(-follower.getPose().getHeading(), "red");
 
                 }
                 if (LL.getY() != 0) {
@@ -270,13 +271,21 @@ public class Specisaibacollect extends OpMode {
                     modules.INTUR.setangle(150);
                     modules.INROTATOR.setState(INROTATOR.State.FOURTH);
                     modules.EXT.setState(EXT.State.AUTO);
-                    collectsample = new Path(new BezierLine(follower.getPose(), new Pose(follower.getPose().getX(),
+                    if ((k * (LL.getY() ) / 2.54) > 1) {
+                        h=-1;
+                        if ((k * (LL.getY() ) / 2.54) > 4) {
+                                h=-4;
+                        }
+                        }
+
+                    else {
+                        h = 1;
+
+                    }
+                        collectsample = new Path(new BezierLine(follower.getPose(), new Pose(follower.getPose().getX(),
                             follower.getPose().getY() + k * (LL.getY() + h) / 2.54)));
-                    collectsample.setConstantHeadingInterpolation(0);
-                    if ((k * (LL.getY() + h) / 2.54) > -2)
-                        d = d - 2;
-                    else
-                        d = 12;
+                    collectsample.setConstantHeadingInterpolation(follower.getPose().getHeading());
+
                     modules.EXT.setAuto((LL.getX() + d - 15) * EXT.TICKSCM);
 
                     follower.followPath(collectsample, true);
@@ -512,7 +521,7 @@ public class Specisaibacollect extends OpMode {
      **/
     @Override
     public void init() {
-        d = 13;
+        h=1;
         modules = new SaibaModules(hardwareMap, 1);
         modules.EXT.EXT.resetEncoder();
         modules.LIFT.LIFT1.resetEncoder();
