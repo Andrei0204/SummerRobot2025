@@ -89,6 +89,7 @@ public class SensorLimelight3A extends LinearOpMode {
     double y = 0;
     public static double distx = 0;
     public static double disty = 0;
+    public static double disty2 = 0;
     public static double d = 1;
 
     public static double camerangle = 46.5;
@@ -139,6 +140,7 @@ public class SensorLimelight3A extends LinearOpMode {
             telemetryA = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
             telemetryA.addLine("distx " + distx);
             telemetryA.addLine("disty " + disty);
+            telemetryA.addLine("disty2    " + disty2);
             telemetryA.addLine("x" + y);
             telemetryA.addLine("y " + x);
             telemetryA.update();
@@ -147,10 +149,11 @@ public class SensorLimelight3A extends LinearOpMode {
     }
 
     public void detectie() {
-        x = -result.getTx();
+        x = result.getTx();
         y = -result.getTy();
         distx =((h-hsample)*Math.tan(Math.toRadians(y + camerangle)));
         disty = distx*Math.tan(Math.toRadians( (x )));
+        disty2 = (h/Math.cos(Math.toRadians(camerangle+y)))*Math.tan(Math.toRadians(x));
 
 
         return;

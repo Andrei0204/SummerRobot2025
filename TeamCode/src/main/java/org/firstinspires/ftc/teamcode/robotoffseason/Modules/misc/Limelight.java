@@ -61,20 +61,19 @@ public class Limelight {
 
     private void detectie(String f) {
 
-        x = -result.getTx();
+        x = result.getTx();
         y = -result.getTy();
         distx =((h-hsample)*Math.tan(Math.toRadians(y + camerangle)));
-        disty = -distx*Math.tan(Math.toRadians( (x )));
-
+        disty = (h/Math.cos(Math.toRadians(camerangle+y)))*Math.tan(Math.toRadians(x));
     }
 
     public Pose2d getDEGREES(String f,double robotpos) {
         result = limelight.getLatestResult();
         if (result != null) {
-            x = -result.getTx();
+            x = result.getTx();
             y = -result.getTy();
             distx =((h-hsample)*Math.tan(Math.toRadians(y + camerangle)));
-            disty = distx*Math.tan(Math.toRadians( (x )));
+            disty = (h/Math.cos(Math.toRadians(camerangle+y)))*Math.tan(Math.toRadians(x));
                         return new Pose2d(y, x, 0);
                 }
         return new Pose2d(0, 0, 0);

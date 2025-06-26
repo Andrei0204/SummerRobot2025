@@ -53,9 +53,9 @@ public class limelightautotest extends OpMode {
     private Path scorePreload;
 
     public static double  d = 8;
-    public static double  h = -1;
+    public static double  h = 0;
     public static double  k = 1;
-    public static double  pi =-1 ;
+    public static double  pi =0 ;
     private PathChain gotohuman2;
     private PathChain firstsample, secondsample, thirdsample, firstspeci, gotohuman, score;
     private PathChain grabPickup1, grabPickup2, grabPickup3, scorePickup1, scorePickup2, scorePickup3;
@@ -86,12 +86,9 @@ public class limelightautotest extends OpMode {
                     firstsample = follower.pathBuilder()
                             .addPath(new BezierLine(follower.getPose(), new Pose(follower.getPose().getX(),
                                     follower.getPose().getY() +k*LL.getY()/2.54+h)))
-                            .setConstantHeadingInterpolation(0)
-                            .setPathEndTimeoutConstraint(500)
-                            .build();
-
+                            .setConstantHeadingInterpolation(0).build();
                     modules.EXT.setAuto((Math.abs(LL.getX())+d - 15) * EXT.TICKSCM);
-
+                    pi=follower.getPose().getY() +k*LL.getY()/2.54+h;
                     follower.followPath(firstsample, true);
                     limelight.limelight.stop();
                     setPathState(-22);
@@ -101,8 +98,13 @@ public class limelightautotest extends OpMode {
             case-22:
                 if(modules.EXT.getTarget()/EXT.TICKSCM-3 <modules.EXT.getRealCurrentPosition()&&!follower.isBusy())
                 {
-                    setPathState(-33);
+                    follower.holdPoint(new Point(follower.getPose().getX(),pi),0);
+                    setPathState(-44);
                 }
+                break;
+            case -44:
+                if(pathtimer.milliseconds()>400)
+                    setPathState(-33);
                 break;
             case-33:
 
