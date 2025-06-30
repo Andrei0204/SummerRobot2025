@@ -45,10 +45,11 @@ public class speicolectgnewcamera extends OpMode {
     private int pathState;
 
 
-    public static double  d = 8;
+    public static double  d = 6;
     public static double  h = 0;
     public static double  k = 1;
     public static double  pi =0 ;
+    public static double  POS =0 ;
     Pose2d LL = new Pose2d(0, 0, 0);
     public static double cycles = 0;
     Limelight limelight = null;
@@ -97,14 +98,13 @@ public class speicolectgnewcamera extends OpMode {
     private final Pose S3FIN = new Pose(11.5, 8, 0);
 
     private final Pose SP1C1 = new Pose(34, 64, 0);
-    private final Pose SP1FIN = new Pose(41, 65, 0);
+    private final Pose SP1FIN = new Pose(39, 65, 0);
 
-    private final Pose COLLECT = new Pose(14, 33, 0);
-    private final Pose COLLECTWALL = new Pose(14  , 33.3, 0);
+    private final Pose COLLECT = new Pose(17, 33, 0);
+    private final Pose COLLECTWALL = new Pose(13.2  , 33.3, 0);
 
     private final Pose COLLECTC1 = new Pose(31, 49, 0);
-    private final Pose COLLECTC2 = new Pose(19, 36, 0);
-//    private final Pose COLLECTC2 = new Pose(31, 33, 0);
+    private final Pose COLLECTC2 = new Pose(31, 33, 0);
 //    private final Pose COLLECTC1 = new Pose(37 , 47, 0);
 //    private final Pose COLLECTC2 = new Pose(44 , 33, 0);
 
@@ -179,31 +179,30 @@ public class speicolectgnewcamera extends OpMode {
                 .addPath(new BezierCurve(new Point(S1FIN), new Point(BS2C1), new Point(BS2FIN)))
                 .setConstantHeadingInterpolation(0)
                 .addPath(new BezierCurve(new Point(BS2FIN), new Point(S2FIN), new Point(S2FIN)))
-                .setZeroPowerAccelerationMultiplier(6)
-
                 .setConstantHeadingInterpolation(0)
 
                 .build();
         thirdsample = follower.pathBuilder()
                 .addPath(new BezierCurve(new Point(S2FIN), new Point(BS3C1), new Point(BS3FIN)))
                 .setConstantHeadingInterpolation(0)
-                .addPath(new BezierLine(new Point(BS3FIN), new Point(S3FIN)))
-                .setZeroPowerAccelerationMultiplier(4.5)
-                .setConstantHeadingInterpolation(0)
+                .setZeroPowerAccelerationMultiplier(6)
 
+                .addPath(new BezierLine(new Point(BS3FIN), new Point(S3FIN)))
+
+                .setConstantHeadingInterpolation(0)
                 .build();
         firstspeci = follower.pathBuilder()
                 .addPath(new BezierCurve(new Point(S3FIN), new Point(SP1C1), new Point(SP1FIN)))
-                .setZeroPowerAccelerationMultiplier(5)
 
                 .setConstantHeadingInterpolation(0)
                 .build();
         gotohuman = follower.pathBuilder()
                 .addPath(new BezierCurve(new Point(SP1FIN), new Point(COLLECTC1), new Point(COLLECTC2), new Point(COLLECT)))
                 .setConstantHeadingInterpolation(0)
-//                .addPath(new BezierLine(COLLECT, COLLECTWALL))
-//                .setConstantHeadingInterpolation(0)
+                .addPath(new BezierLine(SP1FIN, COLLECTWALL))
+                .setConstantHeadingInterpolation(0)
                 .build();
+
         score = follower.pathBuilder()
                 .addPath(new BezierLine(new Point(COLLECTWALL), new Point(SP1FIN)))
                 .setConstantHeadingInterpolation(0)
@@ -265,7 +264,7 @@ public class speicolectgnewcamera extends OpMode {
                 break;
             case -1:
 
-                if (LL.getY() == 0 && follower.poseUpdater.getAcceleration().getMagnitude() <4 && pathtimer.milliseconds()>100) {
+                if (LL.getY() == 0 && follower.poseUpdater.getVelocity().getMagnitude()<2) {
                     LL = new Pose2d(0, 0, 0);
                     LL = limelight.getdistanceVector(0, "red");
 
@@ -318,9 +317,6 @@ public class speicolectgnewcamera extends OpMode {
             case -3:
                 if (pathtimer.milliseconds() > 750){
                     modules.INTUR.setState(INTUR.State.THROW);
-//                if (!follower.isBusy()) {
-//                    modules.INTUR.setState(INTUR.State.THROW);
-//                    follower.followPath(gotohuman2, true);
                     setPathState(-10);}
 //                }
                 break;
@@ -358,7 +354,7 @@ public class speicolectgnewcamera extends OpMode {
                     modules.LINKEAGE.setState(LINKEAGE.State.OPEN);
 
                 }
-                if (!follower.isBusy()) {
+                if (!follower.isBusy() ||(follower.getPose().getX()>40 && modules.LINKEAGE.getState()== LINKEAGE.State.OPEN && cycles!=1)) {
                     modules.LINKEAGE.setState(LINKEAGE.State.CLOSED);
 
                     modules.OUTCLAW.setState(OUTCLAW.State.RELEASE);
@@ -435,9 +431,8 @@ public class speicolectgnewcamera extends OpMode {
                     modules.LINKEAGE.setState(LINKEAGE.State.OPEN);
 
                 }
-                if (!follower.isBusy()) {
+                if (!follower.isBusy()||(follower.getPose().getX()>40 && modules.LINKEAGE.getState()== LINKEAGE.State.OPEN && cycles!=1)) {
                     modules.LINKEAGE.setState(LINKEAGE.State.CLOSED);
-
                     modules.OUTCLAW.setState(OUTCLAW.State.RELEASE);
                     modules.LIFT.setState(LIFT.State.START);
                     modules.OUTROTATIE.setState(OUTROTATIE.State.SPECIMEN);
@@ -450,7 +445,6 @@ public class speicolectgnewcamera extends OpMode {
                         cycles++;
                     } else {
                         follower.followPath(gotohuman, true);
-
                         setPathState(-7);
                     }
                 }

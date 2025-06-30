@@ -27,7 +27,7 @@ public class Limelight {
     public static double disty = 0;
     public static double i = 1;
 
-    public static double camerangle = 46.5;
+    public static double camerangle = 45;
     public static double h = 21.5;
     public static double hsample =0 ;
 

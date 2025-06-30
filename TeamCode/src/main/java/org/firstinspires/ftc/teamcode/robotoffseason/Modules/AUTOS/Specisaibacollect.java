@@ -94,7 +94,7 @@ public class Specisaibacollect extends OpMode {
 //    private final Pose BS3C1 = new Pose(72, 17, 0);
     private final Pose BS3C1 = new Pose(70, 15, 0);
     private final Pose BS3FIN = new Pose(50, 7, 0);
-    private final Pose S3FIN = new Pose(11.7, 7, 0);
+    private final Pose S3FIN = new Pose(12.3, 7, 0);
 
     private final Pose SP1C1 = new Pose(34, 64, 0);
     private final Pose SP1FIN = new Pose(39.5, 66, 0);
