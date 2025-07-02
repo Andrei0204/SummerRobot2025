@@ -25,7 +25,7 @@ public class LIFT implements IStateBasedModule, IRobotModule {
 
     public static double currentPosition = startpos;
     public static double kP = 0.00013, kI = 0.19, kD = 0.000002,f=-0; //TODO Valori PID!!!!
-    public static double kPjos = 0.00014, kIjos = 0.1, kDjos = 0.000004; //TODO Valori PID!!!!
+    public static double kPjos = 0.00009, kIjos = 0.1, kDjos = 0.000006; //TODO Valori PID!!!!
 
     private static boolean ENABLED = true;
     public CoolMotor LIFT1 = null;

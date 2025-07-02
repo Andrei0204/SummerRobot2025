@@ -43,6 +43,7 @@ public class Pepozitii extends OpMode {
      * <p>
      * It is used by the pathUpdate method.
      */
+    public static double sex=0.85;
     private int pathState;
     public StickyGamepad stickyGamepad1;
     Pose2d pozitie1 = new Pose2d(0, 0);
@@ -70,7 +71,7 @@ public class Pepozitii extends OpMode {
     /**
      * Scoring Pose of our robot. It is facing the submersible at a -45 degree (315 degree) angle.
      */
-    private final Pose scorePose = new Pose(38.8, 69, 0);
+    private final Pose scorePose = new Pose(39.3, 69, 0);
 
 
     private final Pose BS1C1 = new Pose(21, 42, 0);
@@ -93,13 +94,13 @@ public class Pepozitii extends OpMode {
     //    private final Pose BS3C1 = new Pose(72, 17, 0);
     private final Pose BS3C1 = new Pose(70, 15, 0);
     private final Pose BS3FIN = new Pose(50, 8, 0);
-    private final Pose S3FIN = new Pose(13, 8, 0);
+    private final Pose S3FIN = new Pose(12.4, 7.2, 0);
 
     private final Pose SP1C1 = new Pose(34, 64, 0);
     private final Pose SP1FIN = new Pose(39, 65, 0);
 
     private final Pose COLLECT = new Pose(15, 33, 0);
-    private final Pose COLLECTWALL = new Pose(12.7, 33.3, 0);
+    private final Pose COLLECTWALL = new Pose(13, 37, 0);
 
     private final Pose COLLECTC1 = new Pose(31, 49, 0);
     private final Pose COLLECTC2 = new Pose(31, 33, 0);
@@ -196,8 +197,8 @@ public class Pepozitii extends OpMode {
                         new Point(18.291, 13.801, Point.CARTESIAN),
                         new Point(62.855, 21.617, Point.CARTESIAN),
                         new Point(61.691, 1.497, Point.CARTESIAN),
-                        new Point(51.381, 7.150, Point.CARTESIAN),
-                        new Point(13.136, 5.654, Point.CARTESIAN)
+                        new Point(52.379, 7.2, Point.CARTESIAN),
+                        new Point(S3FIN)
 
                 ))
                 .setConstantHeadingInterpolation(0)
@@ -209,11 +210,10 @@ public class Pepozitii extends OpMode {
                 .setConstantHeadingInterpolation(0)
                 .build();
         gotohuman = follower.pathBuilder()
-                .addPath(new BezierCurve(new Point(SP1FIN), new Point(COLLECTC1), new Point(COLLECTC2), new Point(COLLECT)))
+                .addPath(new BezierLine(            new Point(39.000, 65.000, Point.CARTESIAN),
+                          new Point( COLLECTWALL)))
                 .setConstantHeadingInterpolation(0)
-                .addPath(new BezierLine(COLLECT, COLLECTWALL))
-                .setConstantHeadingInterpolation(0)
-                .setPathEndTimeoutConstraint(0)
+                .setGlobalDeceleration(sex)
                 .build();
 
         score = follower.pathBuilder()
@@ -224,6 +224,9 @@ public class Pepozitii extends OpMode {
                 .addPath(new BezierLine(new Point(COLLECTWALL), new Point(scorePose)))
                 .setConstantHeadingInterpolation(0)
                 .build();
+        collectsample =new Path(new BezierCurve(new Point(SP1FIN), new Point(COLLECTC1), new Point(COLLECTC2), new Point(COLLECTWALL)));
+        collectsample.setConstantHeadingInterpolation(0);
+
 //        gotohuman2 = follower.pathBuilder()
 ////            .addPath(new BezierLine(COLLECT,COLLECTWALL))
 ////                .setConstantHeadingInterpolation(0)
@@ -306,7 +309,8 @@ public class Pepozitii extends OpMode {
 
                     modules.INROTATOR.setState(INROTATOR.State.SECOND);
                     follower.followPath(gotohuman, true);
-                    follower.setMaxPower(0.8);
+//                    follower.followPath(collectsample, true);
+                    follower.setMaxPower(1);
                     setPathState(-3);
                 }
                 break;
@@ -413,7 +417,8 @@ public class Pepozitii extends OpMode {
                     modules.OUTROTATIE.setState(OUTROTATIE.State.SCORESPECI);
                     scorePose.setY(scorePose.getY() - pozitie1.getY() + pozitie2.getY());
                     firstspeci = follower.pathBuilder()
-                            .addPath(new BezierCurve(new Point(S3FIN), new Point(SP1C1), new Point(scorePose)))
+                            .addPath(new BezierLine(new Point(S3FIN), new Point(scorePose)))
+//                            .addPath(new BezierCurve(new Point(S3FIN), new Point(SP1C1), new Point(scorePose)))
                             .setConstantHeadingInterpolation(0)
                             .build();
                     follower.followPath(firstspeci, true);
@@ -442,8 +447,9 @@ public class Pepozitii extends OpMode {
                         setPathState(-1);
                         cycles++;
                     } else {
+//                        follower.followPath(collectsample, true);
                         follower.followPath(gotohuman, true);
-                        follower.setMaxPower(0.8);
+                        follower.setMaxPower(1);
                         setPathState(-7);
                     }
                 }
