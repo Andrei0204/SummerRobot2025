@@ -12,8 +12,8 @@ public class WEELIE implements IStateBasedModule, IRobotModule {
     public double posst;
     public final double RIDICATDR = 0.4;
     public final double RIDICATST = 0.6,
-            NERIDICATDR = 0.66,
-            NERIDICATST = 0.33;
+            NERIDICATDR = 0.7,
+            NERIDICATST = 0.28;
 
                 //0.72 pt prindere
 

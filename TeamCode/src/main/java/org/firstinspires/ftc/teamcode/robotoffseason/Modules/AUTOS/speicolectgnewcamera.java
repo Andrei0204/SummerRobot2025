@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.robotoffseason.Modules.AUTOS;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.pedropathing.follower.Follower;
+import com.pedropathing.follower.FollowerConstants;
 import com.pedropathing.localization.Pose;
 import com.pedropathing.pathgen.BezierCurve;
 import com.pedropathing.pathgen.BezierLine;
@@ -95,13 +96,13 @@ public class speicolectgnewcamera extends OpMode {
 //    private final Pose BS3C1 = new Pose(72, 17, 0);
     private final Pose BS3C1 = new Pose(70, 15, 0);
     private final Pose BS3FIN = new Pose(50, 8, 0);
-    private final Pose S3FIN = new Pose(11.5, 8, 0);
+    private final Pose S3FIN = new Pose(13, 8, 0);
 
     private final Pose SP1C1 = new Pose(34, 64, 0);
     private final Pose SP1FIN = new Pose(39, 65, 0);
 
     private final Pose COLLECT = new Pose(17, 33, 0);
-    private final Pose COLLECTWALL = new Pose(13.2  , 33.3, 0);
+    private final Pose COLLECTWALL = new Pose(12  , 33.3, 0);
 
     private final Pose COLLECTC1 = new Pose(31, 49, 0);
     private final Pose COLLECTC2 = new Pose(31, 33, 0);
@@ -166,31 +167,64 @@ public class speicolectgnewcamera extends OpMode {
         /* Here is an example for Constant Interpolation
         scorePreload.setConstantInterpolation(startPose.getHeading()); */
 
-        /* This is our grabPickup1 PathChain. We are using a single path with a BezierLine, which is a straight line. */
+//        /* This is our grabPickup1 PathChain. We are using a single path with a BezierLine, which is a straight line. */
+//        firstsample = follower.pathBuilder()
+//                .addPath(new BezierCurve(new Point(scorePose), new Point(BS1C1), new Point(BS1FIN)))
+//                .setConstantHeadingInterpolation(0)
+//                .addPath(new BezierCurve(new Point(BS1FIN), new Point(S1C1), new Point(S1C2), new Point(S1FIN)))
+//                .setConstantHeadingInterpolation(0)
+//                .build();
+//
+//
+//        secondsample = follower.pathBuilder()
+//                .addPath(new BezierCurve(new Point(S1FIN), new Point(BS2C1), new Point(BS2FIN)))
+//                .setConstantHeadingInterpolation(0)
+//                .addPath(new BezierCurve(new Point(BS2FIN), new Point(S2FIN), new Point(S2FIN)))
+//                .setConstantHeadingInterpolation(0)
+//
+//                .build();
+//        thirdsample = follower.pathBuilder()
+//                .addPath(new BezierCurve(new Point(S2FIN), new Point(BS3C1), new Point(BS3FIN)))
+//                .setConstantHeadingInterpolation(0)
+//                .setZeroPowerAccelerationMultiplier(6)
+//
+//                .addPath(new BezierLine(new Point(BS3FIN), new Point(S3FIN)))
+//
+//                .setConstantHeadingInterpolation(0)
+//                .build();
         firstsample = follower.pathBuilder()
-                .addPath(new BezierCurve(new Point(scorePose), new Point(BS1C1), new Point(BS1FIN)))
-                .setConstantHeadingInterpolation(0)
-                .addPath(new BezierCurve(new Point(BS1FIN), new Point(S1C1), new Point(S1C2), new Point(S1FIN)))
+                .addPath(new BezierCurve(
+                        new Point(39.000, 65.000, Point.CARTESIAN),
+                        new Point(13.303, 12.139, Point.CARTESIAN),
+                        new Point(125.376, 38.744, Point.CARTESIAN),
+                        new Point(10.808, 13.968, Point.CARTESIAN),
+                        new Point(99.769, 23.945, Point.CARTESIAN),
+                        new Point(17.626, 22.781, Point.CARTESIAN)
+                ))
                 .setConstantHeadingInterpolation(0)
                 .build();
-
-
         secondsample = follower.pathBuilder()
-                .addPath(new BezierCurve(new Point(S1FIN), new Point(BS2C1), new Point(BS2FIN)))
+                .addPath(new BezierCurve(
+                        new Point(17.626, 22.781, Point.CARTESIAN),
+                        new Point(75.326, 28.434, Point.CARTESIAN),
+                        new Point(52.878, 4.490, Point.CARTESIAN),
+                        new Point(54.873, 13.801, Point.CARTESIAN),
+                        new Point(18.291, 13.801, Point.CARTESIAN)
+                ))
                 .setConstantHeadingInterpolation(0)
-                .addPath(new BezierCurve(new Point(BS2FIN), new Point(S2FIN), new Point(S2FIN)))
-                .setConstantHeadingInterpolation(0)
-
                 .build();
         thirdsample = follower.pathBuilder()
-                .addPath(new BezierCurve(new Point(S2FIN), new Point(BS3C1), new Point(BS3FIN)))
-                .setConstantHeadingInterpolation(0)
-                .setZeroPowerAccelerationMultiplier(6)
+                .addPath(new BezierCurve(
+                        new Point(18.291, 13.801, Point.CARTESIAN),
+                        new Point(60.527, 17.958, Point.CARTESIAN),
+                        new Point(66.679, 0.333, Point.CARTESIAN),
+                        new Point(51.215, 3.658, Point.CARTESIAN),
+                        new Point(10.975, 6.000, Point.CARTESIAN)
 
-                .addPath(new BezierLine(new Point(BS3FIN), new Point(S3FIN)))
-
+                ))
                 .setConstantHeadingInterpolation(0)
                 .build();
+
         firstspeci = follower.pathBuilder()
                 .addPath(new BezierCurve(new Point(S3FIN), new Point(SP1C1), new Point(SP1FIN)))
 
@@ -199,8 +233,9 @@ public class speicolectgnewcamera extends OpMode {
         gotohuman = follower.pathBuilder()
                 .addPath(new BezierCurve(new Point(SP1FIN), new Point(COLLECTC1), new Point(COLLECTC2), new Point(COLLECT)))
                 .setConstantHeadingInterpolation(0)
-                .addPath(new BezierLine(SP1FIN, COLLECTWALL))
+                .addPath(new BezierLine(COLLECT, COLLECTWALL))
                 .setConstantHeadingInterpolation(0)
+                .setPathEndTimeoutConstraint(0)
                 .build();
 
         score = follower.pathBuilder()
@@ -264,7 +299,7 @@ public class speicolectgnewcamera extends OpMode {
                 break;
             case -1:
 
-                if (LL.getY() == 0 && follower.poseUpdater.getVelocity().getMagnitude()<2) {
+                if (LL.getY() == 0 ) {
                     LL = new Pose2d(0, 0, 0);
                     LL = limelight.getdistanceVector(0, "red");
 
@@ -311,6 +346,7 @@ public class speicolectgnewcamera extends OpMode {
 
                     modules.INROTATOR.setState(INROTATOR.State.SECOND);
                     follower.followPath(gotohuman, true);
+                    follower.setMaxPower(0.8);
                     setPathState(-3);
                 }
                 break;
@@ -323,6 +359,7 @@ public class speicolectgnewcamera extends OpMode {
             case -10:
 
                 if (!follower.isBusy()) {
+                    follower.setMaxPower(1);
                     if (modules.INTUR.getState() == INTUR.State.THROW) {
                         actionTimer.reset();
                         modules.INTUR.setState(INTUR.State.DIAG);
@@ -332,11 +369,7 @@ public class speicolectgnewcamera extends OpMode {
                             modules.INCLAW.setState(INCLAW.State.RELEASE);
                         }
                         if (actionTimer.milliseconds() > 250) {
-                            if (cycles == 1) {
-                                follower.followPath(score);
-//                                follower.followPath(scorefst);
-                            } else
-                                follower.followPath(score);
+                            follower.followPath(score);
                             modules.INCLAW.setState(INCLAW.State.RELEASE);
                             modules.LIFT.setState(LIFT.State.SCORESPECI);
                             modules.OUTROTATIE.setState(OUTROTATIE.State.SCORESPECI);
@@ -445,19 +478,14 @@ public class speicolectgnewcamera extends OpMode {
                         cycles++;
                     } else {
                         follower.followPath(gotohuman, true);
+                        follower.setMaxPower(0.8);
                         setPathState(-7);
                     }
                 }
                 break;
-            case 7:
-                if (!follower.isBusy()) {
-                    follower.followPath(gotohuman2, true);
-                    setPathState(-7);
-                    actionTimer.reset();
-                }
-                break;
             case -7:
                 if (!follower.isBusy()) {
+                    follower.setMaxPower(1);
                     setPathState(8);
                 }
                 break;
