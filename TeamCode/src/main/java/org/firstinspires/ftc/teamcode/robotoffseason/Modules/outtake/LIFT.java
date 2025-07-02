@@ -16,7 +16,7 @@ public class LIFT implements IStateBasedModule, IRobotModule {
     public static double TICKSCM = 724.35;    //test
     public static double startpos = -0.1*TICKSCM;
     public static final double finalpos = 58 * TICKSCM;
-    public static final double transferpos = 2 * TICKSCM;
+    public static final double transferpos = 2* TICKSCM;
     public static  double scorespecipos = 30     * TICKSCM;
     public static final double lowbasket =   16  * TICKSCM;
     public static double autopose = 0;
@@ -25,7 +25,7 @@ public class LIFT implements IStateBasedModule, IRobotModule {
 
     public static double currentPosition = startpos;
     public static double kP = 0.00013, kI = 0.19, kD = 0.000002,f=-0; //TODO Valori PID!!!!
-    public static double kPjos = 0.00009, kIjos = 0.1, kDjos = 0.000006; //TODO Valori PID!!!!
+    public static double kPjos = 0.00012, kIjos = 0.1, kDjos = 0.00001; //TODO Valori PID!!!!
 
     private static boolean ENABLED = true;
     public CoolMotor LIFT1 = null;

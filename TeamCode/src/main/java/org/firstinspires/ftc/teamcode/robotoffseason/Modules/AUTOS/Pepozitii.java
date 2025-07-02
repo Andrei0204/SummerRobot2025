@@ -71,7 +71,7 @@ public class Pepozitii extends OpMode {
     /**
      * Scoring Pose of our robot. It is facing the submersible at a -45 degree (315 degree) angle.
      */
-    private final Pose scorePose = new Pose(39.3, 69, 0);
+    private final Pose scorePose = new Pose(40, 69, 0);
 
 
     private final Pose BS1C1 = new Pose(21, 42, 0);
@@ -100,7 +100,7 @@ public class Pepozitii extends OpMode {
     private final Pose SP1FIN = new Pose(39, 65, 0);
 
     private final Pose COLLECT = new Pose(15, 33, 0);
-    private final Pose COLLECTWALL = new Pose(13, 37, 0);
+    private final Pose COLLECTWALL = new Pose(13.5, 39, 0);
 
     private final Pose COLLECTC1 = new Pose(31, 49, 0);
     private final Pose COLLECTC2 = new Pose(31, 33, 0);
@@ -248,14 +248,18 @@ public class Pepozitii extends OpMode {
             case 0:
 
                 cycles = 1;
-
+                modules.INBRAT.setState(INBRAT.State.SEMIDOWN);
+                modules.INTUR.setState(INTUR.State.AUTOSPECI);
+                modules.INTUR.setangle(150);
+                modules.INROTATOR.setState(INROTATOR.State.FOURTH);
 
                 follower.followPath(scorePreload, true);
                 modules.LIFT.setState(LIFT.State.SCORESPECI);
                 modules.OUTROTATIE.setState(OUTROTATIE.State.SCORESPECI);
                 modules.OUTBRAT.setState(OUTBRAT.State.SCORESPECI);
                 modules.INCLAW.setState(INCLAW.State.RELEASE);
-                modules.INROTATOR.setState(INROTATOR.State.THIRD);
+                modules.EXT.setState(EXT.State.AUTO);
+                modules.EXT.setAuto((12 + pozitie1.getX() * 2.54) * EXT.TICKSCM);
 
                 setPathState(1);
                 break;
@@ -263,7 +267,6 @@ public class Pepozitii extends OpMode {
 
                 if (modules.LIFT.getRealCurrentPosition() > 5) {
                     modules.LINKEAGE.setState(LINKEAGE.State.OPEN);
-                    modules.EXT.setState(EXT.State.ZERO);
                 }
                 if (!follower.isBusy()) {
                     modules.OUTCLAW.setState(OUTCLAW.State.RELEASE);
@@ -284,9 +287,9 @@ public class Pepozitii extends OpMode {
                     modules.INROTATOR.setState(INROTATOR.State.FOURTH);
                     modules.EXT.setState(EXT.State.AUTO);
                     if (cycles == 1)
-                        modules.EXT.setAuto((15 + pozitie1.getX() * 2.54) * EXT.TICKSCM);
+                        modules.EXT.setAuto((12 + pozitie1.getX() * 2.54) * EXT.TICKSCM);
                     else
-                        modules.EXT.setAuto((15 + pozitie2.getX() * 2.54) * EXT.TICKSCM);
+                        modules.EXT.setAuto((12 + pozitie2.getX() * 2.54) * EXT.TICKSCM);
 
                     setPathState(-44);
                 }
