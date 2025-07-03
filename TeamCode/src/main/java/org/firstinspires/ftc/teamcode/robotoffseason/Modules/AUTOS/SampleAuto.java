@@ -35,7 +35,7 @@ import pedroPathing.constants.LConstants;
 
 @Config
 @Autonomous(name = "SampleAuto", group = "11Saiba")
-public class SampleAuto extends OpMode {
+public class   SampleAuto extends OpMode {
     private SaibaModules modules = null;
     private Follower follower;
     private Timer opmodeTimer;

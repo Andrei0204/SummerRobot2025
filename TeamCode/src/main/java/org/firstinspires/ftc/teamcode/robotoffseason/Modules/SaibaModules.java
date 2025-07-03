@@ -16,6 +16,7 @@ import org.firstinspires.ftc.teamcode.robotoffseason.Modules.intake.WEELIE;
 import org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.LIFT;
 import org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.LINKEAGE;
 import org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.OUTBRAT;
+import org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.OUTBRAT2;
 import org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.OUTCLAW;
 import org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.OUTROTATIE;
 import org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.PTO;
@@ -94,8 +95,7 @@ public class SaibaModules implements IRobotModule {
         telemetry.addData("extstate",WEELIE.getState());
         telemetry.addData("tare", OUTROTATIE.getState());
         telemetry.addData("tare", OUTROTATIE.rotatie.getPosition());
-        telemetry.addData("dr", OUTBRAT.outdr.getPosition());
-        telemetry.addData("st", OUTBRAT.outst.getPosition());
+
 
     }
 

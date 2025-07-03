@@ -17,13 +17,14 @@ public class Servotest extends LinearOpMode {
     public static double pos2 =0;
     @Override
     public void runOpMode() throws InterruptedException {
-        test =hardwareMap.get(ServoImplEx.class,"inclaw");
- //       test1 =hardwareMap.get(ServoImplEx.class,"outst");
+        test =hardwareMap.get(ServoImplEx.class,"outdr");
+        test1 =hardwareMap.get(ServoImplEx.class,"outst");
 //        test1.setPwmRange(new PwmControl.PwmRange(500, 2500));
 //        test.setPwmRange(new PwmControl.PwmRange(500, 2500));
         waitForStart();
         while (opModeIsActive()) { // singurul while
                   test.setPosition(pos);
+                  test1.setPosition(pos);
                   //test1.setPosition(pos);
         }
 

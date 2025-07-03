@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 
+import org.checkerframework.checker.units.qual.C;
 import org.firstinspires.ftc.teamcode.roboDrive.Wrappers.CoolServo;
 import org.firstinspires.ftc.teamcode.roboDrive.Wrappers.IRobotModule;
 import org.firstinspires.ftc.teamcode.roboDrive.Wrappers.IStateBasedModule;
@@ -16,18 +17,19 @@ public class OUTBRAT implements IStateBasedModule, IRobotModule {
     public static final double transferpos = 1 ;
     public static final double specimenpos = 0;
     public static final double scorespecipos = 0.68;
-    public static  double samplepos = 0.34 ;
+    public static  double samplepos = 0.3 ;
     public static final double midpos = 0.93;
     public static double auto=0.28;
-    public static double profileMaxVelocity = 16, profileAcceleration = 12, profileDeceleration = 5;
+    public static double profileMaxVelocity = 16, profileAcceleration = 12, profileDeceleration = 9;
 
-    public ServoImplEx outdr  ;
-    public ServoImplEx outst;
+    public CoolServo outdr  ;
+    public CoolServo outst;
     public State OutbratState;
-
+    public double MaxVel=16;
     public OUTBRAT(HardwareMap hardwareMap, State initialState) {
-        outdr = hardwareMap.get(ServoImplEx.class, "outdr");
-        outst = hardwareMap.get(ServoImplEx.class, "outst");
+        outdr = new CoolServo(hardwareMap.get(ServoImplEx.class, "outdr"),false,profileMaxVelocity,profileAcceleration,profileDeceleration, initialState.position);
+        outst = new CoolServo(hardwareMap.get(ServoImplEx.class, "outst"),false,profileMaxVelocity,profileAcceleration,profileDeceleration, initialState.position);
+//        outst = hardwareMap.get(ServoImplEx.class, "outst");
 //        outst.setPwmRange(new PwmControl.PwmRange(500,2500));
 //        outdr.setPwmRange(new PwmControl.PwmRange(500,2500));
 //
@@ -69,6 +71,8 @@ public class OUTBRAT implements IStateBasedModule, IRobotModule {
     public void update() {
         updateState();
         updateHardware();
+        outdr.update();
+        outst.update();
     }
 
     @Override

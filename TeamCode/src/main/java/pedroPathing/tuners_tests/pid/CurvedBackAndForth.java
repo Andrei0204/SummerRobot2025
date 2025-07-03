@@ -3,15 +3,18 @@ package pedroPathing.tuners_tests.pid;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.pedropathing.localization.Pose;
 import com.pedropathing.util.Constants;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 import com.pedropathing.follower.Follower;
 import com.pedropathing.pathgen.BezierCurve;
 import com.pedropathing.pathgen.Path;
 import com.pedropathing.pathgen.Point;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import pedroPathing.constants.FConstants;
 import pedroPathing.constants.LConstants;
@@ -37,9 +40,10 @@ public class CurvedBackAndForth extends OpMode {
     public static double DISTANCE = 20;
 
     private boolean forward = true;
-
+    public ElapsedTime timp;
+    public static double decelarare=3;
     private Follower follower;
-
+    private Pose start = new Pose(40,69);
     private Path forwards;
     private Path backwards;
 
@@ -51,13 +55,18 @@ public class CurvedBackAndForth extends OpMode {
     public void init() {
         follower = new Follower(hardwareMap, FConstants.class, LConstants.class);
 
-        forwards = new Path(new BezierCurve(new Point(0,0, Point.CARTESIAN), new Point(Math.abs(DISTANCE),0, Point.CARTESIAN), new Point(Math.abs(DISTANCE),DISTANCE, Point.CARTESIAN)));
-        backwards = new Path(new BezierCurve(new Point(Math.abs(DISTANCE),DISTANCE, Point.CARTESIAN), new Point(Math.abs(DISTANCE),0, Point.CARTESIAN), new Point(0,0, Point.CARTESIAN)));
-
-        backwards.setReversed(true);
-
+        backwards = new Path(new BezierCurve( new Point(11.972, 22.947, Point.CARTESIAN),
+                new Point(38.245, 25.774, Point.CARTESIAN),
+                new Point(40.000, 69.000, Point.CARTESIAN))
+        );
+        backwards.setConstantHeadingInterpolation(0);
+        forwards = new Path(new BezierCurve(new Point(40.000, 69.000, Point.CARTESIAN) ,new Point(38.245, 25.774, Point.CARTESIAN), new Point(11.972, 22.947, Point.CARTESIAN)));
+        forwards.setConstantHeadingInterpolation(0);
+        forwards.setZeroPowerAccelerationMultiplier(decelarare);
+        backwards.setZeroPowerAccelerationMultiplier(decelarare);
+        follower.setStartingPose(start);
         follower.followPath(forwards);
-
+        timp =new ElapsedTime();
 
         telemetryA = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
         telemetryA.addLine("This will run the robot in a curve going " + DISTANCE + " inches"
@@ -74,15 +83,20 @@ public class CurvedBackAndForth extends OpMode {
     @Override
     public void loop() {
         follower.update();
+
         if (!follower.isBusy()) {
-            if (forward) {
-                forward = false;
-                follower.followPath(backwards);
-            } else {
-                forward = true;
-                follower.followPath(forwards);
+            if(timp.milliseconds()>1000) {
+                if (forward) {
+                    forward = false;
+                    follower.followPath(backwards);
+                } else {
+                    forward = true;
+                    follower.followPath(forwards);
+                }
             }
         }
+        else
+            timp.reset();
 
         telemetryA.addData("going forward", forward);
         follower.telemetryDebug(telemetryA);

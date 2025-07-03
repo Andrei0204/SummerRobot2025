@@ -1,0 +1,596 @@
+package org.firstinspires.ftc.teamcode.robotoffseason.Modules.AUTOS;
+
+import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.pedropathing.follower.Follower;
+import com.pedropathing.localization.Pose;
+import com.pedropathing.pathgen.BezierCurve;
+import com.pedropathing.pathgen.BezierLine;
+import com.pedropathing.pathgen.Path;
+import com.pedropathing.pathgen.PathChain;
+import com.pedropathing.pathgen.Point;
+import com.pedropathing.util.Timer;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.teamcode.roboDrive.gamepads.StickyGamepad;
+import org.firstinspires.ftc.teamcode.robotoffseason.Modules.SaibaModules;
+import org.firstinspires.ftc.teamcode.robotoffseason.Modules.intake.EXT;
+import org.firstinspires.ftc.teamcode.robotoffseason.Modules.intake.INBRAT;
+import org.firstinspires.ftc.teamcode.robotoffseason.Modules.intake.INCLAW;
+import org.firstinspires.ftc.teamcode.robotoffseason.Modules.intake.INROTATOR;
+import org.firstinspires.ftc.teamcode.robotoffseason.Modules.intake.INTUR;
+import org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.LIFT;
+import org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.LINKEAGE;
+import org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.OUTBRAT;
+import org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.OUTCLAW;
+import org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.OUTROTATIE;
+
+import pedroPathing.constants.FConstants;
+import pedroPathing.constants.LConstants;
+
+@Config
+@Autonomous(name = "Pepoziti2", group = "11Saiba")
+public class Pepoziti2 extends OpMode {
+    private SaibaModules modules = null;
+    private Follower follower;
+    private Timer opmodeTimer;
+    private ElapsedTime pathtimer, actionTimer;
+    /**
+     * This is the variable where we store the state of our auto.
+     * <p>
+     * It is used by the pathUpdate method.
+     */
+    public static double sex=1.2;
+    private int pathState;
+    public StickyGamepad stickyGamepad1;
+    Pose2d pozitie1 = new Pose2d(0, 0);
+    Pose2d pozitie2 = new Pose2d(4, 0);
+
+
+    public static double cycles = 0;
+
+
+    /* Create and Define Poses + Paths
+     * Poses are built with three constructors: x, y, and heading (in Radians).
+     * Pedro uses 0 - 144 for x and y, with 0, 0 being on the bottom left.
+     * (For Into the Deep, this would be Blue Observation Zone (0,0) to Red Observation Zone (144,144).)
+     * Even though Pedro uses a different coordinate system than RR, you can convert any roadrunner pose by adding +72 both the x and y.
+     * This visualizer is very easy to use to find and create paths/pathchains/poses: <https://pedro-path-generator.vercel.app/>
+     * Lets assume our robot is 18 by 18 inches
+     * Lets assume the Robot is facing the human player and we want to score in the bucket */
+
+    /**
+     * Start Pose of our robot
+     */
+    private final Pose startPose = new Pose(8, 65, 0);
+    private Pose detectpose = new Pose(0, 0, 0);
+
+    /**
+     * Scoring Pose of our robot. It is facing the submersible at a -45 degree (315 degree) angle.
+     */
+    private final Pose scorePose = new Pose(42, 69, 0);
+
+
+    private final Pose BS1C1 = new Pose(21, 42, 0);
+    private final Pose BS1FIN = new Pose(45, 33, 0);
+
+
+    private final Pose S1C1 = new Pose(60, 36, 0);
+    private final Pose S1C2 = new Pose(71, 18, 0);
+    //    private final Pose S1FIN = new Pose(20 , 23, 0);
+    private final Pose S1FIN = new Pose(20, 23, 0);
+
+
+    private final Pose BS2C1 = new Pose(70, 25, 0);
+    private final Pose BS2FIN = new Pose(53, 14, 0);
+
+
+    //    private final Pose S2FIN = new Pose(20, 14, 0);
+    private final Pose S2FIN = new Pose(20, 14, 0);
+
+    //    private final Pose BS3C1 = new Pose(72, 17, 0);
+    private final Pose BS3C1 = new Pose(70, 15, 0);
+    private final Pose BS3FIN = new Pose(50, 8, 0);
+    private final Pose S3FIN = new Pose(11.7, 7.2, 0);
+
+    private final Pose SP1C1 = new Pose(34, 64, 0);
+    private final Pose SP1FIN = new Pose(41, 65, 0);
+
+    private final Pose COLLECT = new Pose(15, 33, 0);
+    private final Pose COLLECTWALL = new Pose(14.3, 38, 0);
+
+    private final Pose COLLECTC1 = new Pose(31, 49, 0);
+    private final Pose COLLECTC2 = new Pose(31, 33, 0);
+//    private final Pose COLLECTC1 = new Pose(37 , 47, 0);
+//    private final Pose COLLECTC2 = new Pose(44 , 33, 0);
+
+
+
+    private PathChain scorePreload;
+    private PathChain firstsample, secondsample, thirdsample, firstspeci, gotohuman, score, scorefst;
+    private PathChain grabPickup1, grabPickup2, grabPickup3, scorePickup1, scorePickup2, detection;
+    private Path collectsample;
+    double x = 0;
+
+    /**
+     * Build the paths for the auto (adds, for example, constant/linear headings while doing paths)
+     * It is necessary to do this so that all the paths are built before the auto starts.
+     **/
+    public void buildPaths() {
+
+        /* There are two major types of paths components: BezierCurves and BezierLines.
+         *    * BezierCurves are curved, and require >= 3 points. There are the start and end points, and the control points.
+         *    - Control points manipulate the curve between the start and end points.
+         *    - A good visualizer for this is [this](https://pedro-path-generator.vercel.app/).
+         *    * BezierLines are straight, and require 2 points. There are the start and end points.
+         * Paths have can have heading interpolation: Constant, Linear, or Tangential
+         *    * Linear heading interpolation:
+         *    - Pedro will slowly change the heading of the robot from the startHeading to the endHeading over the course of the entire path.
+         *    * Constant Heading Interpolation:
+         *    - Pedro will maintain one heading throughout the entire path.
+         *    * Tangential Heading Interpolation:
+         *    - Pedro will follows the angle of the path such that the robot is always driving forward when it follows the path.
+         * PathChains hold Path(s) within it and are able to hold their end point, meaning that they will holdPoint until another path is followed.
+         * Here is a explanation of the difference between Paths and PathChains <https://pedropathing.com/commonissues/pathtopathchain.html> */
+
+        /* This is our scorePreload path. We are using a BezierLine, which is a straight line. */
+        scorePreload = follower.pathBuilder()
+                .addPath(new BezierLine(new Point(startPose), new Point(scorePose.getX(), scorePose.getY() + pozitie1.getY())))
+                .setConstantHeadingInterpolation(0)
+                .build();
+
+
+        /* Here is an example for Constant Interpolation
+        scorePreload.setConstantInterpolation(startPose.getHeading()); */
+
+//        /* This is our grabPickup1 PathChain. We are using a single path with a BezierLine, which is a straight line. */
+//        firstsample = follower.pathBuilder()
+//                .addPath(new BezierCurve(new Point(scorePose), new Point(BS1C1), new Point(BS1FIN)))
+//                .setConstantHeadingInterpolation(0)
+//                .addPath(new BezierCurve(new Point(BS1FIN), new Point(S1C1), new Point(S1C2), new Point(S1FIN)))
+//                .setConstantHeadingInterpolation(0)
+//                .build();
+//
+//
+//        secondsample = follower.pathBuilder()
+//                .addPath(new BezierCurve(new Point(S1FIN), new Point(BS2C1), new Point(BS2FIN)))
+//                .setConstantHeadingInterpolation(0)
+//                .addPath(new BezierCurve(new Point(BS2FIN), new Point(S2FIN), new Point(S2FIN)))
+//                .setConstantHeadingInterpolation(0)
+//
+//                .build();
+//        thirdsample = follower.pathBuilder()
+//                .addPath(new BezierCurve(new Point(S2FIN), new Point(BS3C1), new Point(BS3FIN)))
+//                .setConstantHeadingInterpolation(0)
+//                .setZeroPowerAccelerationMultiplier(6)
+//
+//                .addPath(new BezierLine(new Point(BS3FIN), new Point(S3FIN)))
+//
+//                .setConstantHeadingInterpolation(0)
+//                .build();
+        firstsample = follower.pathBuilder()
+                .addPath(new BezierCurve(
+                        new Point(39.000, 65.000, Point.CARTESIAN),
+                        new Point(13.303, 12.139, Point.CARTESIAN),
+                        new Point(125.376, 38.744, Point.CARTESIAN),
+                        new Point(10.808, 13.968, Point.CARTESIAN),
+                        new Point(99.769, 23.945, Point.CARTESIAN),
+                        new Point(17.626, 22.781, Point.CARTESIAN)
+                ))
+                .setConstantHeadingInterpolation(0)
+                .build();
+        secondsample = follower.pathBuilder()
+                .addPath(new BezierCurve(
+                        new Point(17.626, 22.781, Point.CARTESIAN),
+                        new Point(75.326, 28.434, Point.CARTESIAN),
+                        new Point(52.878, 4.490, Point.CARTESIAN),
+                        new Point(54.873, 13.801, Point.CARTESIAN),
+                        new Point(18.291, 13.801, Point.CARTESIAN)
+                ))
+                .setConstantHeadingInterpolation(0)
+                .build();
+        thirdsample = follower.pathBuilder()
+                .addPath(new BezierCurve(
+                        new Point(18.291, 13.801, Point.CARTESIAN),
+                        new Point(62.855, 21.617, Point.CARTESIAN),
+                        new Point(61.691, 1.497, Point.CARTESIAN),
+                        new Point(52.379, 7.2, Point.CARTESIAN),
+                        new Point(S3FIN)
+
+                ))
+                .setConstantHeadingInterpolation(0)
+                .build();
+
+        firstspeci = follower.pathBuilder()
+                .addPath(new BezierCurve(new Point(S3FIN), new Point(SP1C1), new Point(scorePose)))
+
+                .setConstantHeadingInterpolation(0)
+                .build();
+        gotohuman = follower.pathBuilder()
+                .addPath(new BezierCurve(
+
+                        new Point(39.000, 65.000, Point.CARTESIAN),
+                        new Point(9.478, 55.039, Point.CARTESIAN),
+                        new Point(23.279, 51.714, Point.CARTESIAN),
+                        new Point(14.000, 38.000, Point.CARTESIAN)))
+                .setConstantHeadingInterpolation(0)
+                .build();
+
+        score = follower.pathBuilder()
+                .addPath(new BezierLine(new Point(COLLECTWALL), new Point(SP1FIN)))
+                .setConstantHeadingInterpolation(0)
+                .build();
+        scorefst = follower.pathBuilder()
+                .addPath(new BezierLine(new Point(COLLECTWALL), new Point(SP1FIN)))
+                .setConstantHeadingInterpolation(0)
+                .build();
+        collectsample =new Path(new BezierCurve(new Point(SP1FIN), new Point(COLLECTC1), new Point(COLLECTC2), new Point(COLLECTWALL)));
+        collectsample.setConstantHeadingInterpolation(0);
+
+//        gotohuman2 = follower.pathBuilder()
+////            .addPath(new BezierLine(COLLECT,COLLECTWALL))
+////                .setConstantHeadingInterpolation(0)
+////                .build();
+////                .addPath(new BezierLine(COLLECT, COLLECTWALL))
+////                .setLinearHeadingInterpolation(Math.toRadians(15),0)
+//                .setConstantHeadingInterpolation(0)
+//                .build();
+
+    }
+
+    /**
+     * This switch is called continuously and runs the pathing, at certain points, it triggers the action state.
+     * Everytime the switch changes case, it will reset the timer. (This is because of the setPathState() method)
+     * The followPath() function sets the follower to run the specific path, but does NOT wait for it to finish before moving on.
+     */
+    public void autonomousPathUpdate() {
+        switch (pathState) {
+            case 0:
+
+                cycles = 1;
+                modules.INBRAT.setState(INBRAT.State.SEMIDOWN);
+                modules.INTUR.setState(INTUR.State.AUTOSPECI);
+                modules.INTUR.setangle(150);
+                modules.INROTATOR.setState(INROTATOR.State.FOURTH);
+
+                follower.followPath(scorePreload, true);
+                modules.LIFT.setState(LIFT.State.SCORESPECI);
+                modules.OUTROTATIE.setState(OUTROTATIE.State.SCORESPECI);
+                modules.OUTBRAT.setState(OUTBRAT.State.SCORESPECI);
+                modules.INCLAW.setState(INCLAW.State.RELEASE);
+                modules.EXT.setState(EXT.State.AUTO);
+                modules.EXT.setAuto((12 + pozitie1.getX() * 2.54) * EXT.TICKSCM);
+
+                setPathState(1);
+                break;
+            case 1:
+
+                if (modules.LIFT.getRealCurrentPosition() > 5) {
+                    modules.LINKEAGE.setState(LINKEAGE.State.OPEN);
+                }
+                if (!follower.isBusy()) {
+                    modules.OUTCLAW.setState(OUTCLAW.State.RELEASE);
+                    modules.LINKEAGE.setState(LINKEAGE.State.CLOSED);
+                    modules.OUTBRAT.setState(OUTBRAT.State.SPECIMEN);
+                    modules.OUTROTATIE.setState(OUTROTATIE.State.SPECIMEN);
+                    modules.LIFT.setState(LIFT.State.START);
+
+
+                    setPathState(-1);
+                }
+                break;
+            case -1:
+                if (follower.getVelocity().getMagnitude() < 3) {
+                    modules.INBRAT.setState(INBRAT.State.SEMIDOWN);
+                    modules.INTUR.setState(INTUR.State.AUTOSPECI);
+                    modules.INTUR.setangle(150);
+                    modules.INROTATOR.setState(INROTATOR.State.FOURTH);
+                    modules.EXT.setState(EXT.State.AUTO);
+                    if (cycles == 1)
+                        modules.EXT.setAuto((12 + pozitie1.getX() * 2.54) * EXT.TICKSCM);
+                    else
+                        modules.EXT.setAuto((12 + pozitie2.getX() * 2.54) * EXT.TICKSCM);
+
+                    setPathState(-44);
+                }
+                break;
+            case -44:
+                if (!follower.isBusy() && modules.EXT.getRealCurrentPosition() > modules.EXT.getTarget() / EXT.TICKSCM - 3)
+
+                    setPathState(-33);
+                break;
+            case -33:
+
+                if (pathtimer.milliseconds() > 200)
+                    modules.INBRAT.setState(INBRAT.State.DOWN);
+                if (pathtimer.milliseconds() > 350)
+
+                    modules.INCLAW.setState(INCLAW.State.SECURE);
+                if (pathtimer.milliseconds() > 420) {
+                    modules.INBRAT.setState(INBRAT.State.UP);
+                    modules.EXT.setState(EXT.State.ZERO);
+                    modules.INBRAT.setState(INBRAT.State.MIDDLE);
+                    modules.OUTBRAT.setState(OUTBRAT.State.SPECIMEN);
+                    modules.INROTATOR.setState(INROTATOR.State.SECOND);
+                    follower.followPath(gotohuman, true);
+//                    follower.followPath(collectsample, true);
+
+                    setPathState(-3);
+                }
+                break;
+            case -3:
+                if (pathtimer.milliseconds() > 750) {
+                    modules.INTUR.setState(INTUR.State.THROW);
+                    setPathState(-10);
+                }
+//                }
+                break;
+            case -10:
+
+                if (!follower.isBusy()) {
+                    if (modules.INTUR.getState() == INTUR.State.THROW) {
+                        actionTimer.reset();
+                        modules.INTUR.setState(INTUR.State.DIAG);
+                    } else {
+                        if (actionTimer.milliseconds() > 30) {
+                            modules.OUTCLAW.setState(OUTCLAW.State.SECURE);
+                            modules.INCLAW.setState(INCLAW.State.RELEASE);
+                        }
+                        if (actionTimer.milliseconds() > 250) {
+                            scorePose.setY(scorePose.getY() - pozitie1.getY() + pozitie2.getY());
+                            score = follower.pathBuilder()
+                                    .addPath(new BezierLine(new Point(COLLECTWALL), new Point(SP1FIN)))
+                                    .setConstantHeadingInterpolation(0)
+                                    .build();
+                            follower.followPath(score);
+                            modules.INCLAW.setState(INCLAW.State.RELEASE);
+                            modules.LIFT.setState(LIFT.State.SCORESPECI);
+                            modules.OUTROTATIE.setState(OUTROTATIE.State.SCORESPECI);
+                            setPathState(-11);
+                        }
+                    }
+
+                }
+                break;
+            case -11:
+                if (follower.getPose().getY() > 35)
+                    modules.OUTBRAT.setState(OUTBRAT.State.SCORESPECI);
+                if (follower.getPose().getY() > 57) {
+
+                    modules.LINKEAGE.setState(LINKEAGE.State.OPEN);
+
+                }
+                if (!follower.isBusy() || (follower.getPose().getX() > 40 && modules.LINKEAGE.getState() == LINKEAGE.State.OPEN && cycles != 1)) {
+                    modules.LINKEAGE.setState(LINKEAGE.State.CLOSED);
+
+                    modules.OUTCLAW.setState(OUTCLAW.State.RELEASE);
+                    modules.LIFT.setState(LIFT.State.START);
+                    modules.OUTROTATIE.setState(OUTROTATIE.State.SPECIMEN);
+
+                    if (cycles == 1) {
+                        setPathState(6);
+                    } else {
+
+                        follower.followPath(firstsample);
+
+                        setPathState(2);
+                    }
+                }
+                break;
+            case 2:
+                /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the pickup1Pose's position */
+                if (!follower.isBusy() || follower.getPose().getX() < 19) {
+                    /* Grab Sample */
+                    /* Since this is a pathChain, we can have Pedro hold the end point while we are scoring the sample */
+                    modules.INBRAT.setState(INBRAT.State.UP);
+                    follower.followPath(secondsample, true);
+                    modules.OUTBRAT.setState(OUTBRAT.State.SCORESPECI);
+                    setPathState(3);
+                }
+                break;
+            case 3:
+                /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the scorePose's position */
+                if (!follower.isBusy() || (follower.getPose().getX() < 19 && follower.getPose().getY() < 20)) {
+                    /* Score Sample */
+
+                    /* Since this is a pathChain, we can have Pedro hold the end point while we are grabbing the sample */
+                    follower.followPath(thirdsample, true);
+                    modules.OUTBRAT.setState(OUTBRAT.State.SPECIMEN);
+                    setPathState(4);
+                }
+                break;
+            case 4:
+                /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the pickup2Pose's position */
+                if (!follower.isBusy()) {
+                    /* Grab Sample */
+
+                    /* Since this is a pathChain, we can have Pedro hold the end point while we are scoring the sample */
+                    actionTimer.reset();
+                    setPathState(-4);
+                }
+                break;
+
+
+            case -4:
+                if (actionTimer.milliseconds() > 100) {
+                    modules.OUTCLAW.setState(OUTCLAW.State.SECURE);
+                    setPathState(5);
+                }
+                break;
+            case 5:
+                if (pathtimer.milliseconds() > 100) {
+
+                    modules.LIFT.setState(LIFT.State.SCORESPECI);
+                    modules.OUTROTATIE.setState(OUTROTATIE.State.SCORESPECI);
+                    firstspeci = follower.pathBuilder()
+                            .addPath(new BezierLine(new Point(S3FIN), new Point(scorePose)))
+//                            .addPath(new BezierCurve(new Point(S3FIN), new Point(SP1C1), new Point(scorePose)))
+                            .setConstantHeadingInterpolation(0)
+                            .build();
+                    follower.followPath(firstspeci, true);
+                    setPathState(6);
+
+                }
+                break;
+            case 6: //CICLAT
+                if (follower.getPose().getY() > 35)
+                    modules.OUTBRAT.setState(OUTBRAT.State.SCORESPECI);
+                if (follower.getPose().getY() > 59) {
+
+                    modules.LINKEAGE.setState(LINKEAGE.State.OPEN);
+
+                }
+                if (!follower.isBusy() || (follower.getPose().getX() > 40 && modules.LINKEAGE.getState() == LINKEAGE.State.OPEN && cycles != 1)) {
+                    modules.LINKEAGE.setState(LINKEAGE.State.CLOSED);
+                    modules.OUTCLAW.setState(OUTCLAW.State.RELEASE);
+                    modules.LIFT.setState(LIFT.State.START);
+                    modules.OUTROTATIE.setState(OUTROTATIE.State.SPECIMEN);
+
+                    if (cycles == 1) {
+                        scorePose.setY(scorePose.getY() - pozitie1.getY() + pozitie2.getY());
+                        follower.holdPoint(new Point(scorePose), 0);
+                        setPathState(-1);
+                        cycles++;
+                    } else {
+//                        follower.followPath(collectsample, true);
+                        follower.followPath(gotohuman, true);
+
+                        setPathState(-7);
+                    }
+                }
+                break;
+            case -7:
+                if(actionTimer.milliseconds()>500)
+                    modules.OUTBRAT.setState(OUTBRAT.State.SPECIMEN);
+                if (!follower.isBusy()) {
+
+                    setPathState(8);
+                }
+                break;
+            case 8:
+                if (actionTimer.milliseconds() > 100) {
+                    modules.OUTCLAW.setState(OUTCLAW.State.SECURE);
+                    setPathState(9);
+                }
+                break;
+            case 9:
+                if (pathtimer.milliseconds() > 100 && !follower.isBusy()) {
+
+                    modules.LIFT.setState(LIFT.State.SCORESPECI);
+                    modules.OUTROTATIE.setState(OUTROTATIE.State.SCORESPECI);
+
+                    follower.followPath(score, true);
+                    setPathState(6);
+                }
+                break;
+        }
+    }
+
+    /**
+     * These change the states of the paths and actions
+     * It will also reset the timers of the individual switches
+     **/
+    public void setPathState(int pState) {
+        pathState = pState;
+        pathtimer.reset();
+    }
+
+    /**
+     * This is the main loop of the OpMode, it will run repeatedly after clicking "Play".
+     **/
+    @Override
+    public void loop() {
+
+        // These loop the movements of the robot
+        follower.update();
+        autonomousPathUpdate();
+
+        // Feedback to Driver Hub
+        telemetry.addData("path state", pathState);
+        telemetry.addData("x", follower.getPose().getX());
+        telemetry.addData("y", follower.getPose().getY());
+        telemetry.addData("heading", follower.getPose().getHeading());
+        telemetry.addData("dp", detectpose);
+        telemetry.update();
+        modules.update();
+    }
+
+    /**
+     * This method is called once at the init of the OpMode.
+     **/
+    @Override
+    public void init() {
+        stickyGamepad1 = new StickyGamepad(gamepad1);
+        pozitie1 = new Pose2d(0, 0);
+        pozitie2 = new Pose2d(0, 0);
+        modules = new SaibaModules(hardwareMap, 1);
+        modules.EXT.EXT.resetEncoder();
+        modules.LIFT.LIFT1.resetEncoder();
+        modules.LIFT.LIFT2.resetEncoder();
+        pathtimer = new ElapsedTime();
+        actionTimer = new ElapsedTime();
+        opmodeTimer = new Timer();
+        opmodeTimer.resetTimer();
+        follower = new Follower(hardwareMap, FConstants.class, LConstants.class);
+        follower.setStartingPose(startPose);
+
+    }
+
+    /**
+     * This method is called continuously after Init while waiting for "play".
+     **/
+    @Override
+    public void init_loop() {
+        modules.update();
+        if (stickyGamepad1.a) {
+            pozitie1 = new Pose2d(pozitie1.getX(), pozitie1.getY() + 1);
+        }
+        if (stickyGamepad1.b) {
+            pozitie1 = new Pose2d(pozitie1.getX(), pozitie1.getY() - 1);
+        }
+        if (stickyGamepad1.x) {
+            pozitie1 = new Pose2d(pozitie1.getX() + 1, pozitie1.getY());
+        }
+        if (stickyGamepad1.y) {
+            pozitie1 = new Pose2d(pozitie1.getX() - 1, pozitie1.getY());
+        }
+
+        if (stickyGamepad1.dpad_down) {
+            pozitie2 = new Pose2d(pozitie2.getX(), pozitie2.getY() + 1);
+        }
+        if (stickyGamepad1.dpad_right) {
+            pozitie2 = new Pose2d(pozitie2.getX(), pozitie2.getY() - 1);
+        }
+        if (stickyGamepad1.dpad_left) {
+            pozitie2 = new Pose2d(pozitie2.getX() + 1, pozitie2.getY());
+        }
+        if (stickyGamepad1.dpad_up) {
+            pozitie2 = new Pose2d(pozitie2.getX() - 1, pozitie2.getY());
+        }
+        stickyGamepad1.update();
+        telemetry.addData("pos1", pozitie1);
+        telemetry.addData("pos2", pozitie2);
+        telemetry.update();
+
+    }
+
+    /**
+     * This method is called once at the start of the OpMode.
+     * It runs all the setup actions, including building paths and starting the path system
+     **/
+    @Override
+    public void start() {
+        opmodeTimer.resetTimer();
+        buildPaths();
+        setPathState(0);
+    }
+
+    /**
+     * We do not use this because everything should automatically disable
+     **/
+    @Override
+    public void stop() {
+    }
+}

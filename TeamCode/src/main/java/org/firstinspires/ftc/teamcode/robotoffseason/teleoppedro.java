@@ -1,12 +1,15 @@
 package org.firstinspires.ftc.teamcode.robotoffseason;
 
+import com.acmerobotics.dashboard.config.Config;
+import com.arcrobotics.ftclib.controller.PIDFController;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.localization.Pose;
-import  com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
+import org.firstinspires.ftc.teamcode.roboDrive.gamepads.StickyGamepad;
 import org.firstinspires.ftc.teamcode.robotoffseason.Modules.SaibaModules;
 import org.firstinspires.ftc.teamcode.robotoffseason.Modules.drive.SaibaControl;
 
@@ -19,32 +22,40 @@ import pedroPathing.constants.LConstants;
  * @author Baron Henderson - 20077 The Indubitables
  * @version 2.0, 12/30/2024
  */
-
+@Config
 @TeleOp(name = "1Saiba", group = "Examples")
 public class teleoppedro extends OpMode {
-
+    StickyGamepad stickyGamepad1=null;
     ElapsedTime Timer;
     SaibaModules modules;
     SaibaControl modulesControl;
-
-
+    double headingCorrection;
+    public  static double kp=
+            -0.6
+            ,ki=-0.1,kd=0.005;
+    double holdheading=0;
     private Follower follower;
-    private final Pose startPose = new Pose(0,0,0);
-
-    /** This method is call once when init is played, it initializes the follower **/
+    private final Pose startPose = new Pose(0, 0, 0);
+    PIDFController headingPIDController;
+    /**
+     * This method is call once when init is played, it initializes the follower
+     **/
     @Override
     public void init() {
-        follower = new Follower(hardwareMap,FConstants.class, LConstants.class);
+        follower = new Follower(hardwareMap, FConstants.class, LConstants.class);
         follower.setStartingPose(startPose);
         modules = new SaibaModules(hardwareMap);
         modulesControl = new SaibaControl(gamepad1, gamepad2, modules);
         Timer = new ElapsedTime();
+        stickyGamepad1 = new StickyGamepad(gamepad1);
     }
 
-    /** This method is called continuously after Init while waiting to be started. **/
+    /**
+     * This method is called continuously after Init while waiting to be started.
+     **/
     @Override
     public void init_loop() {
-        if(gamepad1.a) {
+        if (gamepad1.a) {
             modules.EXT.EXT.resetEncoder();
             modules.LIFT.LIFT1.resetEncoder();
             modules.LIFT.LIFT2.resetEncoder();
@@ -52,33 +63,73 @@ public class teleoppedro extends OpMode {
         }
     }
 
-    /** This method is called once at the start of the OpMode. **/
+    /**
+     * This method is called once at the start of the OpMode.
+     **/
     @Override
     public void start() {
         follower.startTeleopDrive();
     }
 
-    /** This is the main loop of the opmode and runs continuously after play **/
+    /**
+     * This is the main loop of the opmode and runs continuously after play
+     **/
     @Override
     public void loop() {
-        follower.setTeleOpMovementVectors(gamepad1.left_stick_y, gamepad1.left_stick_x, -gamepad1.right_stick_x, true);
-        follower.update();
-        modules.update();
-        modulesControl.update();
-        if(modulesControl.stickyGamepad2.a)
-            telemetry.addData("idk anymore",modulesControl.clawintake);
+        headingPIDController=new PIDFController(kp,ki,kd,0);
+       // follower.setTeleOpMovementVectors(gamepad1.left_stick_y, gamepad1.left_stick_x, -gamepad1.right_stick_x, true);
+
 
         modules.telemetry(telemetry);
-        telemetry.update();
 
 
+        double targetHeading = 0;
+        double pos =follower.getPose().getHeading();
+        double headingError = targetHeading -pos;
 
         /* Update Telemetry to the Driver Hub */
         telemetry.update();
+        if(stickyGamepad1.b && holdheading==0)
+        {
+            holdheading=1;
+        }
+        else if(stickyGamepad1.b && holdheading==1)
+            holdheading=0;
+        if(gamepad1.y)
+            follower.setPose(new Pose(0,0,0));
+        if (holdheading==1) {
+
+
+             headingError = targetHeading -pos;
+             if(headingError<-Math.PI)
+                 headingError=(2*Math.PI+headingError);
+            if (Math.abs(headingError) < Math.toRadians(2)) {
+                headingCorrection = 0;
+            } else {
+
+                headingCorrection = headingPIDController.calculate(headingError);
+            }
+
+            follower.setTeleOpMovementVectors(gamepad1.left_stick_y, gamepad1.left_stick_x, headingCorrection);
+
+        } else {
+            follower.setTeleOpMovementVectors(gamepad1.left_stick_y, gamepad1.left_stick_x,  -gamepad1.right_stick_x);
+        }
+        follower.update();
+        modules.update();
+        stickyGamepad1.update();
+        modulesControl.update();
+        telemetry.addData("poz",pos);
+        telemetry.addData("headingERR",headingError);
+        telemetry.addData("pos",follower.getPose().getHeading());
+        telemetry.update();
+
 
     }
 
-    /** We do not use this because everything automatically should disable **/
+    /**
+     * We do not use this because everything automatically should disable
+     **/
     @Override
     public void stop() {
     }

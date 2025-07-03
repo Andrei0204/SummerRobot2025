@@ -94,13 +94,13 @@ public class Pepozitii extends OpMode {
     //    private final Pose BS3C1 = new Pose(72, 17, 0);
     private final Pose BS3C1 = new Pose(70, 15, 0);
     private final Pose BS3FIN = new Pose(50, 8, 0);
-    private final Pose S3FIN = new Pose(12.4, 7.2, 0);
+    private final Pose S3FIN = new Pose(11.5, 7.2, 0);
 
     private final Pose SP1C1 = new Pose(34, 64, 0);
-    private final Pose SP1FIN = new Pose(39, 65, 0);
+    private final Pose SP1FIN = new Pose(41, 65, 0);
 
     private final Pose COLLECT = new Pose(15, 33, 0);
-    private final Pose COLLECTWALL = new Pose(13.5, 39, 0);
+    private final Pose COLLECTWALL = new Pose(14.5, 34, 0);
 
     private final Pose COLLECTC1 = new Pose(31, 49, 0);
     private final Pose COLLECTC2 = new Pose(31, 33, 0);
@@ -110,7 +110,8 @@ public class Pepozitii extends OpMode {
 
 
     private PathChain scorePreload;
-    private PathChain firstsample, secondsample, thirdsample, firstspeci, gotohuman, score, scorefst;
+
+    private PathChain firstsample, secondsample, thirdsample, firstspeci, score, scorefst,gotohuman;
     private PathChain grabPickup1, grabPickup2, grabPickup3, scorePickup1, scorePickup2, detection;
     private Path collectsample;
     double x = 0;
@@ -173,12 +174,12 @@ public class Pepozitii extends OpMode {
 //                .build();
         firstsample = follower.pathBuilder()
                 .addPath(new BezierCurve(
-                        new Point(39.000, 65.000, Point.CARTESIAN),
+                        new Point(38.000, 69.000, Point.CARTESIAN),
                         new Point(13.303, 12.139, Point.CARTESIAN),
                         new Point(125.376, 38.744, Point.CARTESIAN),
                         new Point(10.808, 13.968, Point.CARTESIAN),
                         new Point(99.769, 23.945, Point.CARTESIAN),
-                        new Point(17.626, 22.781, Point.CARTESIAN)
+                        new Point(4.305, 23.446, Point.CARTESIAN)
                 ))
                 .setConstantHeadingInterpolation(0)
                 .build();
@@ -191,6 +192,7 @@ public class Pepozitii extends OpMode {
                         new Point(18.291, 13.801, Point.CARTESIAN)
                 ))
                 .setConstantHeadingInterpolation(0)
+
                 .build();
         thirdsample = follower.pathBuilder()
                 .addPath(new BezierCurve(
@@ -209,20 +211,26 @@ public class Pepozitii extends OpMode {
 
                 .setConstantHeadingInterpolation(0)
                 .build();
+        //line
         gotohuman = follower.pathBuilder()
-                .addPath(new BezierLine(            new Point(39.000, 65.000, Point.CARTESIAN),
-                          new Point( COLLECTWALL)))
+                .addPath(
+                        new BezierCurve(new Point(scorePose),new Point(30,38),new Point(30,38),new Point(COLLECTWALL)))
                 .setConstantHeadingInterpolation(0)
-                .setGlobalDeceleration(sex)
+//                .setGlobalDeceleration(sex)
                 .build();
+//        gotohuman=new Path(new BezierCurve(new Point(scorePose),new Point(30,38),new Point(30,38),new Point(COLLECTWALL)));
+//        gotohuman.setConstantHeadingInterpolation(0);
+
 
         score = follower.pathBuilder()
                 .addPath(new BezierLine(new Point(COLLECTWALL), new Point(SP1FIN)))
                 .setConstantHeadingInterpolation(0)
                 .build();
+
         scorefst = follower.pathBuilder()
                 .addPath(new BezierLine(new Point(COLLECTWALL), new Point(scorePose)))
                 .setConstantHeadingInterpolation(0)
+
                 .build();
         collectsample =new Path(new BezierCurve(new Point(SP1FIN), new Point(COLLECTC1), new Point(COLLECTC2), new Point(COLLECTWALL)));
         collectsample.setConstantHeadingInterpolation(0);
@@ -273,14 +281,17 @@ public class Pepozitii extends OpMode {
                     modules.LINKEAGE.setState(LINKEAGE.State.CLOSED);
                     modules.OUTBRAT.setState(OUTBRAT.State.SPECIMEN);
                     modules.OUTROTATIE.setState(OUTROTATIE.State.SPECIMEN);
-                    modules.LIFT.setState(LIFT.State.START);
+
 
 
                     setPathState(-1);
                 }
                 break;
             case -1:
-                if (follower.getVelocity().getMagnitude() < 2) {
+                if (follower.getVelocity().getMagnitude() < 3
+                || cycles==1
+                ) {
+                    modules.LIFT.setState(LIFT.State.START);
                     modules.INBRAT.setState(INBRAT.State.SEMIDOWN);
                     modules.INTUR.setState(INTUR.State.AUTOSPECI);
                     modules.INTUR.setangle(150);
@@ -312,8 +323,9 @@ public class Pepozitii extends OpMode {
 
                     modules.INROTATOR.setState(INROTATOR.State.SECOND);
                     follower.followPath(gotohuman, true);
+                    follower.setMaxPower(0.8);
 //                    follower.followPath(collectsample, true);
-                    follower.setMaxPower(1);
+
                     setPathState(-3);
                 }
                 break;
@@ -327,6 +339,7 @@ public class Pepozitii extends OpMode {
             case -10:
 
                 if (!follower.isBusy()) {
+
                     follower.setMaxPower(1);
                     if (modules.INTUR.getState() == INTUR.State.THROW) {
                         actionTimer.reset();
@@ -338,6 +351,7 @@ public class Pepozitii extends OpMode {
                         }
                         if (actionTimer.milliseconds() > 250) {
                             follower.followPath(score);
+
                             modules.INCLAW.setState(INCLAW.State.RELEASE);
                             modules.LIFT.setState(LIFT.State.SCORESPECI);
                             modules.OUTROTATIE.setState(OUTROTATIE.State.SCORESPECI);
@@ -359,7 +373,7 @@ public class Pepozitii extends OpMode {
                     modules.LINKEAGE.setState(LINKEAGE.State.CLOSED);
 
                     modules.OUTCLAW.setState(OUTCLAW.State.RELEASE);
-                    modules.LIFT.setState(LIFT.State.START);
+
                     modules.OUTROTATIE.setState(OUTROTATIE.State.SPECIMEN);
                     modules.OUTBRAT.setState(OUTBRAT.State.SPECIMEN);
                     if (cycles == 2) {
@@ -367,13 +381,15 @@ public class Pepozitii extends OpMode {
                         cycles++;
                     } else {
 
-                        follower.followPath(firstsample);
+                        follower.followPath(firstsample,true);
 
                         setPathState(2);
                     }
                 }
                 break;
             case 2:
+                if(pathtimer.milliseconds()>700)
+                    modules.LIFT.setState(LIFT.State.START);
                 /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the pickup1Pose's position */
                 if (!follower.isBusy() || follower.getPose().getX() < 19) {
                     /* Grab Sample */
@@ -432,15 +448,28 @@ public class Pepozitii extends OpMode {
             case 6: //CICLAT
                 if (follower.getPose().getY() > 35)
                     modules.OUTBRAT.setState(OUTBRAT.State.SCORESPECI);
-                if (follower.getPose().getY() > 59) {
+                if (follower.getPose().getY() > 56) {
 
                     modules.LINKEAGE.setState(LINKEAGE.State.OPEN);
 
                 }
-                if (!follower.isBusy() || (follower.getPose().getX() > 40 && modules.LINKEAGE.getState() == LINKEAGE.State.OPEN && cycles != 1)) {
+                if(cycles==1 &&follower.getPose().getY() >59)
+                {
+
+                    modules.INBRAT.setState(INBRAT.State.SEMIDOWN);
+                    modules.INTUR.setState(INTUR.State.AUTOSPECI);
+                    modules.INTUR.setangle(150);
+                    modules.INROTATOR.setState(INROTATOR.State.FOURTH);
+                    modules.EXT.setState(EXT.State.AUTO);
+                    modules.EXT.setAuto((12 + pozitie2.getX() * 2.54) * EXT.TICKSCM);
+
+                }
+                if (!follower.isBusy()
+//                        || (follower.getPose().getX() > 40 && modules.LINKEAGE.getState() == LINKEAGE.State.OPEN && cycles != 1)
+                ) {
                     modules.LINKEAGE.setState(LINKEAGE.State.CLOSED);
                     modules.OUTCLAW.setState(OUTCLAW.State.RELEASE);
-                    modules.LIFT.setState(LIFT.State.START);
+
                     modules.OUTROTATIE.setState(OUTROTATIE.State.SPECIMEN);
                     modules.OUTBRAT.setState(OUTBRAT.State.SPECIMEN);
                     if (cycles == 1) {
@@ -451,31 +480,32 @@ public class Pepozitii extends OpMode {
                         cycles++;
                     } else {
 //                        follower.followPath(collectsample, true);
-                        follower.followPath(gotohuman, true);
-                        follower.setMaxPower(1);
+                        follower.followPath(gotohuman);
+                        follower.setMaxPower(0.8);
                         setPathState(-7);
                     }
                 }
                 break;
             case -7:
-                if (!follower.isBusy()) {
-                    follower.setMaxPower(1);
+                if(pathtimer.milliseconds()>350)
+                    modules.LIFT.setState(LIFT.State.START);
+                if (follower.atParametricEnd()) {
                     setPathState(8);
                 }
                 break;
             case 8:
-                if (actionTimer.milliseconds() > 100) {
+                if (actionTimer.milliseconds() > 100 &&follower.atParametricEnd() ) {
                     modules.OUTCLAW.setState(OUTCLAW.State.SECURE);
                     setPathState(9);
                 }
                 break;
             case 9:
-                if (pathtimer.milliseconds() > 100 && !follower.isBusy()) {
+                if (pathtimer.milliseconds() > 100) {
 
                     modules.LIFT.setState(LIFT.State.SCORESPECI);
                     modules.OUTROTATIE.setState(OUTROTATIE.State.SCORESPECI);
-
                     follower.followPath(score, true);
+                    follower.setMaxPower(1    );
                     setPathState(6);
                 }
                 break;
@@ -507,6 +537,7 @@ public class Pepozitii extends OpMode {
         telemetry.addData("y", follower.getPose().getY());
         telemetry.addData("heading", follower.getPose().getHeading());
         telemetry.addData("dp", detectpose);
+        telemetry.addData("isbusy", !follower.isBusy());
         telemetry.update();
         modules.update();
     }
@@ -529,6 +560,7 @@ public class Pepozitii extends OpMode {
         opmodeTimer.resetTimer();
         follower = new Follower(hardwareMap, FConstants.class, LConstants.class);
         follower.setStartingPose(startPose);
+        modules.OUTBRAT.setState(OUTBRAT.State.SCORESPECI);
 
     }
 
@@ -538,6 +570,8 @@ public class Pepozitii extends OpMode {
     @Override
     public void init_loop() {
         modules.update();
+        modules.OUTBRAT.setState(OUTBRAT.State.MID);
+
         if (stickyGamepad1.a) {
             pozitie1 = new Pose2d(pozitie1.getX(), pozitie1.getY() + 1);
         }

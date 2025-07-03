@@ -30,7 +30,7 @@ public class SaibaControl implements IRobotModule {
     ElapsedTime timercollect;
     public int clawintake = 1;
     public int waitfordown = 0;
-
+    public double fisttime=0;
     public  StateInSample stateInSample= StateInSample.TRANSFER;
     public  StateInSpeci stateInSpeci= StateInSpeci.TRANSFER;
     public  StateOutSample stateOutSample= StateOutSample.DOWN;
@@ -137,6 +137,7 @@ public class SaibaControl implements IRobotModule {
 
                 modules.OUTBRAT.setState(OUTBRAT.State.SPECIMEN);
                 modules.LIFT.setState(LIFT.State.START);
+                fisttime=2;
             }
         }
         if (stateInSample==StateInSample.TRANSFER&& modules.EXT.getRealCurrentPosition() < 17)
@@ -491,20 +492,33 @@ public class SaibaControl implements IRobotModule {
 
     @Override
     public void update() {
+        if(fisttime==0 || fisttime==2)
+        {
+            modules.LIFT.setState(LIFT.State.AUTO);
+            modules.LIFT.setAuto(20*LIFT.TICKSCM);
+            if(modules.LIFT.getRealCurrentPosition()>18){
+                if(fisttime==2)
+                    modules.LIFT.setState(LIFT.State.START);
+                else
+                    modules.LIFT.setState(LIFT.State.TRANSFER);
+                fisttime=1;
+            }
+        }
+            else {
+        modules.update();
 
 //        CLIMB();
-        stickyGamepad1.update();
-        stickyGamepad2.update();
-
-
+            stickyGamepad1.update();
+            stickyGamepad2.update();
 //
-        if (scoremode==Scoremode.SAMPLE)
-            SAMPLECONTROL();
-        else
-            SPECICONTROL();
-        OuttakeControl();
-        EXTCONTROL();
-        LIFTCONTROL();
+            if (scoremode == Scoremode.SAMPLE)
+                SAMPLECONTROL();
+            else
+                SPECICONTROL();
+            OuttakeControl();
+            EXTCONTROL();
+            LIFTCONTROL();
+        }
 
     }
 }

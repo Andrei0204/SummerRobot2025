@@ -10,9 +10,9 @@ public class INCLAW implements IStateBasedModule, IRobotModule {
 
     public double clawpos;
     public final double clawRelease = 1,
-            clawSecure = 0.75,
-            clawInterior=0.76,
-            semiopenpos=0.76;
+            clawSecure = 0.77,
+            clawInterior=0.77,
+            semiopenpos=0.77;
 
                 //0.72 pt prindere
 

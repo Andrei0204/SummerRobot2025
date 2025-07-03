@@ -12,6 +12,7 @@ import com.pedropathing.follower.Follower;
 import com.pedropathing.pathgen.BezierLine;
 import com.pedropathing.pathgen.Path;
 import com.pedropathing.pathgen.Point;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import pedroPathing.constants.FConstants;
 import pedroPathing.constants.LConstants;
@@ -33,7 +34,7 @@ import pedroPathing.constants.LConstants;
 @Autonomous (name = "Straight Back And Forth", group = "PIDF Tuning")
 public class StraightBackAndForth extends OpMode {
     private Telemetry telemetryA;
-
+    public ElapsedTime timp;
     public static double DISTANCE = 40;
 
     private boolean forward = true;
@@ -50,7 +51,7 @@ public class StraightBackAndForth extends OpMode {
     @Override
     public void init() {
         follower = new Follower(hardwareMap, FConstants.class, LConstants.class);
-
+        timp =new ElapsedTime();
         forwards = new Path(new BezierLine(new Point(0,0, Point.CARTESIAN), new Point(DISTANCE,0, Point.CARTESIAN)));
         forwards.setConstantHeadingInterpolation(0);
 
@@ -73,16 +74,20 @@ public class StraightBackAndForth extends OpMode {
     @Override
     public void loop() {
         follower.update();
+
         if (!follower.isBusy()) {
-            if (forward) {
-                forward = false;
-                follower.followPath(backwards);
-            } else {
-                forward = true;
-                follower.followPath(forwards);
+            if(timp.milliseconds()>1000) {
+                if (forward) {
+                    forward = false;
+                    follower.followPath(backwards);
+                } else {
+                    forward = true;
+                    follower.followPath(forwards);
+                }
             }
         }
-
+        else
+            timp.reset();
         telemetryA.addData("going forward", forward);
         follower.telemetryDebug(telemetryA);
     }

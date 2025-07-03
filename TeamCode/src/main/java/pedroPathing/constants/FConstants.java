@@ -32,23 +32,23 @@ public class FConstants {
         FollowerConstants.useSecondaryTranslationalPID = false;
         FollowerConstants.secondaryTranslationalPIDFCoefficients.setCoefficients(0.1,0,0.01,0); // Not being used, @see useSecondaryTranslationalPID
 
-        FollowerConstants.headingPIDFCoefficients.setCoefficients(1.5 ,0,0.001 ,0);
+        FollowerConstants.headingPIDFCoefficients.setCoefficients(1.1 ,0,0.001 ,0);
         FollowerConstants.useSecondaryHeadingPID = false;
         FollowerConstants.secondaryHeadingPIDFCoefficients.setCoefficients(2,0,0.1,0); // Not being used, @see useSecondaryHeadingPID
 
 //        FollowerConstants.drivePIDFCoefficients.setCoefficients(0.01,0,0.00004 ,0.6,0);//0.015//        FollowerConstants.drivePIDFCoefficients.setCoefficients(0.0115,0,0.00007 ,0.6,0);//0.015
-        FollowerConstants.drivePIDFCoefficients.setCoefficients(0.01,0,0.00048 ,0.6,0);//0.015//        FollowerConstants.drivePIDFCoefficients.setCoefficients(0.0115,0,0.00007 ,0.6,0);//0.015
+        FollowerConstants.drivePIDFCoefficients.setCoefficients(0.01,0,0.0013 ,0.6,0);//0.015//        FollowerConstants.drivePIDFCoefficients.setCoefficients(0.0115,0,0.00007 ,0.6,0);//0.015
         FollowerConstants.useSecondaryDrivePID = false;
         FollowerConstants.secondaryDrivePIDFCoefficients.setCoefficients(0.01,0,
                 0.00018
                 ,0.6,0); // Not being used, @see useSecondaryDrivePID
 //0.012
-
-        FollowerConstants.zeroPowerAccelerationMultiplier = 4.1;//5
+        FollowerConstants.useBrakeModeInTeleOp=true;
+        FollowerConstants.zeroPowerAccelerationMultiplier = 4.6;//5
         FollowerConstants.centripetalScaling = 0.00035;
-        FollowerConstants.driveKalmanFilterParameters.dataCovariance=2;
-        FollowerConstants.pathEndTimeoutConstraint = 100;
-        FollowerConstants.pathEndTValueConstraint = 0.990;
+
+        FollowerConstants.pathEndTimeoutConstraint = 50;
+        FollowerConstants.pathEndTValueConstraint = 0.985;
         FollowerConstants.pathEndVelocityConstraint = 0.1;
         FollowerConstants.pathEndTranslationalConstraint = 0.1;
         FollowerConstants.pathEndHeadingConstraint = 0.007;
