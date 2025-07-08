@@ -81,40 +81,7 @@ public class teleoppedro extends OpMode {
 
 
         modules.telemetry(telemetry);
-
-
-        double targetHeading = 0;
-        double pos =follower.getPose().getHeading();
-        double headingError = targetHeading -pos;
-
-        /* Update Telemetry to the Driver Hub */
-        telemetry.update();
-        if(stickyGamepad1.b && holdheading==0)
-        {
-            holdheading=1;
-        }
-        else if(stickyGamepad1.b && holdheading==1)
-            holdheading=0;
-        if(gamepad1.y)
-            follower.setPose(new Pose(0,0,0));
-        if (holdheading==1) {
-
-
-             headingError = targetHeading -pos;
-             if(headingError<-Math.PI)
-                 headingError=(2*Math.PI+headingError);
-            if (Math.abs(headingError) < Math.toRadians(2)) {
-                headingCorrection = 0;
-            } else {
-
-                headingCorrection = headingPIDController.calculate(headingError);
-            }
-
-            follower.setTeleOpMovementVectors(gamepad1.left_stick_y, gamepad1.left_stick_x, headingCorrection);
-
-        } else {
-            follower.setTeleOpMovementVectors(gamepad1.left_stick_y, gamepad1.left_stick_x,  -gamepad1.right_stick_x);
-        }
+        follower.setTeleOpMovementVectors(gamepad1.left_stick_y, gamepad1.left_stick_x,  -gamepad1.right_stick_x);
         follower.update();
         modules.update();
         stickyGamepad1.update();

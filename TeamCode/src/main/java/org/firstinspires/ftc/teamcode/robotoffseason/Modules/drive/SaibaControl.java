@@ -30,21 +30,21 @@ public class SaibaControl implements IRobotModule {
     ElapsedTime timercollect;
     public int clawintake = 1;
     public int waitfordown = 0;
-    public double fisttime=0;
-    public  StateInSample stateInSample= StateInSample.TRANSFER;
-    public  StateInSpeci stateInSpeci= StateInSpeci.TRANSFER;
-    public  StateOutSample stateOutSample= StateOutSample.DOWN;
-    public StateOutSpeci sateOutSpeci= StateOutSpeci.DOWN;
+    public double fisttime = 0;
+    public StateInSample stateInSample = StateInSample.TRANSFER;
+    public StateInSpeci stateInSpeci = StateInSpeci.TRANSFER;
+    public StateOutSample stateOutSample = StateOutSample.DOWN;
+    public StateOutSpeci sateOutSpeci = StateOutSpeci.DOWN;
     public Scoremode scoremode = Scoremode.SAMPLE;
-
-    public enum  StateInSpeci{
+    double pressedretraction=0;
+    public enum StateInSpeci {
         TRANSFER,
         DOWN,
         RETRACTSERVOS,
         RETRACTEXT;
     }
 
-    public enum  StateInSample{
+    public enum StateInSample {
         TRANSFER,
         DOWN,
         RETRACTSERVOS,
@@ -55,7 +55,8 @@ public class SaibaControl implements IRobotModule {
         SCORING,
         DOWN;
     }
-    public enum  StateOutSample{
+
+    public enum StateOutSample {
         DOWN,
         MOVEINTOTRANSFER,
         HANDSHAKE,
@@ -63,7 +64,8 @@ public class SaibaControl implements IRobotModule {
         EXTENDLINK,
         RELEASED;
     }
-    public enum Scoremode{
+
+    public enum Scoremode {
         SAMPLE,
         SPECIMEN;
 
@@ -124,10 +126,10 @@ public class SaibaControl implements IRobotModule {
     }
 
     public void SAMPLECONTROL() {
-        if (stateInSample==StateInSample.TRANSFER) {
+        if (stateInSample == StateInSample.TRANSFER) {
             if (gamepad1.dpad_right) {
-                scoremode=Scoremode.SPECIMEN;
-                stateInSpeci=StateInSpeci.TRANSFER;
+                scoremode = Scoremode.SPECIMEN;
+                stateInSpeci = StateInSpeci.TRANSFER;
                 if (modules.EXT.getRealCurrentPosition() < 10) {
                     modules.EXT.setRunMode(EXT.EXTRUNMODE.PID);
                     modules.EXT.setState(EXT.State.MID);
@@ -137,24 +139,24 @@ public class SaibaControl implements IRobotModule {
 
                 modules.OUTBRAT.setState(OUTBRAT.State.SPECIMEN);
                 modules.LIFT.setState(LIFT.State.START);
-                fisttime=2;
+                fisttime = 2;
             }
         }
-        if (stateInSample==StateInSample.TRANSFER&& modules.EXT.getRealCurrentPosition() < 17)
+        if (stateInSample == StateInSample.TRANSFER && modules.EXT.getRealCurrentPosition() < 17)
             modules.INROTATOR.setState(INROTATOR.State.THIRD);
-        if ((gamepad2.b || stickyGamepad2.x) && stateInSample==StateInSample.TRANSFER) {
+        if ((gamepad2.b || stickyGamepad2.x) && stateInSample == StateInSample.TRANSFER) {
             modules.INTUR.setState(INTUR.State.FRONT);
             intaketimer.reset();
-            stateInSample=StateInSample.DOWN;
+            stateInSample = StateInSample.DOWN;
             modules.INCLAW.setState(INCLAW.State.RELEASE);
             clawintake = 0;
 
         }
 
-        if (stateInSample==StateInSample.DOWN) { //E la sol
+        if (stateInSample == StateInSample.DOWN) { //E la sol
             COLLECTCOMANDS();
         }
-        if (modules.INTUR.getState() == INTUR.State.FRONT && intaketimer.milliseconds() > 150 && stateInSample==StateInSample.DOWN) {
+        if (modules.INTUR.getState() == INTUR.State.FRONT && intaketimer.milliseconds() > 150 && stateInSample == StateInSample.DOWN) {
             if (waitfordown != 1) {
                 modules.INBRAT.setState(INBRAT.State.SEMIDOWN);
 
@@ -164,16 +166,16 @@ public class SaibaControl implements IRobotModule {
         if ((gamepad2.dpad_down) && waitfordown == 0)//return
         {
             returntimer.reset();
-            stateInSample=StateInSample.RETRACTSERVOS;
+            stateInSample = StateInSample.RETRACTSERVOS;
         }
 
-        if ( stateInSample==StateInSample.RETRACTSERVOS) {
+        if (stateInSample == StateInSample.RETRACTSERVOS) {
 
             modules.INBRAT.setState(INBRAT.State.UP);
             modules.INROTATOR.setState(INROTATOR.State.FIRST);
             modules.INCLAW.setState(INCLAW.State.SEMIOPEN);
             modules.INTUR.setState(INTUR.State.TRANSFER);
-            stateInSample=StateInSample.RETRACTEXT;
+            stateInSample = StateInSample.RETRACTEXT;
             returntimer.reset();
             if (modules.EXT.getRealCurrentPosition() < 6) {
                 modules.EXT.setRunMode(EXT.EXTRUNMODE.PID);
@@ -181,21 +183,21 @@ public class SaibaControl implements IRobotModule {
             }
 
         }
-        if (returntimer.milliseconds() > 200 && stateInSample==StateInSample.RETRACTEXT) {
+        if (returntimer.milliseconds() > 200 && stateInSample == StateInSample.RETRACTEXT) {
 
             modules.INCLAW.setState(INCLAW.State.INTERIOR);
         }
-        if (returntimer.milliseconds() > 200 && stateInSample==StateInSample.RETRACTEXT) {
+        if (returntimer.milliseconds() > 200 && stateInSample == StateInSample.RETRACTEXT) {
             modules.EXT.setRunMode(EXT.EXTRUNMODE.PID);
             modules.EXT.setState(EXT.State.START);
 
-            stateInSample=StateInSample.TRANSFER;
+            stateInSample = StateInSample.TRANSFER;
             returntimer.reset();
         }
     }
 
     public void OuttakeControl() {
-        if (scoremode==Scoremode.SPECIMEN) {
+        if (scoremode == Scoremode.SPECIMEN) {
 
 
             if (gamepad2.y && modules.LIFT.getState() == LIFT.State.START) {
@@ -205,75 +207,84 @@ public class SaibaControl implements IRobotModule {
                 modules.OUTCLAW.setState(OUTCLAW.State.SECURE);
                 outtimer.reset();
 
-                sateOutSpeci =StateOutSpeci.SCORING;
+                sateOutSpeci = StateOutSpeci.SCORING;
             }
-            if (sateOutSpeci ==StateOutSpeci.SCORING && outtimer.milliseconds() > 100 && gamepad2.right_stick_y < -0.8) {
+            if (sateOutSpeci == StateOutSpeci.SCORING && outtimer.milliseconds() > 100 && gamepad2.right_stick_y < -0.8) {
                 modules.LINKEAGE.setState(LINKEAGE.State.OPEN);
             }
 
-            if (sateOutSpeci ==StateOutSpeci.SCORING && outtimer.milliseconds() > 100 && gamepad1.a ) {
+            if (sateOutSpeci == StateOutSpeci.SCORING && outtimer.milliseconds() > 100 && gamepad1.a) {
                 modules.OUTCLAW.setState(OUTCLAW.State.RELEASE);
 
-                modules.LIFT.setState(LIFT.State.START);
                 modules.OUTBRAT.setState(OUTBRAT.State.SPECIMEN);
                 modules.LINKEAGE.setState(LINKEAGE.State.CLOSED);
                 modules.OUTROTATIE.setState(OUTROTATIE.State.SPECIMEN);
-                sateOutSpeci =StateOutSpeci.DOWN;
+                sateOutSpeci = StateOutSpeci.DOWN;
+                pressedretraction=1;
+                outtimer.reset();
+            }
+            if (pressedretraction==1 && outtimer.milliseconds()>150) {
+                modules.LIFT.setState(LIFT.State.START);
+                modules.OUTCLAW.setState(OUTCLAW.State.SECURE);
+
+                sateOutSpeci = StateOutSpeci.DOWN;
+                pressedretraction=0;
             }
 
+
         }
-        if (scoremode==Scoremode.SAMPLE) {
+        if (scoremode == Scoremode.SAMPLE) {
 
 
             if (modules.LIFT.getState() == LIFT.State.START)
                 modules.LIFT.setState(LIFT.State.TRANSFER);
-            if (stateOutSample==StateOutSample.DOWN && modules.EXT.getRealCurrentPosition() < 10 && gamepad2.dpad_up) {
+            if (stateOutSample == StateOutSample.DOWN && modules.EXT.getRealCurrentPosition() < 10 && gamepad2.dpad_up) {
                 modules.OUTBRAT.setState(OUTBRAT.State.MID);
                 outtimer.reset();
-                stateOutSample=StateOutSample.MOVEINTOTRANSFER;
+                stateOutSample = StateOutSample.MOVEINTOTRANSFER;
 
             }
-            if (outtimer.milliseconds() > 75 && stateOutSample==StateOutSample.MOVEINTOTRANSFER) {
+            if (outtimer.milliseconds() > 75 && stateOutSample == StateOutSample.MOVEINTOTRANSFER) {
                 modules.OUTCLAW.setState(OUTCLAW.State.SECURE);
-                stateOutSample=StateOutSample.HANDSHAKE;
+                stateOutSample = StateOutSample.HANDSHAKE;
 
                 outtimer.reset();
             }
-            if (outtimer.milliseconds() > 100 && stateOutSample==StateOutSample.HANDSHAKE) {
+            if (outtimer.milliseconds() > 100 && stateOutSample == StateOutSample.HANDSHAKE) {
                 modules.INCLAW.setState(INCLAW.State.RELEASE);
                 modules.EXT.setRunMode(EXT.EXTRUNMODE.PID);
                 modules.EXT.setState(EXT.State.MID);
-                stateOutSample=StateOutSample.EXTEND;
+                stateOutSample = StateOutSample.EXTEND;
 
                 outtimer.reset();
             }
-            if (stateOutSample==StateOutSample.EXTEND && outtimer.milliseconds() > 100) {
+            if (stateOutSample == StateOutSample.EXTEND && outtimer.milliseconds() > 100) {
                 modules.LIFT.setRunMode(LIFT.EXTRUNMODE.PID);
                 modules.LIFT.setState(LIFT.State.FULL);
                 modules.OUTBRAT.setState(OUTBRAT.State.SAMPLE);
                 outtimer.reset();
-                stateOutSample=StateOutSample.EXTENDLINK;
+                stateOutSample = StateOutSample.EXTENDLINK;
 
             }
-            if (stateOutSample==StateOutSample.EXTENDLINK && outtimer.milliseconds() > 200) {
+            if (stateOutSample == StateOutSample.EXTENDLINK && outtimer.milliseconds() > 200) {
                 modules.LINKEAGE.setState(LINKEAGE.State.OVERCENTER);
                 modules.OUTROTATIE.setState(OUTROTATIE.State.SCORESMAPLE);
             }
-            if (stateOutSample==StateOutSample.EXTENDLINK && outtimer.milliseconds() > 100 && gamepad2.a) {
+            if (stateOutSample == StateOutSample.EXTENDLINK && outtimer.milliseconds() > 100 && gamepad2.a) {
                 modules.OUTCLAW.setState(OUTCLAW.State.RELEASE);
                 outtimer.reset();
-                stateOutSample=StateOutSample.RELEASED;
+                stateOutSample = StateOutSample.RELEASED;
             }
-            if (stateOutSample==StateOutSample.RELEASED && outtimer.milliseconds() > 100 && gamepad2.right_stick_y > 0.1) {
+            if (stateOutSample == StateOutSample.RELEASED && outtimer.milliseconds() > 100 && gamepad2.right_stick_y > 0.1) {
                 modules.LINKEAGE.setState(LINKEAGE.State.CLOSED);
 
                 modules.OUTBRAT.setState(OUTBRAT.State.TRANSFER);
                 modules.OUTROTATIE.setState(OUTROTATIE.State.COLLECT);
                 modules.LIFT.setRunMode(LIFT.EXTRUNMODE.PID);
                 modules.LIFT.setState(LIFT.State.TRANSFER);
-                stateOutSample=StateOutSample.DOWN;
+                stateOutSample = StateOutSample.DOWN;
             }
-            if (modules.EXT.getCurrentPosition() < modules.EXT.midpos && stateOutSample==StateOutSample.RELEASED) {
+            if (modules.EXT.getCurrentPosition() < modules.EXT.midpos && stateOutSample == StateOutSample.RELEASED) {
                 modules.EXT.setRunMode(EXT.EXTRUNMODE.PID);
                 modules.EXT.setState(EXT.State.MID);
             }
@@ -282,15 +293,15 @@ public class SaibaControl implements IRobotModule {
 
     void SPECICONTROL() {
         if (gamepad1.dpad_left) {
-            scoremode=Scoremode.SAMPLE;
-            stateInSample=StateInSample.TRANSFER;
+            scoremode = Scoremode.SAMPLE;
+            stateInSample = StateInSample.TRANSFER;
             if (modules.EXT.getRealCurrentPosition() < 10) {
                 modules.EXT.setRunMode(EXT.EXTRUNMODE.PID);
                 modules.EXT.setState(EXT.State.MID);
             }
             modules.OUTROTATIE.setState(OUTROTATIE.State.COLLECT);
             modules.OUTBRAT.setState(OUTBRAT.State.TRANSFER);
-
+            fisttime = 0;
         }
         if (stickyGamepad2.a) {
             if (clawintake == 1) {
@@ -300,7 +311,6 @@ public class SaibaControl implements IRobotModule {
                     clawintake = 0;
 
                 } else {
-
 
                     modules.INTUR.setState(INTUR.State.DIAG);
                     clawintake = 0;
@@ -319,7 +329,8 @@ public class SaibaControl implements IRobotModule {
             }
         }
         if (timercollect.milliseconds() > 150 && waitfordown == 1) {
-            modules.OUTCLAW.setState(OUTCLAW.State.RELEASE);
+
+                modules.OUTCLAW.setState(OUTCLAW.State.RELEASE);
             modules.INCLAW.setState(INCLAW.State.INTERIOR);
             clawintake = 1;
             waitfordown = 0;
@@ -339,40 +350,40 @@ public class SaibaControl implements IRobotModule {
             timercollect.reset();
             modules.INROTATOR.setState(INROTATOR.State.THIRD);
 
-            stateInSpeci=StateInSpeci.DOWN;
+            stateInSpeci = StateInSpeci.DOWN;
             modules.OUTCLAW.setState(OUTCLAW.State.SECURE);
             modules.INCLAW.setState(INCLAW.State.RELEASE);
             clawintake = 0;
 
         }
-        if (modules.INTUR.getState() == INTUR.State.FRONT && intaketimer.milliseconds() > 100 && stateInSpeci==StateInSpeci.DOWN) {
+        if (modules.INTUR.getState() == INTUR.State.FRONT && intaketimer.milliseconds() > 100 && stateInSpeci == StateInSpeci.DOWN) {
             if (waitfordown != 1 && timercollect.milliseconds() > 100) {
                 modules.INBRAT.setState(INBRAT.State.SEMIDOWN);
 
             }
         }
-        if (stateInSpeci==StateInSpeci.DOWN) //E LA SOL
+        if (stateInSpeci == StateInSpeci.DOWN) //E LA SOL
             COLLECTWITHOUTCLAW();
 
 
         if (gamepad2.dpad_down && waitfordown != 1) {
-            stateInSpeci=StateInSpeci.RETRACTSERVOS;
+            stateInSpeci = StateInSpeci.RETRACTSERVOS;
         }
-        if (stateInSpeci==StateInSpeci.RETRACTSERVOS) {
+        if (stateInSpeci == StateInSpeci.RETRACTSERVOS) {
 
             modules.INBRAT.setState(INBRAT.State.MIDDLE);
             modules.INROTATOR.setState(INROTATOR.State.FIRST);
             modules.INTUR.setState(INTUR.State.THROW);
-            stateInSpeci=StateInSpeci.RETRACTEXT;
+            stateInSpeci = StateInSpeci.RETRACTEXT;
             returntimer.reset();
 
         }
-        if (returntimer.milliseconds() > 100 && stateInSpeci==StateInSpeci.RETRACTEXT) {
+        if (returntimer.milliseconds() > 100 && stateInSpeci == StateInSpeci.RETRACTEXT) {
             modules.EXT.setRunMode(EXT.EXTRUNMODE.PID);
             modules.EXT.setState(EXT.State.ZERO);
 
 
-            stateInSpeci=StateInSpeci.TRANSFER;
+            stateInSpeci = StateInSpeci.TRANSFER;
             returntimer.reset();
         }
 
@@ -484,7 +495,7 @@ public class SaibaControl implements IRobotModule {
             modules.LIFT.setManualPower(0);
 //                modules.LIFT.setRunMode(LIFT.EXTRUNMODE.PID);
         }
-        if(gamepad1.dpad_up) {
+        if (gamepad1.dpad_up) {
             modules.LINKEAGE.setState(LINKEAGE.State.OPEN);
         }
     }
@@ -492,20 +503,18 @@ public class SaibaControl implements IRobotModule {
 
     @Override
     public void update() {
-        if(fisttime==0 || fisttime==2)
-        {
+        if (fisttime == 0 || fisttime == 2) {
             modules.LIFT.setState(LIFT.State.AUTO);
-            modules.LIFT.setAuto(20*LIFT.TICKSCM);
-            if(modules.LIFT.getRealCurrentPosition()>18){
-                if(fisttime==2)
+            modules.LIFT.setAuto(20 * LIFT.TICKSCM);
+            if (modules.LIFT.getRealCurrentPosition() > 18) {
+                if (fisttime == 2)
                     modules.LIFT.setState(LIFT.State.START);
                 else
                     modules.LIFT.setState(LIFT.State.TRANSFER);
-                fisttime=1;
+                fisttime = 1;
             }
-        }
-            else {
-        modules.update();
+        } else {
+            modules.update();
 
 //        CLIMB();
             stickyGamepad1.update();

@@ -14,17 +14,17 @@ import org.firstinspires.ftc.teamcode.roboDrive.Wrappers.IStateBasedModule;
 public class LIFT implements IStateBasedModule, IRobotModule {
 
     public static double TICKSCM = 724.35;    //test
-    public static double startpos = -0.1*TICKSCM;
+    public static double startpos = -0.1 * TICKSCM;
     public static final double finalpos = 58 * TICKSCM;
-    public static final double transferpos =4 * TICKSCM;
-    public static  double scorespecipos = 30     * TICKSCM;
-    public static final double lowbasket =   16  * TICKSCM;
+    public static final double transferpos = 4 * TICKSCM;
+    public static double scorespecipos = 30 * TICKSCM;
+    public static final double lowbasket = 16 * TICKSCM;
     public static double autopose = 0;
 
     public static double target = 0; //cm
 
     public static double currentPosition = startpos;
-    public static double kP = 0.00013, kI = 0.19, kD = 0.000002,f=-0; //TODO Valori PID!!!!
+    public static double kP = 0.00013, kI = 0.19, kD = 0.000002, f = -0; //TODO Valori PID!!!!
     public static double kPjos = 0.00008, kIjos = 0.1, kDjos = 0.000003; //TODO Valori PID!!!!
 
     private static boolean ENABLED = true;
@@ -37,7 +37,8 @@ public class LIFT implements IStateBasedModule, IRobotModule {
     public State state;
     public EXTRUNMODE runMode;
 
-    VoltageSensor voltage=null;
+    VoltageSensor voltage = null;
+
     public LIFT(HardwareMap hardwareMap, State initialState) {
         if (!ENABLED) {
 
@@ -150,9 +151,11 @@ public class LIFT implements IStateBasedModule, IRobotModule {
     public void updateHardware() {
         pid = new PIDCoefficients(kP, kI, kD);
         double actualKs = f * 12.0 / voltage.getVoltage();
-        if ((target== transferpos ) || ( target==startpos   )) {
+        if (
+//                (target== transferpos ) ||
+                (target == startpos)) {
             pid = new PIDCoefficients(kPjos, kIjos, kDjos);
-            actualKs=0;
+            actualKs = 0;
         }
 
         switch (runMode) {
@@ -160,9 +163,8 @@ public class LIFT implements IStateBasedModule, IRobotModule {
                 LIFT1.setMode(CoolMotor.RunMode.PID);
                 LIFT2.setMode(CoolMotor.RunMode.PID);
 
-                LIFT1.setPIDF(pid,actualKs);
-                LIFT2.setPIDF(pid,actualKs);
-
+                LIFT1.setPIDF(pid, actualKs);
+                LIFT2.setPIDF(pid, actualKs);
 
 
                 LIFT2.calculatePowerFF(LIFT1.getCurrentPosition(), target);
