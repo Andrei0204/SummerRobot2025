@@ -15,9 +15,10 @@ public class LIFT implements IStateBasedModule, IRobotModule {
 
     public static double TICKSCM = 724.35;    //test
     public static double startpos = -0.1 * TICKSCM;
-    public static final double finalpos = 58 * TICKSCM;
-    public static final double transferpos = 4 * TICKSCM;
+    public static final double finalpos = 60 * TICKSCM;
+    public static final double transferpos = 0 * TICKSCM;
     public static double scorespecipos = 30 * TICKSCM;
+//    public static double scorespecipos = 34 * TICKSCM;
     public static final double lowbasket = 16 * TICKSCM;
     public static double autopose = 0;
 
@@ -80,6 +81,11 @@ public class LIFT implements IStateBasedModule, IRobotModule {
 
     public double getRealCurrentPosition() {
         return LIFT1.getCurrentPosition() / TICKSCM;
+    }
+
+    public boolean atTarget()
+    {
+        return Math.abs(getRealCurrentPosition() - target/TICKSCM) < 3;
     }
 
     public State getState() {
@@ -152,7 +158,7 @@ public class LIFT implements IStateBasedModule, IRobotModule {
         pid = new PIDCoefficients(kP, kI, kD);
         double actualKs = f * 12.0 / voltage.getVoltage();
         if (
-//                (target== transferpos ) ||
+                (target== transferpos ) ||
                 (target == startpos)) {
             pid = new PIDCoefficients(kPjos, kIjos, kDjos);
             actualKs = 0;

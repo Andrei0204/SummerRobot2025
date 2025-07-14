@@ -25,9 +25,9 @@ public class Follower {
     CoolMotor frontLeft, frontRight, backLeft, backRight;
     boolean frontLeftMotorReversed = true, frontRightMotorReversed, backLeftMotorReversed = true, backRightMotorReversed;
     PIDController tpid = new PIDController(0,0,0), hpid = new PIDController(0,0,0);
-    public static double kp = 0.09, ki = 0, kd = 0.015     , kph = 1.3, kih = 0, kdh = 0.1;
+    private double kp = 0.09, ki = 0, kd = 0.015     , kph = 1.3, kih = 0, kdh = 0.1;
     Vector power = new Vector(0,0);
-    public static double velocityThreshold = 0.5 ;
+    public static double velocityThreshold = 3.5 ;
     public static double lateralmultiplier = 1 ;
 
     double headingPower = 0;
@@ -61,7 +61,10 @@ public class Follower {
         return Math.abs(diff) <= tolerance;
     }
     public boolean stopped() {
-        return (odo.getVelX(DistanceUnit.CM) <= velocityThreshold && odo.getVelY(DistanceUnit.CM) <= velocityThreshold  ) && reachedTarget(3.5);
+        return (Math.abs(odo.getVelX(DistanceUnit.CM) )<= velocityThreshold &&Math.abs( odo.getVelY(DistanceUnit.CM)) <= velocityThreshold  ) && reachedTarget(4);
+    }
+    public boolean fullstop() {
+        return (Math.abs(odo.getVelX(DistanceUnit.CM) )<= 0.1 &&Math.abs( odo.getVelY(DistanceUnit.CM)) <= 0.1  ) && reachedTarget(4);
     }
     public void setTarget(Pose target) {
         this.target = target;
@@ -116,6 +119,14 @@ public class Follower {
     }
     public double getDistance(Pose p1, Pose p2) {
         return Math.sqrt((p1.getX() - p2.getX()) * (p1.getX() - p2.getX()) + (p1.getY() - p2.getY()) * (p1.getY() - p2.getY()));
+    }
+
+    public void setKP(double kp) {
+        this.kp = kp;
+    }
+    public void setKD(double kd)
+    {
+        this.kd = kd;
     }
 
 }

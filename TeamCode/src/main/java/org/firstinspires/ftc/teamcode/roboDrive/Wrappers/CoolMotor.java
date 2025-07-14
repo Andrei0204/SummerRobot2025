@@ -98,10 +98,11 @@ public class CoolMotor {
     }
 
     public double feedforward;
+
     public void resetEncoder (){
+
         this.motor.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         this.motor.motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
 
     }
     public void setPIDF(PIDCoefficients pidCoefficients, double feedforward){

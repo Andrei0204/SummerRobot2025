@@ -86,9 +86,7 @@ public class teleoppedro extends OpMode {
         modules.update();
         stickyGamepad1.update();
         modulesControl.update();
-        telemetry.addData("poz",pos);
-        telemetry.addData("headingERR",headingError);
-        telemetry.addData("pos",follower.getPose().getHeading());
+
         telemetry.update();
 
 

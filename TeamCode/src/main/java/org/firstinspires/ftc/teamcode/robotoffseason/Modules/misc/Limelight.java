@@ -25,12 +25,15 @@ public class Limelight {
     double y = 0;
     public static double distx = 0;
     public static double disty = 0;
-    public static double i = 1;
+    public double lenght=0;
+    public double width=0;
 
-    public static double camerangle = 45;
-    public static double h = 21.5;
-    public static double hsample =0 ;
+    public static double h = 23.2;//22.5
 
+    public static double i=-1;
+    public static double c=1;
+    public static double angle=32.2;
+    public static double heigh=21;
     public Limelight(HardwareMap hardwareMap) {
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
         limelight.start();
@@ -38,8 +41,14 @@ public class Limelight {
     }
 
     public void pipeline() {
-        limelight.pipelineSwitch(7);
+        limelight.pipelineSwitch(5);
     }
+
+    public void pipelineZero() {
+        limelight.pipelineSwitch(0);
+    }
+
+
 //TODO DETECTIE STIU CE ARE!!!;
     public Pose2d getdistanceVector(double heading, String f) {
         result = limelight.getLatestResult();
@@ -58,53 +67,108 @@ public class Limelight {
         }
         return new Pose2d(0, 0, 0);
     }
+    public Pose2d getdistanceVector(double heading, String f , double i ) {
+        result = limelight.getLatestResult();
+        if (result != null) {
+            if (result.isValid()) {
+                detectie(f, i);
+                rotatedPose = new Vector(distx,
+                        disty,
+                        0);
+                if (x != 0 && y != 0) {
+                    rotatedPose = rotatedPose.rotateBy(rotatedPose, heading);
+                    return new Pose2d(rotatedPose.getX(), rotatedPose.getY(), 0);
+                }
+            }
+
+        }
+        return new Pose2d(0, 0, 0);
+    }
 
     private void detectie(String f) {
+        List<LLResultTypes.DetectorResult> detectorResults = result.getDetectorResults();
+        for (LLResultTypes.DetectorResult dr : detectorResults) {
+            if(Objects.equals(dr.getClassName(), f)){
+        x= dr.getTargetYDegreesNoCrosshair();
+        y= dr.getTargetXDegreesNoCrosshair();
+        distx=heigh/Math.tan(Math.toRadians(angle-i*x));
+        disty=Math.sqrt(distx*distx+heigh*heigh)*Math.tan(Math.toRadians(y*c));
+                    double xc1=dr.getTargetCorners().get(0).get(0);
+                    double xc2=dr.getTargetCorners().get(3).get(0);
+                    double xc3=dr.getTargetCorners().get(2).get(0);
+                    double yc1=dr.getTargetCorners().get(0).get(1);
+                    double yc2=dr.getTargetCorners().get(3).get(1);
+                    double yc3=dr.getTargetCorners().get(2).get(1);
+                    lenght= Math.sqrt((xc1-xc2)*(xc1-xc2) +(yc1-yc2)*(yc1-yc2));
+                    width= Math.sqrt((xc2-xc3)*(xc2-xc3) +(yc2-yc3)*(yc2-yc3));
 
-        x = result.getTx();
-        y = -result.getTy();
-        distx =((h-hsample)*Math.tan(Math.toRadians(y + camerangle)));
-        disty = (h/Math.cos(Math.toRadians(camerangle+y)))*Math.tan(Math.toRadians(x));
+        return;
+        }
     }
+    }
+
+    private void detectie(String f,double i) {
+        double cycle = 1;
+        double x1=0,y1=0 ,l1=0,w1=0;
+        List<LLResultTypes.DetectorResult> detectorResults = result.getDetectorResults();
+        for (LLResultTypes.DetectorResult dr : detectorResults) {
+            if(Objects.equals(dr.getClassName(), f)){
+                x= dr.getTargetYDegreesNoCrosshair();
+                y= dr.getTargetXDegreesNoCrosshair();
+                distx=heigh/Math.tan(Math.toRadians(angle-i*x));
+                disty=Math.sqrt(distx*distx+heigh*heigh)*Math.tan(Math.toRadians(y*c));
+                double xc1=dr.getTargetCorners().get(0).get(0);
+                double xc2=dr.getTargetCorners().get(3).get(0);
+                double xc3=dr.getTargetCorners().get(2).get(0);
+                double yc1=dr.getTargetCorners().get(0).get(1);
+                double yc2=dr.getTargetCorners().get(3).get(1);
+                double yc3=dr.getTargetCorners().get(2).get(1);
+                lenght= Math.sqrt((xc1-xc2)*(xc1-xc2) +(yc1-yc2)*(yc1-yc2));
+                width= Math.sqrt((xc2-xc3)*(xc2-xc3) +(yc2-yc3)*(yc2-yc3));
+
+                if(cycle == 1)
+                {
+                    x1=distx;
+                    y1=disty;
+                    l1=lenght;
+                    w1=width;
+                }
+
+                if(distx>i)
+                    return;
+
+                cycle++;
+            }
+        }
+        if(x1!=0){
+        distx=x1;
+        disty=y1;
+        width=w1;
+        lenght=l1;
+        }
+    }
+
 
     public Pose2d getDEGREES(String f,double robotpos) {
         result = limelight.getLatestResult();
         if (result != null) {
-            x = result.getTx();
-            y = -result.getTy();
-            distx =((h-hsample)*Math.tan(Math.toRadians(y + camerangle)));
-            disty = (h/Math.cos(Math.toRadians(camerangle+y)))*Math.tan(Math.toRadians(x));
+            x= result.getTyNC();
+            y= result.getTxNC();
+            distx=heigh/Math.tan(Math.toRadians(angle-i*x));
+            disty=Math.sqrt(distx*distx+heigh*heigh)*Math.tan(Math.toRadians(y*c));
                         return new Pose2d(y, x, 0);
                 }
         return new Pose2d(0, 0, 0);
     }
 
     public double isLateral(String f) {
-        result = limelight.getLatestResult();
-        if (result != null) {
-            if (result.isValid()) {
-                List<LLResultTypes.DetectorResult> detectorResults = result.getDetectorResults();
-                for (LLResultTypes.DetectorResult dr : detectorResults) {
-                    if (Objects.equals(dr.getClassName(), f)) {
-                        double xc1=dr.getTargetCorners().get(0).get(0);
-                        double xc2=dr.getTargetCorners().get(3).get(0);
-                        double xc3=dr.getTargetCorners().get(2).get(0);
-                        double yc1=dr.getTargetCorners().get(0).get(1);
-                        double yc2=dr.getTargetCorners().get(3).get(1);
-                        double yc3=dr.getTargetCorners().get(2).get(1);
-                        double lenght= Math.sqrt((xc1-xc2)*(xc1-xc2) +(yc1-yc2)*(yc1-yc2));
-                        double width= Math.sqrt((xc2-xc3)*(xc2-xc3) +(yc2-yc3)*(yc2-yc3));
-                        if(lenght>width)
-                            return 1;
-                        else
-                            return 2;
-                    }
-
-                }
-
-            }
-        }
-        return 0;
+        if(  lenght/width >0.5 ||
+                lenght==width)
+         return 0;
+        else if(lenght>width)
+            return 1;
+        else
+            return 2;
     }
 }
 

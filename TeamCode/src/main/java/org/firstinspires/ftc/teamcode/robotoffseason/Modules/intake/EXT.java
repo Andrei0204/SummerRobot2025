@@ -16,7 +16,7 @@ public class EXT implements IStateBasedModule, IRobotModule {
     public static  double startpos=7*TICKSCM;
     public static  double zeropos=0*TICKSCM;
     public static final double finalpos=48*TICKSCM;
-    public static final double midpos=12*TICKSCM;
+    public static final double midpos=15*TICKSCM; // era 12
     public static double autopose=0;
 
     public static double target = 0; //cm
@@ -80,6 +80,11 @@ public class EXT implements IStateBasedModule, IRobotModule {
     public void setState(State newState) {
         if (state == newState) return;
         this.state = newState;
+    }
+
+    public boolean atTarget()
+    {
+        return Math.abs(getRealCurrentPosition() - target/TICKSCM) <= 2;
     }
 
     public boolean reachedPosition(double tolerance) {

@@ -17,7 +17,8 @@ public class OUTBRAT implements IStateBasedModule, IRobotModule {
     public static final double transferpos = 1 ;
     public static final double specimenpos = 0;
     public static final double scorespecipos = 0.68;
-    public static  double samplepos = 0.3 ;
+//    public static final double scorespecipos = 0.71;
+    public static  double samplepos = 0.29 ;
     public static final double midpos = 0.93;
     public static double auto=0.28;
     public static double profileMaxVelocity = 16, profileAcceleration = 12, profileDeceleration = 9;

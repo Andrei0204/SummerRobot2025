@@ -6,13 +6,11 @@ import com.acmerobotics.dashboard.config.Config;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.roboDrive.math.Pose;
-import org.firstinspires.ftc.teamcode.robotoffseason.CurbeBezier.Follower;
 import org.firstinspires.ftc.teamcode.robotoffseason.Modules.SaibaModules;
 import org.firstinspires.ftc.teamcode.robotoffseason.Modules.intake.EXT;
 import org.firstinspires.ftc.teamcode.robotoffseason.Modules.intake.INBRAT;
@@ -25,12 +23,9 @@ import org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.OUTBRAT;
 import org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.OUTCLAW;
 import org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.OUTROTATIE;
 
-import pedroPathing.constants.FConstants;
-import pedroPathing.constants.LConstants;
-
 @Config
-@Autonomous(name = "custom", group = "11Saiba")
-public class postest extends OpMode {
+@Autonomous(name = "speci8", group = "11Saiba")
+public class speci8 extends OpMode {
     private SaibaModules modules = null;
     Follower follower = null;
     private ElapsedTime pathtimer, actionTimer;
@@ -41,7 +36,7 @@ public class postest extends OpMode {
      */
     private int pathState;
 
-
+    double cycles =0;
     public static double i = 1.6;
 
     public void buildPaths() {
@@ -51,7 +46,7 @@ public class postest extends OpMode {
     public void autonomousPathUpdate() {
         switch (pathState) {
             case 1:
-                follower.setTarget(new Pose(84, 9, 0));
+                follower.setTarget(new Pose(84, 13, 0));
                 modules.LIFT.setState(LIFT.State.SCORESPECI);
                 modules.OUTROTATIE.setState(OUTROTATIE.State.SCORESPECI);
                 modules.OUTBRAT.setState(OUTBRAT.State.SCORESPECI);
@@ -62,11 +57,17 @@ public class postest extends OpMode {
                     modules.LINKEAGE.setState(LINKEAGE.State.CLOSED);
                     modules.OUTBRAT.setState(OUTBRAT.State.SPECIMEN);
 
-                    follower.setTarget(new Pose(48, -69, -0.86));
-                    setPathState(2);
+
+                    setPathState(-1);
                 }
                 break;
+            case -1:
+                if(follower.reachedTargetAndStopped(3.5) && follower.fullstop())
+                {
+
+                }
             case 2: //primu
+                follower.setTarget(new Pose(48, -67, -0.86));
                 if (follower.localization.getX() < 60) {
                     modules.OUTROTATIE.setState(OUTROTATIE.State.SPECIMEN);
                     modules.LIFT.setState(LIFT.State.START);
@@ -77,7 +78,7 @@ public class postest extends OpMode {
                     modules.INROTATOR.setState(INROTATOR.State.THIRD);
                     modules.INBRAT.setState(INBRAT.State.SEMIDOWN);
                 }
-                if (follower.reachedTargetAndStopped(3)) {
+                if (follower.reachedTargetAndStopped(2.5) &&follower.reachedHeading(Math.toRadians(5)) ) {
 
                     setPathState(3);
                 }
@@ -101,7 +102,7 @@ public class postest extends OpMode {
                 }
                 break;
             case 5:
-                if (pathtimer.milliseconds() > 100) {
+                if (pathtimer.milliseconds() > 100) { //scnd
                     follower.setTarget(new Pose(45.5, -94, -0.83));
                     modules.INTUR.setState(INTUR.State.AUTOSPECI);
                     modules.INTUR.setangle(45);
@@ -110,7 +111,7 @@ public class postest extends OpMode {
                 }
                 break;
             case 6:
-                if (follower.reachedHeading(Math.toRadians(3)) && follower.reachedTargetAndStopped(3.5)) {
+                if (follower.reachedHeading(Math.toRadians(5)) && follower.reachedTargetAndStopped(2.5)) {
                     setPathState(-6);
                 } else
                     pathtimer.reset();
@@ -134,10 +135,10 @@ public class postest extends OpMode {
                     modules.INCLAW.setState(INCLAW.State.RELEASE);
                     setPathState(8);
                 }
-                break;
-            case 8:
+                break ;
+            case 8://third
                 if (pathtimer.milliseconds() > 100) {
-                    follower.setTarget(new Pose(42, -115, -0.73));
+                    follower.setTarget(new Pose(44, -116, -0.73));
                     modules.INTUR.setState(INTUR.State.AUTOSPECI);
                     modules.INTUR.setangle(0);
                     modules.INROTATOR.setState(INROTATOR.State.SECOND);
@@ -189,12 +190,16 @@ public class postest extends OpMode {
                 modules.OUTROTATIE.setState(OUTROTATIE.State.SCORESPECI);
                 modules.LIFT.setState(LIFT.State.SCORESPECI);
                 follower.lateralmultiplier=i;
-                follower.setTarget(new Pose(91.5, 1, Math.toRadians(5)));
+                if(cycles<3)
+                    follower.setTarget(new Pose(88, 4, Math.toRadians(10)));
+                else
+                    follower.setTarget(new Pose(90 , 4, Math.toRadians(10)));
                 if(follower.localization.getY()>-50) {
                     modules.LINKEAGE.setState(LINKEAGE.State.OPEN);
                 }
-                if(follower.reachedTarget(4.5))
+                if(follower.reachedTarget(4))
                 {
+                    cycles ++;
                     modules.OUTCLAW.setState(OUTCLAW.State.RELEASE);
                     modules.LINKEAGE.setState(LINKEAGE.State.CLOSED);
                     modules.OUTBRAT.setState(OUTBRAT.State.SPECIMEN);
@@ -269,6 +274,9 @@ public class postest extends OpMode {
         modules.update();
         modules.OUTBRAT.setState(OUTBRAT.State.MID);
         follower.update();
+
+        telemetry.update();
+
     }
 
     /**

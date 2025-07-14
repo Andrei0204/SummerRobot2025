@@ -1,8 +1,11 @@
 package org.firstinspires.ftc.teamcode.robotoffseason.Modules;
 
+import com.pedropathing.pathgen.Point;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.robotoffseason.Modules.intake.INTUR;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.roboDrive.Wrappers.IRobotModule;
@@ -38,6 +41,10 @@ public class SaibaModules implements IRobotModule {
     public OUTCLAW OUTCLAW;
     public OUTROTATIE OUTROTATIE;
     public PTO PTO;
+
+    private final double armLength = 15; //cm
+    private double extension = 0;
+    private double angle = 0;
 
 
 
@@ -84,6 +91,36 @@ public class SaibaModules implements IRobotModule {
             //  PTO = new PTO(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.PTO.State.FAST);
         }
 
+    }
+
+    public void calculateKinematicConsts(Point point)
+    {
+        angle = Math.toDegrees(Math.asin(point.getY() / armLength));
+        extension = point.getX() - Math.sqrt(armLength * armLength - point.getY() * point.getY());
+    }
+
+    public void setIntakeKinematic(Point point)
+    {
+        calculateKinematicConsts(point);
+        EXT.setState(org.firstinspires.ftc.teamcode.robotoffseason.Modules.intake.EXT.State.AUTO);
+        EXT.setAuto(extension * org.firstinspires.ftc.teamcode.robotoffseason.Modules.intake.EXT.TICKSCM);
+        INTUR.setState(org.firstinspires.ftc.teamcode.robotoffseason.Modules.intake.INTUR.State.AUTOSPECI);
+        INTUR.setangle(angle);
+        INBRAT.setState(org.firstinspires.ftc.teamcode.robotoffseason.Modules.intake.INBRAT.State.SEMIDOWN);
+    }
+
+    public double getKinematicExtension(){
+        return extension;
+    }
+
+    public double getKinematixAngle()
+    {
+        return angle;
+    }
+
+    public double getLiftCurrent()
+    {
+        return Math.abs(LIFT.LIFT1.motor.motor.getCurrent(CurrentUnit.AMPS));
     }
 
     public void telemetry(Telemetry telemetry) {

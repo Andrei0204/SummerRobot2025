@@ -134,6 +134,17 @@ public class SensorLimelight3A extends LinearOpMode {
                     List<LLResultTypes.DetectorResult> detectorResults = result.getDetectorResults();
                     for (LLResultTypes.DetectorResult dr : detectorResults) {
                         telemetry.addData("Detector", "Class: %s, Area: %.2f", dr.getClassName(), dr.getTargetArea());
+                        telemetry.addData("colt1 x", "Class: %s, Area: %.2f", dr.getTargetCorners().get(0).get(0));
+                        telemetry.addData("colt1 y", "Class: %s, Area: %.2f", dr.getTargetCorners().get(0).get(1));
+                        telemetry.addData("colt2 x", "Class: %s, Area: %.2f", dr.getTargetCorners().get(1).get(0));
+                        telemetry.addData("colt2 y", "Class: %s, Area: %.2f", dr.getTargetCorners().get(1).get(1));
+                        telemetry.addData("colt3 x", "Class: %s, Area: %.2f", dr.getTargetCorners().get(2).get(0));
+                        telemetry.addData("colt3 y", "Class: %s, Area: %.2f", dr.getTargetCorners().get(2).get(1));
+
+                        telemetry.addData("colt4 x", "Class: %s, Area: %.2f", dr.getTargetCorners().get(3).get(0));
+
+                        telemetry.addData("colt4 y", "Class: %s, Area: %.2f", dr.getTargetCorners().get(3).get(1));
+
                     }
 
                     // Access fiducial results

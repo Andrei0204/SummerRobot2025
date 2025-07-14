@@ -55,6 +55,7 @@ public class CoolServo {
     }
 
     public double cachedPosition, targetPosition;
+
     public void setPwmRange(int downval,int upval)
     {
         servo.servo.setPwmRange(new PwmControl.PwmRange(downval,upval));

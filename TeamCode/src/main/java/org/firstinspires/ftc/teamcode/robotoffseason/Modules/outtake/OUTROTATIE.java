@@ -5,13 +5,16 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.roboDrive.Wrappers.IRobotModule;
 import org.firstinspires.ftc.teamcode.roboDrive.Wrappers.IStateBasedModule;
+import com.acmerobotics.dashboard.config.Config;
 
+@Config
 public class OUTROTATIE implements IStateBasedModule, IRobotModule {
     public double rotpose;
-    public static final double specimen = 0.2;
-    public static final double scorespeci = 0.55;
-    public static final double collect = 0.00;
-    public static final double samplepos = 0;
+    public static  double specimen = 0.5;
+    public static  double scorespeci = 0.8 ;
+//    public static final double scorespeci = 0.4;
+    public static  double collect = 0.2;
+    public static  double samplepos = 0.2;
     public static double auto=0.28;
 
     public Servo rotatie;
@@ -20,7 +23,6 @@ public class OUTROTATIE implements IStateBasedModule, IRobotModule {
     public OUTROTATIE(HardwareMap hardwareMap, State initialState) {
         rotatie = hardwareMap.get(Servo.class, "outrotatie");
         this.RotatieState = initialState;
-
     }
     public State getState() {
         return RotatieState;
