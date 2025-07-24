@@ -12,9 +12,9 @@ public class INROTATOR implements IStateBasedModule, IRobotModule {
     public static final double scndpos = 0.347;
     public static final double trdpos = 0.495;
     public static final double fthpos = 0.637;
-    public static final double fifthpos=0.78;
-    public static final double specimenpos=0.83;
-    public static double custom=0.47;
+    public static final double fifthpos = 0.78;
+    public static final double specimenpos = 0.83;
+    public static double custom = 0.47;
 
     public Servo rotator;
     public State RotState;
@@ -24,18 +24,26 @@ public class INROTATOR implements IStateBasedModule, IRobotModule {
         this.RotState = initialState;
 
     }
+
     public State getState() {
         return RotState;
     }
-    public void setCustom(double custom){
-        this.custom=custom;
+
+    public void setCustom(double custom) {
+        this.custom = custom;
     }
-    public void setAngle(double angle)
-    {
-        double mid=0.495;
-        double ticksdegree=0.003;
-        custom = mid + ticksdegree*angle;
+
+    public void setAngle(double angle) {
+        double mid = 0.495;
+        double ticksdegree = 0.003;
+        custom = mid + ticksdegree * angle;
+        if (custom <= 0)
+            custom = 0;
+        if (custom >= 1)
+            custom = 1;
+
     }
+
     public void setState(State State) {
         switch (State) {
 
@@ -80,13 +88,13 @@ public class INROTATOR implements IStateBasedModule, IRobotModule {
                 rotpose = scndpos;
                 break;
             case THIRD:
-                rotpose =trdpos;
+                rotpose = trdpos;
                 break;
             case FOURTH:
-                rotpose =fthpos;
+                rotpose = fthpos;
                 break;
             case FIFTH:
-                rotpose =fifthpos;
+                rotpose = fifthpos;
                 break;
             case SPECIMEN:
                 rotpose = specimenpos;

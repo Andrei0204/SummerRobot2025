@@ -68,6 +68,8 @@ import java.util.List;
  *   and the ip address the Limelight device assigned the Control Hub and which is displayed in small text
  *   below the name of the Limelight on the top level configuration screen.
  */
+@Disabled
+
 @TeleOp(name = "colturi", group = "Sensor")
 @Config
 public class SensorLELE extends LinearOpMode {
@@ -90,7 +92,7 @@ public class SensorLELE extends LinearOpMode {
 
         telemetry.setMsTransmissionInterval(11);
 
-        limelight.pipelineSwitch(5);
+        limelight.pipelineSwitch(0);
 
         /*
          * Starts polling for data.  If you neglect to call start(), getLatestResult() will return null.

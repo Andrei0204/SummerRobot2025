@@ -64,7 +64,7 @@ public class Follower {
         return (Math.abs(odo.getVelX(DistanceUnit.CM) )<= velocityThreshold &&Math.abs( odo.getVelY(DistanceUnit.CM)) <= velocityThreshold  ) && reachedTarget(4);
     }
     public boolean fullstop() {
-        return (Math.abs(odo.getVelX(DistanceUnit.CM) )<= 0.1 &&Math.abs( odo.getVelY(DistanceUnit.CM)) <= 0.1  ) && reachedTarget(4);
+        return (Math.abs(odo.getVelX(DistanceUnit.CM) )<= 0.2 &&Math.abs( odo.getVelY(DistanceUnit.CM)) <= 0.2  ) && reachedTarget(4);
     }
     public void setTarget(Pose target) {
         this.target = target;

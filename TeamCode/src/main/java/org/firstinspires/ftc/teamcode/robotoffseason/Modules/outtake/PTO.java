@@ -8,9 +8,9 @@ import org.firstinspires.ftc.teamcode.roboDrive.Wrappers.IStateBasedModule;
 
 public class PTO implements IStateBasedModule, IRobotModule {
     public double rotpose;
-    public static final double fast = 0.34;
+    public static final double fast = 0.475;
     public static final double neutral = 0.65;
-    public static final double slow = 0.85;
+    public static final double slow = 0.92;
     public static double auto=0.28;
 
     public Servo pto;

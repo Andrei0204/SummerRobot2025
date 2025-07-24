@@ -8,10 +8,10 @@ import org.firstinspires.ftc.teamcode.roboDrive.Wrappers.IStateBasedModule;
 
 public class INTUR implements IStateBasedModule, IRobotModule {
     public double rotpose;
-    public static final double transfer = 0.025;
-    public static final double diagonal = 0.35;
-    public static final double throwpos = 0.55;
-    public static final double FRONT = 0.69;
+        public static final double transfer = 0.03;
+    public static final double diagonal = 0.37;
+    public static final double throwpos = 0.57;
+    public static final double FRONT = 0.71;
     public static double auto=0.69;
 
     public Servo intur;
@@ -32,9 +32,9 @@ public class INTUR implements IStateBasedModule, IRobotModule {
     }
     public void setangle(double angle)
     {
-        double rightmax=0.45;
-        double leftmax=0.92;
-        double middle=0.69;
+        double rightmax=0.47;
+        double leftmax=0.94;
+        double middle=0.71;
         double tickstodegree=0.0036;
         this.auto =middle +angle*tickstodegree;
         if(auto>leftmax)

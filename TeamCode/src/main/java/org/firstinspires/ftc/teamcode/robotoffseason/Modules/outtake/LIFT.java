@@ -14,10 +14,11 @@ import org.firstinspires.ftc.teamcode.roboDrive.Wrappers.IStateBasedModule;
 public class LIFT implements IStateBasedModule, IRobotModule {
 
     public static double TICKSCM = 724.35;    //test
-    public static double startpos = -0.1 * TICKSCM;
-    public static final double finalpos = 60 * TICKSCM;
+        public static double startpos = -0.1 * TICKSCM;
+    public static final double finalpos = 67 * TICKSCM;
     public static final double transferpos = 0 * TICKSCM;
     public static double scorespecipos = 30 * TICKSCM;
+    public static double scorespecipostele = 36* TICKSCM;
 //    public static double scorespecipos = 34 * TICKSCM;
     public static final double lowbasket = 16 * TICKSCM;
     public static double autopose = 0;
@@ -25,8 +26,8 @@ public class LIFT implements IStateBasedModule, IRobotModule {
     public static double target = 0; //cm
 
     public static double currentPosition = startpos;
-    public static double kP = 0.00013, kI = 0.19, kD = 0.000002, f = -0; //TODO Valori PID!!!!
-    public static double kPjos = 0.00008, kIjos = 0.1, kDjos = 0.000003; //TODO Valori PID!!!!
+    public  double kP = 0.00018,kp2=0.0002, kI = 0.17, kD = 0.0000008, f = -0; //TODO Valori PID!!!!
+    public  double kPjos = 0.00008, kIjos = 0.1, kDjos = 0.000003; //TODO Valori PID!!!!
 
     private static boolean ENABLED = true;
     public CoolMotor LIFT1 = null;
@@ -51,6 +52,8 @@ public class LIFT implements IStateBasedModule, IRobotModule {
             voltage = hardwareMap.voltageSensor.iterator().next();
 
         }
+        kI=0.17;
+        kIjos=0.1;
         this.state = initialState;
     }
 
@@ -143,6 +146,9 @@ public class LIFT implements IStateBasedModule, IRobotModule {
                 case SCORESPECI:
                     setTarget(scorespecipos);
                     break;
+                case SCORESPECItele:
+                    setTarget(scorespecipostele);
+                    break;
                 case MANUAL:
                     setTarget(target);
                     break;
@@ -163,7 +169,11 @@ public class LIFT implements IStateBasedModule, IRobotModule {
             pid = new PIDCoefficients(kPjos, kIjos, kDjos);
             actualKs = 0;
         }
-
+        if (
+                (target== finalpos )) {
+            pid = new PIDCoefficients(kp2, kI, kD);
+            actualKs = 0;
+        }
         switch (runMode) {
             case PID:
                 LIFT1.setMode(CoolMotor.RunMode.PID);
@@ -196,7 +206,8 @@ public class LIFT implements IStateBasedModule, IRobotModule {
         MANUAL(currentPosition),
         AUTO(autopose),
         TRANSFER(transferpos),
-        SCORESPECI(transferpos),
+        SCORESPECI(scorespecipos),
+        SCORESPECItele(scorespecipostele),
 
 
         START(startpos);

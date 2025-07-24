@@ -5,6 +5,7 @@ import static java.lang.Thread.sleep;
 import com.acmerobotics.dashboard.config.Config;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -22,6 +23,7 @@ import org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.LINKEAGE;
 import org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.OUTBRAT;
 import org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.OUTCLAW;
 import org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.OUTROTATIE;
+@Disabled
 
 @Config
 @Autonomous(name = "speci8", group = "11Saiba")

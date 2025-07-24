@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.roboDrive.gamepads.StickyGamepad;
 import org.firstinspires.ftc.teamcode.robotoffseason.Modules.SaibaModules;
 import org.firstinspires.ftc.teamcode.robotoffseason.Modules.drive.SaibaControl;
+import org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.OUTBRAT;
 
 import pedroPathing.constants.FConstants;
 import pedroPathing.constants.LConstants;
@@ -23,7 +24,7 @@ import pedroPathing.constants.LConstants;
  * @version 2.0, 12/30/2024
  */
 @Config
-@TeleOp(name = "1Saiba", group = "Examples")
+@TeleOp(name = "1Saiba")
 public class teleoppedro extends OpMode {
     StickyGamepad stickyGamepad1=null;
     ElapsedTime Timer;
@@ -42,6 +43,7 @@ public class teleoppedro extends OpMode {
      **/
     @Override
     public void init() {
+
         follower = new Follower(hardwareMap, FConstants.class, LConstants.class);
         follower.setStartingPose(startPose);
         modules = new SaibaModules(hardwareMap);
@@ -59,6 +61,8 @@ public class teleoppedro extends OpMode {
             modules.EXT.EXT.resetEncoder();
             modules.LIFT.LIFT1.resetEncoder();
             modules.LIFT.LIFT2.resetEncoder();
+            follower.setTeleOpMovementVectors(gamepad1.left_stick_y, gamepad1.left_stick_x,  -gamepad1.right_stick_x);
+            follower.update();
 
         }
     }
@@ -68,6 +72,7 @@ public class teleoppedro extends OpMode {
      **/
     @Override
     public void start() {
+        modules.OUTBRAT.setState(OUTBRAT.State.MID);
         follower.startTeleopDrive();
     }
 

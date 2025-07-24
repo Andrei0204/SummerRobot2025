@@ -24,7 +24,7 @@ import org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.OUTCLAW;
 import org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.OUTROTATIE;
 
 @Config
-@Autonomous(name = "sample", group = "11Saiba")
+@Autonomous(name = "sampledmnfere", group = "111Saiba")
 public class sample extends OpMode {
     private SaibaModules modules = null;
     Follower follower = null;

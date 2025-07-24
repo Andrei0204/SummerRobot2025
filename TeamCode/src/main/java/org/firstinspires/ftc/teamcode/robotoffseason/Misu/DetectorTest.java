@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.robotoffseason.Misu;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.pedropathing.pathgen.Point;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -23,6 +24,7 @@ import org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.LINKEAGE;
 import org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.OUTBRAT;
 import org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.OUTCLAW;
 import org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.OUTROTATIE;
+@Disabled
 
 @Autonomous
 public class DetectorTest extends LinearOpMode {

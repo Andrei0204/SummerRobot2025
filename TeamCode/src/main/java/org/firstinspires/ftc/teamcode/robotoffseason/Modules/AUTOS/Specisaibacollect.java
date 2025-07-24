@@ -11,6 +11,7 @@ import com.pedropathing.pathgen.PathChain;
 import com.pedropathing.pathgen.Point;
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.MovingStatistics;
@@ -30,7 +31,7 @@ import org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.OUTROTATIE;
 
 import pedroPathing.constants.FConstants;
 import pedroPathing.constants.LConstants;
-
+@Disabled
 @Config
 @Autonomous(name = "Autoredcolect", group = "11Saiba")
 public class Specisaibacollect extends OpMode {

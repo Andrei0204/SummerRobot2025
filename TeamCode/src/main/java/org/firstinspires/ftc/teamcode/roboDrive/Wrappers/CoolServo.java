@@ -10,7 +10,7 @@ public class CoolServo {
 
     private final ServoFunny servo;
     public AsymmetricMotionProfile profile;
-    private boolean isProfiled = false;
+    public boolean isProfiled = false;
 
     private final boolean async;
 

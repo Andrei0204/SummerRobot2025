@@ -16,7 +16,8 @@ public class OUTBRAT implements IStateBasedModule, IRobotModule {
     public double rotpose;
     public static final double transferpos = 1 ;
     public static final double specimenpos = 0;
-    public static final double scorespecipos = 0.68;
+    public static  double scorespecipostele = 0.71;
+    public static  double scorespecipos = 0.68;
 //    public static final double scorespecipos = 0.71;
     public static  double samplepos = 0.29 ;
     public static final double midpos = 0.93;
@@ -46,6 +47,8 @@ public class OUTBRAT implements IStateBasedModule, IRobotModule {
 
     }
     public void setState(State State) {
+        outst.isProfiled=true;
+        outdr.isProfiled=true;
         switch (State) {
 
             case TRANSFER :
@@ -61,10 +64,15 @@ public class OUTBRAT implements IStateBasedModule, IRobotModule {
                 OutbratState = State.SPECIMEN;
                 break;
             case SAMPLE:
+                outst.isProfiled=false;
+                outdr.isProfiled=false;
                 OutbratState = State.SAMPLE;
                 break;
             case SCORESPECI:
                 OutbratState = State.SCORESPECI;
+                break;
+            case SCORESPECITELE:
+                OutbratState = State.SCORESPECITELE;
                 break;
         }
     }
@@ -98,6 +106,9 @@ public class OUTBRAT implements IStateBasedModule, IRobotModule {
             case SCORESPECI:
                 rotpose = scorespecipos;
                 break;
+            case SCORESPECITELE:
+                rotpose = scorespecipostele;
+                break;
         }
     }
 
@@ -114,6 +125,7 @@ public class OUTBRAT implements IStateBasedModule, IRobotModule {
     public enum State {
         TRANSFER (transferpos),
         SCORESPECI (scorespecipos),
+        SCORESPECITELE (scorespecipostele),
 
         MID(OUTBRAT.midpos),
         AUTOSPECI(auto),

@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.roboDrive.Wrappers.IStateBasedModule;
 public class INBRAT implements IStateBasedModule, IRobotModule {
     public double rotpose;
     public static final double downpos = 0;
-    public static  double BeforCollect = 0.17;
+    public static  double BeforCollect = 0.2;
     public static final double uppos = 0.5;
     public static final double middle = 0.35;
     public static double auto=0.28;

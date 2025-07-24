@@ -11,6 +11,7 @@ import com.pedropathing.pathgen.PathChain;
 import com.pedropathing.pathgen.Point;
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -32,6 +33,7 @@ import java.time.Year;
 
 import pedroPathing.constants.FConstants;
 import pedroPathing.constants.LConstants;
+@Disabled
 
 @Config
 @TeleOp(name = "LLTEST", group = "11Saiba")

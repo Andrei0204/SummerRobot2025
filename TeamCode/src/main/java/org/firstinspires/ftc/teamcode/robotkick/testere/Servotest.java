@@ -13,11 +13,11 @@ import com.qualcomm.robotcore.hardware.ServoImplEx;
 public class Servotest extends LinearOpMode {
     ServoImplEx test;
 //    ServoImplEx test1;
-    public static double pos =0;
+    public static double pos =0.454 ;
     public static double pos2 =0;
     @Override
     public void runOpMode() throws InterruptedException {
-        test =hardwareMap.get(ServoImplEx.class,"outrotatie");
+        test =hardwareMap.get(ServoImplEx.class,"pto");
 //        test1 =hardwareMap.get(ServoImplEx.class,"outst");
 //        test1.setPwmRange(new PwmControl.PwmRange(500, 2500));
 //        test.setPwmRange(new PwmControl.PwmRange(500, 2500));

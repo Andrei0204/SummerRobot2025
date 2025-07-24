@@ -5,6 +5,7 @@ import android.media.midi.MidiDeviceInfo;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.pedropathing.pathgen.Point;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -28,6 +29,7 @@ import org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.OUTCLAW;
 import org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.OUTROTATIE;
 
 import java.sql.Time;
+@Disabled
 
 @Autonomous
 public class SampleMisu extends LinearOpMode {
@@ -358,22 +360,23 @@ public class SampleMisu extends LinearOpMode {
                     }
                     break;
                 case DETECT:
-                    Pose2d sex=camera.getdistanceVector(0,"yellow");
+                    Pose2d sex=camera.getdistanceVector(0,"red",0.8);
                     if (sex.getY() != 0 && sex.getX() != 0) {
+
                         Modules.INTUR.setState(INTUR.State.FRONT);
                         Modules.INBRAT.setState(INBRAT.State.SEMIDOWN);
 
-                        x = sex.getX()+1.5;
+                        x = sex.getX()-2;
                         y = sex.getY() + 13;
                         punct = new Pose(x, y);
                         unghi = Math.toDegrees(Math.asin(punct.getY() / lbrat));
-                        if (camera.isLateral("yellow") == 1 || camera.isLateral("yellow") == 0) {
+                        if (camera.isLateral("red") == 1 || camera.isLateral("red") == 0) {
                             Modules.INROTATOR.setAngle(unghi);
-                            if (camera.isLateral("yellow") == 0)
+                            if (camera.isLateral("red") == 0)
                                 x = sex.getX();
                         } else {
                             Modules.INROTATOR.setAngle(unghi - 90);
-                            x = sex.getX() - 3;
+                            x = sex.getX() ;
 
                         }
 //                        if (x < 24)
@@ -388,6 +391,7 @@ public class SampleMisu extends LinearOpMode {
                             setNextState(State.COLLECT);
                         }
                     }
+
                     break;
                 case COLLECT:
                     if(timer.milliseconds()>250) {
@@ -407,10 +411,10 @@ public class SampleMisu extends LinearOpMode {
                             if (timer.milliseconds() > 850) {
                                 Modules.EXT.setState(EXT.State.MID);
                                 Modules.INTUR.setState(INTUR.State.TRANSFER);
-                                Modules.INROTATOR.setState(INROTATOR.State.THIRD);
+
                                 Drive.setTarget(BASKET);
                                 if(timer.milliseconds()>1150) {
-
+                                    Modules.INROTATOR.setState(INROTATOR.State.THIRD);
                                     Modules.OUTBRAT.setState(OUTBRAT.State.MID);
                                     if(Modules.LIFT.getRealCurrentPosition() < 4 && Modules.EXT.atTarget())
                                     {
@@ -535,9 +539,9 @@ public class SampleMisu extends LinearOpMode {
 
     public static Pose OH_SHIT_POSE = new Pose(-54, 50, Math.toRadians(75));
 
-    public static Point FIRST_SAMPLE = new Point(58, -8.5);
+    public static Point FIRST_SAMPLE = new Point(58, -12);
     public static Point SECOND_SAMPLE = new Point(52, 9);
-    public static Point THIRD_SAMPLE = new Point(52, 13);
+    public static Point THIRD_SAMPLE = new Point(50, 13);
 
 
 }

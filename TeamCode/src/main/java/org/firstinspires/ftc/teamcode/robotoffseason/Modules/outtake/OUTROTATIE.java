@@ -10,11 +10,11 @@ import com.acmerobotics.dashboard.config.Config;
 @Config
 public class OUTROTATIE implements IStateBasedModule, IRobotModule {
     public double rotpose;
-    public static  double specimen = 0.5;
-    public static  double scorespeci = 0.8 ;
-//    public static final double scorespeci = 0.4;
-    public static  double collect = 0.2;
-    public static  double samplepos = 0.2;
+    public static  double specimen = 0.6;
+    public static  double scorespeci = 0.9;
+    public static final double scorespecitele = 0.95;
+    public static  double collect = 0.3;
+    public static  double samplepos = 0.3;
     public static double auto=0.28;
 
     public Servo rotatie;
@@ -47,6 +47,9 @@ public class OUTROTATIE implements IStateBasedModule, IRobotModule {
             case SCORESPECI:
                 RotatieState = State.SCORESPECI;
                 break;
+            case SCORESPECITELE:
+                RotatieState = State.SCORESPECITELE;
+                break;
             case SCORESMAPLE:
                 RotatieState = State.SCORESMAPLE;
                 break;
@@ -74,6 +77,9 @@ public class OUTROTATIE implements IStateBasedModule, IRobotModule {
             case SCORESPECI:
                 rotpose = scorespeci;
                 break;
+            case SCORESPECITELE:
+                rotpose = scorespecitele;
+                break;
             case SCORESMAPLE:
                 rotpose = samplepos;
                 break;
@@ -90,6 +96,7 @@ public class OUTROTATIE implements IStateBasedModule, IRobotModule {
         COLLECT(OUTROTATIE.collect),
         AUTOSPECI(auto),
         SCORESPECI(scorespeci),
+        SCORESPECITELE(scorespecitele),
         SCORESMAPLE(samplepos);
 
         public final State nextState;

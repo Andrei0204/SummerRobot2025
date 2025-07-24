@@ -43,7 +43,8 @@ public class FConstants {
                 0.00018
                 ,0.6,0); // Not being used, @see useSecondaryDrivePID
 //0.012
-        FollowerConstants.useBrakeModeInTeleOp=true;
+
+
         FollowerConstants.zeroPowerAccelerationMultiplier = 4.6;//5
         FollowerConstants.centripetalScaling = 0.00035;
 
@@ -52,6 +53,7 @@ public class FConstants {
         FollowerConstants.pathEndVelocityConstraint = 0.1;
         FollowerConstants.pathEndTranslationalConstraint = 0.1;
         FollowerConstants.pathEndHeadingConstraint = 0.007;
+        FollowerConstants.useBrakeModeInTeleOp=true;
 //
 
     }
