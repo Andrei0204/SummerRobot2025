@@ -59,7 +59,7 @@ public class sample extends OpMode {
                 modules.OUTBRAT.setState(OUTBRAT.State.SAMPLE);
                 modules.OUTROTATIE.setState(OUTROTATIE.State.SCORESMAPLE);
                 modules.INTUR.setState(INTUR.State.FRONT);
-                if (modules.LIFT.getRealCurrentPosition() > 40)
+                if (modules.LIFT.getRealCurrentPosition() > 45)
                     modules.LINKEAGE.setState(LINKEAGE.State.OPEN);
                 //in
                 if (follower.localization.getY() > 20) {
@@ -136,7 +136,7 @@ public class sample extends OpMode {
                 modules.OUTBRAT.setState(OUTBRAT.State.SAMPLE);
                 modules.OUTROTATIE.setState(OUTROTATIE.State.SCORESMAPLE);
                 modules.INTUR.setState(INTUR.State.FRONT);
-                if (modules.LIFT.getRealCurrentPosition() > 40)
+                if (modules.LIFT.getRealCurrentPosition() > 45)
                     modules.LINKEAGE.setState(LINKEAGE.State.OPEN);
                 //in
                 if (pathtimer.milliseconds() > 200) {
@@ -167,7 +167,7 @@ public class sample extends OpMode {
                 modules.OUTBRAT.setState(OUTBRAT.State.SAMPLE);
                 modules.OUTROTATIE.setState(OUTROTATIE.State.SCORESMAPLE);
 
-                if (modules.LIFT.getRealCurrentPosition() > 40)
+                if (modules.LIFT.getRealCurrentPosition() > 45)
                     modules.LINKEAGE.setState(LINKEAGE.State.OPEN);
                 if (modules.LIFT.getRealCurrentPosition() > 54) {
                     modules.INBRAT.setState(INBRAT.State.SEMIDOWN);
@@ -250,13 +250,11 @@ public class sample extends OpMode {
                 follower.setTarget(new Pose(23,130,0));
                 if(follower.localization.getY()>60)
                 {
-
                     modules.OUTBRAT.setState(OUTBRAT.State.TRANSFER);
                     modules.LINKEAGE.setState(LINKEAGE.State.CLOSED);
                     modules.OUTROTATIE.setState(OUTROTATIE.State.COLLECT);
                     modules.LIFT.setState(LIFT.State.TRANSFER);
                 }
-
                 break;
         }
     }

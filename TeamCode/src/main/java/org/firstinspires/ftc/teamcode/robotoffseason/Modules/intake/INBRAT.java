@@ -2,7 +2,9 @@ package org.firstinspires.ftc.teamcode.robotoffseason.Modules.intake;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ServoImplEx;
 
+import org.firstinspires.ftc.teamcode.roboDrive.Wrappers.CoolServo;
 import org.firstinspires.ftc.teamcode.roboDrive.Wrappers.IRobotModule;
 import org.firstinspires.ftc.teamcode.roboDrive.Wrappers.IStateBasedModule;
 
@@ -12,13 +14,18 @@ public class INBRAT implements IStateBasedModule, IRobotModule {
     public static  double BeforCollect = 0.2;
     public static final double uppos = 0.5;
     public static final double middle = 0.35;
+    public static final double transferv2 = 0.97;
     public static double auto=0.28;
 
-    public Servo inbrat;
+
+    public static double profileMaxVelocity = 20, profileAcceleration = 20, profileDeceleration = 20;
+
+    public CoolServo inbrat;
     public State BratState;
 
     public INBRAT(HardwareMap hardwareMap, State initialState) {
-        inbrat = hardwareMap.get(Servo.class, "inbrat");
+        inbrat = new CoolServo(hardwareMap.get(ServoImplEx.class, "inbrat"),false,profileMaxVelocity,profileAcceleration,profileDeceleration, initialState.position);
+
         this.BratState = initialState;
 
     }
@@ -31,9 +38,11 @@ public class INBRAT implements IStateBasedModule, IRobotModule {
 
     }
     public void setState(State State) {
+        inbrat.isProfiled=true;
         switch (State) {
 
             case DOWN:
+                inbrat.isProfiled=false;
                 BratState = State.DOWN;
                 break;
             case SEMIDOWN:
@@ -48,12 +57,16 @@ public class INBRAT implements IStateBasedModule, IRobotModule {
             case UP:
                 BratState = State.UP;
                 break;
+            case TRANSFERV2:
+                BratState = State.TRANSFERV2;
+                break;
         }
     }
     @Override
     public void update() {
         updateState();
         updateHardware();
+
     }
 
     @Override
@@ -75,12 +88,16 @@ public class INBRAT implements IStateBasedModule, IRobotModule {
             case UP:
                 rotpose = uppos;
                 break;
+            case TRANSFERV2:
+                rotpose = transferv2;
+                break;
         }
     }
 
     @Override
     public void updateHardware() {
         inbrat.setPosition(rotpose);
+        inbrat.update();
     }
 
     public enum State {
@@ -88,6 +105,7 @@ public class INBRAT implements IStateBasedModule, IRobotModule {
         MIDDLE(middle),
         SEMIDOWN(BeforCollect),
         AUTOSPECI(auto),
+        TRANSFERV2(transferv2),
         UP(uppos);
 
         public final State nextState;

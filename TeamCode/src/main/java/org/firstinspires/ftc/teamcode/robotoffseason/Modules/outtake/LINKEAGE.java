@@ -11,6 +11,7 @@ public class LINKEAGE implements IStateBasedModule, IRobotModule {
     public static final double open = 0.66;
     public static final double overcenter = 0.73;
     public static final double closed = 0.98;
+    public static final double transfnou = 0.96;
     public static double auto=0.8;
 
     public Servo linkeage;
@@ -44,6 +45,9 @@ public class LINKEAGE implements IStateBasedModule, IRobotModule {
             case OVERCENTER:
                 LinkeageState = State.OVERCENTER;
                 break;
+            case TRANSFER:
+                LinkeageState = State.TRANSFER;
+                break;
         }
     }
     @Override
@@ -60,6 +64,9 @@ public class LINKEAGE implements IStateBasedModule, IRobotModule {
                 break;
             case CLOSED:
                 rotpose = closed;
+                break;
+            case TRANSFER:
+                rotpose = transfnou;
                 break;
 
             case AUTOSPECI:
@@ -80,6 +87,7 @@ public class LINKEAGE implements IStateBasedModule, IRobotModule {
         OPEN (open),
         CLOSED(LINKEAGE.closed),
         AUTOSPECI(auto),
+        TRANSFER(transfnou),
         OVERCENTER(overcenter);
 
         public final State nextState;

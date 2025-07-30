@@ -15,6 +15,7 @@ public class OUTROTATIE implements IStateBasedModule, IRobotModule {
     public static final double scorespecitele = 0.95;
     public static  double collect = 0.3;
     public static  double samplepos = 0.3;
+    public static final double transfernou = 0.88;
     public static double auto=0.28;
 
     public Servo rotatie;
@@ -53,6 +54,9 @@ public class OUTROTATIE implements IStateBasedModule, IRobotModule {
             case SCORESMAPLE:
                 RotatieState = State.SCORESMAPLE;
                 break;
+            case TRANSFERNOU:
+                RotatieState = State.TRANSFERNOU;
+                break;
         }
     }
     @Override
@@ -83,6 +87,9 @@ public class OUTROTATIE implements IStateBasedModule, IRobotModule {
             case SCORESMAPLE:
                 rotpose = samplepos;
                 break;
+            case TRANSFERNOU:
+                rotpose = transfernou;
+                break;
         }
     }
 
@@ -96,6 +103,7 @@ public class OUTROTATIE implements IStateBasedModule, IRobotModule {
         COLLECT(OUTROTATIE.collect),
         AUTOSPECI(auto),
         SCORESPECI(scorespeci),
+        TRANSFERNOU(transfernou),
         SCORESPECITELE(scorespecitele),
         SCORESMAPLE(samplepos);
 

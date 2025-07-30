@@ -56,14 +56,14 @@ public class SaibaModules implements IRobotModule {
         INCLAW = new INCLAW(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.intake.INCLAW.State.RELEASE);
         INBRAT = new INBRAT(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.intake.INBRAT.State.UP);
         INROTATOR = new INROTATOR(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.intake.INROTATOR.State.THIRD);
-        INTUR = new INTUR(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.intake.INTUR.State.TRANSFER);
+        INTUR = new INTUR(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.intake.INTUR.State.FRONT);
         WEELIE = new WEELIE(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.intake.WEELIE.State.NERIDICAT);
 
 
-        LINKEAGE = new LINKEAGE(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.LINKEAGE.State.CLOSED);
-        OUTBRAT = new OUTBRAT(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.OUTBRAT.State.TRANSFER);
+        LINKEAGE = new LINKEAGE(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.LINKEAGE.State.TRANSFER);
+        OUTBRAT = new OUTBRAT(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.OUTBRAT.State.TRANSFERV2);
         OUTCLAW = new OUTCLAW(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.OUTCLAW.State.RELEASE);
-        OUTROTATIE = new OUTROTATIE(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.OUTROTATIE.State.COLLECT);
+        OUTROTATIE = new OUTROTATIE(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.OUTROTATIE.State.TRANSFERNOU);
         PTO = new PTO(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.PTO.State.FAST);
 
 
@@ -132,6 +132,7 @@ public class SaibaModules implements IRobotModule {
         telemetry.addData("extstate",WEELIE.getState());
         telemetry.addData("tare", OUTROTATIE.getState());
         telemetry.addData("tare", OUTROTATIE.rotatie.getPosition());
+        telemetry.addData("tensiune", EXT.EXT.motor.motor.getCurrent(CurrentUnit.AMPS));
 
 
     }

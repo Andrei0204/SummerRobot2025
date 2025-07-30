@@ -13,10 +13,10 @@ import org.firstinspires.ftc.teamcode.roboDrive.Wrappers.IStateBasedModule;
 public class EXT implements IStateBasedModule, IRobotModule {
 
     public static double TICKSCM = 12.83;    //test
-    public static  double startpos=7*TICKSCM;
+    public static  double startpos=5.5*TICKSCM;
     public static  double zeropos=0*TICKSCM;
-    public static final double finalpos=48*TICKSCM;
-    public static final double midpos=15*TICKSCM; // era 12
+    public static final double finalpos=44*TICKSCM;
+    public static final double midpos=23*TICKSCM; // era 12
     public static double autopose=0;
 
     public static double target = 0; //cm

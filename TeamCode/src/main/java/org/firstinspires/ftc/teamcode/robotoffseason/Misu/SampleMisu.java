@@ -29,7 +29,7 @@ import org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.OUTCLAW;
 import org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.OUTROTATIE;
 
 import java.sql.Time;
-@Disabled
+
 
 @Autonomous
 public class SampleMisu extends LinearOpMode {

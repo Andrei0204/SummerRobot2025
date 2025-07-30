@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.roboDrive.gamepads.StickyGamepad;
 import org.firstinspires.ftc.teamcode.robotoffseason.Modules.SaibaModules;
 import org.firstinspires.ftc.teamcode.robotoffseason.Modules.drive.SaibaControl;
+import org.firstinspires.ftc.teamcode.robotoffseason.Modules.intake.INBRAT;
 import org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.OUTBRAT;
 
 import pedroPathing.constants.FConstants;
@@ -48,6 +49,7 @@ public class teleoppedro extends OpMode {
         follower.setStartingPose(startPose);
         modules = new SaibaModules(hardwareMap);
         modulesControl = new SaibaControl(gamepad1, gamepad2, modules);
+        modules.INBRAT.setState(INBRAT.State.MIDDLE);
         Timer = new ElapsedTime();
         stickyGamepad1 = new StickyGamepad(gamepad1);
     }
