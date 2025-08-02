@@ -85,7 +85,7 @@ public class SaibaModules implements IRobotModule {
 
 
             LINKEAGE = new LINKEAGE(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.LINKEAGE.State.CLOSED);
-            OUTBRAT = new OUTBRAT(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.OUTBRAT.State.MID);
+            OUTBRAT = new OUTBRAT(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.OUTBRAT.State.TRANSFER);
             OUTCLAW = new OUTCLAW(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.OUTCLAW.State.SECURE);
             OUTROTATIE = new OUTROTATIE(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.OUTROTATIE.State.COLLECT);
               PTO = new PTO(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.PTO.State.FAST);

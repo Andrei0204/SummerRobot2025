@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode.roboDrive.Wrappers.CoolMotor;
 import org.firstinspires.ftc.teamcode.roboDrive.math.Angles;
 import org.firstinspires.ftc.teamcode.roboDrive.math.Pose;
@@ -82,7 +83,8 @@ public class Follower {
 
     public void updatePath() {
         odo.update();
-        localization = new Pose(odo.getPosition().getX(DistanceUnit.CM), odo.getPosition().getY(DistanceUnit.CM), odo.getHeading(AngleUnit.RADIANS));
+        Pose2D odoplm  =odo.getPosition();
+        localization = new Pose(odoplm.getX(DistanceUnit.CM), odoplm.getY(DistanceUnit.CM), odoplm.getHeading(AngleUnit.RADIANS));
         double xDiff = target.getX() - localization.getX();
         double yDiff = target.getY() - localization.getY();
         double angle = Math.atan2(yDiff, xDiff);

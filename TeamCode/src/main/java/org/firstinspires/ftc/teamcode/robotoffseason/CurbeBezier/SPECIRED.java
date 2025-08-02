@@ -182,7 +182,7 @@ public class SPECIRED extends OpMode {
                 break;
 
             case 2: //primu
-                follower.setTarget(new Pose(51, -68, -0.86));
+                follower.setTarget(new Pose(48, -68, -0.86));
                 if (follower.localization.getX() < 60) {
                     modules.OUTROTATIE.setState(OUTROTATIE.State.SPECIMEN);
                     modules.LIFT.setState(LIFT.State.START);
@@ -218,7 +218,7 @@ public class SPECIRED extends OpMode {
                 break;
             case 5:
                 if (pathtimer.milliseconds() > 100) { //scnd
-                    follower.setTarget(new Pose(48.5, -95, -0.83));
+                    follower.setTarget(new Pose(45.5, -95, -0.83));
                     modules.INTUR.setState(INTUR.State.AUTOSPECI);
                     modules.INTUR.setangle(45);
                     modules.INBRAT.setState(INBRAT.State.SEMIDOWN);
@@ -253,7 +253,7 @@ public class SPECIRED extends OpMode {
                 break;
             case 8://third
                 if (pathtimer.milliseconds() > 100) {
-                    follower.setTarget(new Pose(47, -116, -0.73));
+                    follower.setTarget(new Pose(44, -116, -0.73));
                     modules.INTUR.setState(INTUR.State.AUTOSPECI);
                     modules.INTUR.setangle(0);
                     modules.INROTATOR.setState(INROTATOR.State.SECOND);
@@ -371,7 +371,7 @@ public class SPECIRED extends OpMode {
         odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.REVERSED, GoBildaPinpointDriver.EncoderDirection.REVERSED);
         odo.resetPosAndIMU();
         try {
-            sleep(200);
+            sleep(300);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -383,6 +383,7 @@ public class SPECIRED extends OpMode {
         pathtimer = new ElapsedTime();
         actionTimer = new ElapsedTime();
         modules.OUTBRAT.setState(OUTBRAT.State.SCORESPECI);
+        modules.INBRAT.setState(INBRAT.State.UP);
         buildPaths();
     }
 
@@ -392,7 +393,8 @@ public class SPECIRED extends OpMode {
     @Override
     public void init_loop() {
         modules.update();
-        modules.OUTBRAT.setState(OUTBRAT.State.MID);
+        modules.OUTBRAT.setState(OUTBRAT.State.TRANSFER);
+        modules.INBRAT.setState(INBRAT.State.MIDDLE);
         follower.update();
 
         telemetry.update();

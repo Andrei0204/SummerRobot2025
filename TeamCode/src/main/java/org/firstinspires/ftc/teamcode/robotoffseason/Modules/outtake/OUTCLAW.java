@@ -9,9 +9,9 @@ import org.firstinspires.ftc.teamcode.roboDrive.Wrappers.IStateBasedModule;
 public class OUTCLAW implements IStateBasedModule, IRobotModule {
 
     public double clawpos;
-    public final double clawRelease = 0.98,
-            clawSecure = 0.61 ,
-            clawInterior=0.63;
+    public final double clawRelease =0.96,
+            clawSecure = 0.68 ,
+            clawInterior=0.58;
 
 
     public Servo Claw;

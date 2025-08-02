@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.roboDrive.Wrappers.ServoFunny;
 @Config
 public class OUTBRAT implements IStateBasedModule, IRobotModule {
     public double rotpose;
-    public static final double transferpos = 1 ;
+    public static final double transferpos =0.9 ;
     public static final double specimenpos = 0;
     public static  double scorespecipostele = 0.71;
     public static  double scorespecipos = 0.68;
@@ -50,7 +50,9 @@ public class OUTBRAT implements IStateBasedModule, IRobotModule {
         this.auto =auto;
 
     }
-    public void setState(State State) {
+    public void
+
+    setState(State State) {
         outst.isProfiled=true;
         outdr.isProfiled=true;
         switch (State) {

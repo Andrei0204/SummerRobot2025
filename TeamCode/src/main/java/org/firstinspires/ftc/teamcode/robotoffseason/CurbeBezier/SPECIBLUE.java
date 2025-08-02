@@ -383,6 +383,7 @@ public class SPECIBLUE extends OpMode {
         pathtimer = new ElapsedTime();
         actionTimer = new ElapsedTime();
         modules.OUTBRAT.setState(OUTBRAT.State.SCORESPECI);
+        modules.INBRAT.setState(INBRAT.State.UP);
         buildPaths();
     }
 
@@ -392,7 +393,8 @@ public class SPECIBLUE extends OpMode {
     @Override
     public void init_loop() {
         modules.update();
-        modules.OUTBRAT.setState(OUTBRAT.State.MID);
+        modules.OUTBRAT.setState(OUTBRAT.State.TRANSFER);
+        modules.INBRAT.setState(INBRAT.State.MIDDLE);
         follower.update();
 
         telemetry.update();

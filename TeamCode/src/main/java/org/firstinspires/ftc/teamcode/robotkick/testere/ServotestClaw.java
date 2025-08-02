@@ -8,12 +8,12 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 @Config
 @TeleOp
-public class ServotestClaw extends LinearOpMode {
+public class  ServotestClaw extends LinearOpMode {
     Servo test;
     public static double pos =0.69;
     @Override
     public void runOpMode() throws InterruptedException {
-        test =hardwareMap.get(Servo.class,"intur");
+        test =hardwareMap.get(Servo.class,"outclaw");
 
         test.setPosition(pos);
         waitForStart();

@@ -11,7 +11,7 @@ public class LINKEAGE implements IStateBasedModule, IRobotModule {
     public static final double open = 0.66;
     public static final double overcenter = 0.73;
     public static final double closed = 0.98;
-    public static final double transfnou = 0.96;
+    public static final double transfnou = 0.9;
     public static double auto=0.8;
 
     public Servo linkeage;
