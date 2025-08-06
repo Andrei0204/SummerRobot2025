@@ -10,9 +10,9 @@ import com.acmerobotics.dashboard.config.Config;
 @Config
 public class OUTROTATIE implements IStateBasedModule, IRobotModule {
     public double rotpose;
-    public static  double specimen = 0.4  ;
+    public static  double specimen = 0.41   ;
     public static  double scorespeci = 0.85;
-    public static final double scorespecitele = 0.75;
+    public static final double scorespecitele = 0.76;
     public static  double collect = 0.3;
     public static  double samplepos = 0.3;
     public static final double transfernou = 0.85;

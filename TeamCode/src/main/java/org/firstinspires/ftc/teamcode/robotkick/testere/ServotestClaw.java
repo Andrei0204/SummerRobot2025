@@ -13,7 +13,7 @@ public class  ServotestClaw extends LinearOpMode {
     public static double pos =0.69;
     @Override
     public void runOpMode() throws InterruptedException {
-        test =hardwareMap.get(Servo.class,"outclaw");
+        test =hardwareMap.get(Servo.class,"inclaw");
 
         test.setPosition(pos);
         waitForStart();

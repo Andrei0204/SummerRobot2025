@@ -28,7 +28,7 @@ import org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.OUTROTATIE;
 @Autonomous(name = "SPECIRED", group = "111 Saiba")
 public class SPECIRED extends OpMode {
     private SaibaModules modules = null;
-    Follower follower = null;
+     Follower follower = null;
     private ElapsedTime pathtimer, actionTimer;
     GoBildaPinpointDriver odo;
     public static double x = 0, y = 0, lbrat = 15;//cm,
@@ -111,13 +111,14 @@ public class SPECIRED extends OpMode {
             case -22:
                 modules.OUTBRAT.setState(OUTBRAT.State.SPECIMEN);
                 modules.INBRAT.setState(INBRAT.State.DOWN);
-                if (pathtimer.milliseconds() > 250) //300
+                if (pathtimer.milliseconds() > 300) //300
                     modules.INCLAW.setState(INCLAW.State.SECURE);
-                if (pathtimer.milliseconds() > 500) { //475
+                if (pathtimer.milliseconds() > 550) { //475
                     modules.INBRAT.setState(INBRAT.State.MIDDLE);
-                    modules.EXT.setState(EXT.State.ZERO);
+
                 }
-                if (pathtimer.milliseconds() > 550) {
+                if (pathtimer.milliseconds() > 600) {
+                    modules.EXT.setState(EXT.State.ZERO);
                     modules.INTUR.setAuto(0.92);
                     modules.INTUR.setState(INTUR.State.AUTOSPECI);
                     setPathState(-3);
@@ -132,7 +133,7 @@ public class SPECIRED extends OpMode {
                 }
                 if (follower.reachedTarget(4)) {
                     modules.INTUR.setState(INTUR.State.DIAG);
-                    if (actionTimer.milliseconds() > 70) {
+                    if (actionTimer.milliseconds() >70) {
                         modules.INCLAW.setState(INCLAW.State.RELEASE);
                         if (actionTimer.milliseconds() > 120)
                             modules.OUTCLAW.setState(OUTCLAW.State.SECURE);
@@ -147,7 +148,7 @@ public class SPECIRED extends OpMode {
                 modules.OUTROTATIE.setState(OUTROTATIE.State.SCORESPECI);
                 modules.LIFT.setState(LIFT.State.SCORESPECI);
                 follower.lateralmultiplier = i;
-                follower.setTarget(new Pose(90, 4, Math.toRadians(0)));
+                follower.setTarget(new Pose(91, 5.5, Math.toRadians(2)));
                 if (follower.localization.getY() > -50) {
                     modules.LINKEAGE.setState(LINKEAGE.State.OPEN);
                 }
@@ -182,7 +183,7 @@ public class SPECIRED extends OpMode {
                 break;
 
             case 2: //primu
-                follower.setTarget(new Pose(48, -68, -0.86));
+                follower.setTarget(new Pose(49, -68, -0.86));
                 if (follower.localization.getX() < 60) {
                     modules.OUTROTATIE.setState(OUTROTATIE.State.SPECIMEN);
                     modules.LIFT.setState(LIFT.State.START);
@@ -239,12 +240,15 @@ public class SPECIRED extends OpMode {
                     modules.INCLAW.setState(INCLAW.State.SECURE);
                 if (pathtimer.milliseconds() > 500) {
                     follower.setTarget(new Pose(44, -96, -2));
-                    modules.INBRAT.setState(INBRAT.State.MIDDLE);
+                    modules.EXT.setAuto(28*EXT.TICKSCM);
+                    modules.EXT.setState(EXT.State.AUTO);
                     modules.INTUR.setState(INTUR.State.DIAG);
                     setPathState(7);
                 }
                 break;
             case 7:
+                if(follower.reachedHeading(Math.toRadians(30)))
+                    modules.INBRAT.setState(INBRAT.State.MIDDLE);
                 if (follower.reachedHeading(Math.toRadians(10))) {
                     modules.EXT.setAuto(32 * EXT.TICKSCM);
                     modules.INCLAW.setState(INCLAW.State.RELEASE);

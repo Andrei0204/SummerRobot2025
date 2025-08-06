@@ -60,14 +60,33 @@ public class SaibaModules implements IRobotModule {
         WEELIE = new WEELIE(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.intake.WEELIE.State.NERIDICAT);
 
 
-        LINKEAGE = new LINKEAGE(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.LINKEAGE.State.TRANSFER);
-        OUTBRAT = new OUTBRAT(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.OUTBRAT.State.TRANSFERV2);
+        LINKEAGE = new LINKEAGE(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.LINKEAGE.State.CLOSED);
+        OUTBRAT = new OUTBRAT(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.OUTBRAT.State.SCORESPECI);
         OUTCLAW = new OUTCLAW(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.OUTCLAW.State.RELEASE);
-        OUTROTATIE = new OUTROTATIE(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.OUTROTATIE.State.TRANSFERNOU);
+        OUTROTATIE = new OUTROTATIE(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.OUTROTATIE.State.SPECIMEN);
         PTO = new PTO(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.PTO.State.FAST);
 
 
     }
+//    public SaibaModules(HardwareMap hardwareMap) {
+//
+//        EXT = new EXT(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.intake.EXT.State.START);
+//        LIFT = new LIFT(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.LIFT.State.START);
+//        INCLAW = new INCLAW(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.intake.INCLAW.State.RELEASE);
+//        INBRAT = new INBRAT(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.intake.INBRAT.State.UP);
+//        INROTATOR = new INROTATOR(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.intake.INROTATOR.State.THIRD);
+//        INTUR = new INTUR(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.intake.INTUR.State.FRONT);
+//        WEELIE = new WEELIE(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.intake.WEELIE.State.NERIDICAT);
+//
+//
+//        LINKEAGE = new LINKEAGE(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.LINKEAGE.State.TRANSFER);
+//        OUTBRAT = new OUTBRAT(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.OUTBRAT.State.TRANSFERV2);
+//        OUTCLAW = new OUTCLAW(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.OUTCLAW.State.RELEASE);
+//        OUTROTATIE = new OUTROTATIE(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.OUTROTATIE.State.TRANSFERNOU);
+//        PTO = new PTO(hardwareMap, org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.PTO.State.FAST);
+//
+//
+//    }
     public SaibaModules(HardwareMap hardwareMap,int auto) {
 
         if(auto==1) {

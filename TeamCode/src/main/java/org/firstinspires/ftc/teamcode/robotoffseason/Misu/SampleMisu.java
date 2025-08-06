@@ -87,7 +87,7 @@ public class SampleMisu extends LinearOpMode {
         Odometry.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
         Odometry.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.REVERSED, GoBildaPinpointDriver.EncoderDirection.REVERSED);
         Odometry.resetPosAndIMU();
-
+        sleep(300);
         timer = new ElapsedTime();
         globalTimer = new ElapsedTime();
 
@@ -100,6 +100,7 @@ public class SampleMisu extends LinearOpMode {
         Modules.LIFT.LIFT1.resetEncoder();
         Modules.LIFT.LIFT2.resetEncoder();
         Modules.OUTBRAT.setState(OUTBRAT.State.SCORESPECI);
+        Modules.INBRAT.setState(INBRAT.State.UP);
         Modules.update();
 
 
@@ -109,7 +110,8 @@ public class SampleMisu extends LinearOpMode {
 
         while(!isStopRequested() && opModeInInit())
         {
-            Modules.OUTBRAT.setState(OUTBRAT.State.MID);
+            Modules.OUTBRAT.setState(OUTBRAT.State.TRANSFER);
+            Modules.INBRAT.setState(INBRAT.State.MIDDLE);
             Modules.update();
         }
 
@@ -125,12 +127,12 @@ public class SampleMisu extends LinearOpMode {
                 case GO_TO_PRELOAD_SETUP_FOR_1ST:
 
                     Drive.setTarget(PRELOAD_POSE);
-                    Modules.LIFT.setState(LIFT.State.FULL);
-                    Modules.OUTBRAT.setState(OUTBRAT.State.SAMPLE);
+                    Modules.LIFT.setState(LIFT.State.FULLAUTO);
+                    Modules.OUTBRAT.setState(OUTBRAT.State.SAMPLEAUTO);
                     Modules.OUTROTATIE.setState(OUTROTATIE.State.SCORESMAPLE);
                     Modules.INTUR.setangle(INTUR.FRONT);
 
-                    if(Math.abs(Modules.OUTBRAT.outst.profile.getPosition() - OUTBRAT.samplepos) <= 0.1){
+                    if(Math.abs(Modules.OUTBRAT.outst.profile.getPosition() - OUTBRAT.sampleposauto) <= 0.1){
                         Modules.LINKEAGE.setState(LINKEAGE.State.OPEN);
                     }
 
@@ -154,30 +156,30 @@ public class SampleMisu extends LinearOpMode {
                     Modules.OUTCLAW.setState(OUTCLAW.State.RELEASE);
                     Modules.INBRAT.setState(INBRAT.State.DOWN);
                     if(timer.milliseconds()>200)
-                        Modules.OUTBRAT.setState(OUTBRAT.State.TRANSFER);
+                        Modules.OUTBRAT.setState(OUTBRAT.State.MID);
                     if(timer.milliseconds()>550)
                     {
-                        Modules.LINKEAGE.setState(LINKEAGE.State.CLOSED);
-                        Modules.OUTROTATIE.setState(OUTROTATIE.State.COLLECT);
+
+                        Modules.LINKEAGE.setState(LINKEAGE.State.TRANSFER);
+                        Modules.OUTROTATIE.setState(OUTROTATIE.State.TRANSFERNOU);
                         Modules.INCLAW.setState(INCLAW.State.SECURE);
                         Modules.LIFT.setState(LIFT.State.TRANSFER);
                         if(timer.milliseconds()>750)
                         {
 
-                            Modules.INBRAT.setState(INBRAT.State.UP);
+                            Modules.INBRAT.setState(INBRAT.State.TRANSFERV2);
                             if (timer.milliseconds() > 850) {
-                                Modules.EXT.setState(EXT.State.MID);//aici era start
-                                Modules.INTUR.setState(INTUR.State.TRANSFER);
+                                Modules.INTUR.setState(INTUR.State.FRONT);
                                 Modules.INROTATOR.setState(INROTATOR.State.THIRD);
                                 if(timer.milliseconds()>1150) {
-
-                                    Modules.OUTBRAT.setState(OUTBRAT.State.MID);
-                                    if(Modules.LIFT.getRealCurrentPosition() < 4  && Modules.EXT.atTarget()) // && EXT.atTarget()
+                                    if(Modules.LIFT.getRealCurrentPosition() < 4  && (Math.abs(Modules.INBRAT.inbrat.profile.getPosition() - INBRAT.transferv2) <= 0.02)) // && EXT.atTarget()
                                     {
                                         Modules.EXT.setState(EXT.State.START);
-                                        if(Modules.EXT.atTarget())
+                                        if(Modules.EXT.getRealCurrentPosition()<11) {
+                                            Modules.OUTBRAT.setState(OUTBRAT.State.TRANSFERV2);
                                             setNextState(State.TRANSFER);
-                                    }
+                                        }
+                                        }
 
                                 }
                             }
@@ -189,10 +191,10 @@ public class SampleMisu extends LinearOpMode {
                         Modules.OUTCLAW.setState(OUTCLAW.State.SECURE);
                     if (timer.milliseconds() > 180) {
                         Modules.INCLAW.setState(INCLAW.State.RELEASE);
-                        Modules.OUTBRAT.setState(OUTBRAT.State.TRANSFER);
                     }
                     if(timer.milliseconds()>300)
                     {
+
                         Modules.INTUR.setState(INTUR.State.FRONT);
                         cycles++;
                         if(cycles == 1)
@@ -205,19 +207,26 @@ public class SampleMisu extends LinearOpMode {
 
                     break;
                 case UP_AND_SETUP_FOR_2ND:
-                    Modules.LIFT.setState(LIFT.State.FULL);
+                    Modules.LIFT.setState(LIFT.State.FULLAUTO);
                     Modules.OUTBRAT.setState(OUTBRAT.State.SAMPLE);
                     Modules.OUTROTATIE.setState(OUTROTATIE.State.SCORESMAPLE);
-                    Modules.INTUR.setangle(INTUR.FRONT);
 
                     if(Math.abs(Modules.OUTBRAT.outst.profile.getPosition() - OUTBRAT.samplepos) <= 0.1){
                         Modules.LINKEAGE.setState(LINKEAGE.State.OPEN);
                     }
 
-                    Modules.setIntakeKinematic(SECOND_SAMPLE);
+                    Modules.EXT.setState(EXT.State.MID);
+                    if(Modules.EXT.getRealCurrentPosition()>21)
+                    {
+
+                        Modules.INBRAT.setState(INBRAT.State.SEMIDOWN);
+                        if(Modules.INBRAT.inbrat.profile.getPosition() < 0.5)
+                            Modules.setIntakeKinematic(SECOND_SAMPLE);
+                    }
                     Modules.INROTATOR.setState(INROTATOR.State.FOURTH);
 
-                    if(Modules.LIFT.getRealCurrentPosition() > 54 && Modules.EXT.getRealCurrentPosition() > Modules.getKinematicExtension() - 2)
+
+                    if(Modules.LIFT.getRealCurrentPosition() > 54 && Modules.EXT.getRealCurrentPosition() > Modules.getKinematicExtension() - 2 && Modules.EXT.getState() != EXT.State.MID)
                     {
                         setNextState(State.RELEASE_AND_COLLECT_2ND);
                     }
@@ -226,31 +235,34 @@ public class SampleMisu extends LinearOpMode {
                 case RELEASE_AND_COLLECT_2ND:
                     Modules.OUTCLAW.setState(OUTCLAW.State.RELEASE);
                     Modules.INBRAT.setState(INBRAT.State.DOWN);
+
                     if(timer.milliseconds()>200)
-                        Modules.OUTBRAT.setState(OUTBRAT.State.TRANSFER);
+                        Modules.OUTBRAT.setState(OUTBRAT.State.MID);
                     if(timer.milliseconds()>550)
                     {
-                        Modules.LINKEAGE.setState(LINKEAGE.State.CLOSED);
-                        Modules.OUTROTATIE.setState(OUTROTATIE.State.COLLECT);
+                        Modules.LINKEAGE.setState(LINKEAGE.State.TRANSFER);
+                        Modules.OUTROTATIE.setState(OUTROTATIE.State.TRANSFERNOU);
                         Modules.INCLAW.setState(INCLAW.State.SECURE);
                         Modules.LIFT.setState(LIFT.State.TRANSFER);
                         if(timer.milliseconds()>750)
                         {
 
-                            Modules.INBRAT.setState(INBRAT.State.UP);
+                            Modules.INBRAT.setState(INBRAT.State.TRANSFERV2);
+
                             if (timer.milliseconds() > 850) {
-                                Modules.EXT.setState(EXT.State.MID);
-                                Modules.INTUR.setState(INTUR.State.TRANSFER);
                                 Modules.INROTATOR.setState(INROTATOR.State.THIRD);
+                                Modules.INTUR.setangle(INTUR.FRONT);
                                 if(timer.milliseconds()>1150) {
 
-                                    Modules.OUTBRAT.setState(OUTBRAT.State.MID);
-                                    if(Modules.LIFT.getRealCurrentPosition()<4 && Modules.EXT.atTarget())
+
+                                    if(Modules.LIFT.getRealCurrentPosition()<4 && (Math.abs(Modules.INBRAT.inbrat.profile.getPosition() - INBRAT.transferv2) <= 0.02))
                                     {
                                         Modules.EXT.setState(EXT.State.START);
-                                        if(Modules.EXT.atTarget())
+                                        if(Modules.EXT.getRealCurrentPosition()<11) {
+                                            Modules.OUTBRAT.setState(OUTBRAT.State.TRANSFERV2);
                                             setNextState(State.TRANSFER);
-                                    }
+                                        }
+                                        }
 
                                 }
                             }
@@ -258,8 +270,8 @@ public class SampleMisu extends LinearOpMode {
                     }
                     break;
                 case UP_AND_SETUP_FOR_3RD:
-                    Modules.LIFT.setState(LIFT.State.FULL);
-                    Modules.OUTBRAT.setState(OUTBRAT.State.SAMPLE);
+                    Modules.LIFT.setState(LIFT.State.FULLAUTO);
+                    Modules.OUTBRAT.setState(OUTBRAT.State.SAMPLEAUTO);
                     Modules.OUTROTATIE.setState(OUTROTATIE.State.SCORESMAPLE);
                     Modules.INTUR.setangle(INTUR.FRONT);
 
@@ -268,11 +280,17 @@ public class SampleMisu extends LinearOpMode {
                     if(Math.abs(Modules.OUTBRAT.outst.profile.getPosition() - OUTBRAT.samplepos) <= 0.1){
                         Modules.LINKEAGE.setState(LINKEAGE.State.OPEN);
                     }
+                    Modules.EXT.setState(EXT.State.MID);
+                    if(Modules.EXT.getRealCurrentPosition()>21)
+                    {
+                        Modules.INBRAT.setState(INBRAT.State.SEMIDOWN);
+                        if(Modules.INBRAT.inbrat.profile.getPosition() < 0.5)
+                             Modules.setIntakeKinematic(THIRD_SAMPLE);
+                    }
 
-                    Modules.setIntakeKinematic(THIRD_SAMPLE);
                     Modules.INROTATOR.setState(INROTATOR.State.FOURTH);
 
-                    if(Modules.LIFT.getRealCurrentPosition()>55 && Modules.EXT.atTarget() && Drive.reachedTargetAndStopped(4))
+                    if(Modules.LIFT.getRealCurrentPosition()>50 && Modules.EXT.atTarget() && Drive.reachedTargetAndStopped(6))
                     {
                         setNextState(State.RELEASE_AND_COLLECT_3RD);
                     }
@@ -281,29 +299,29 @@ public class SampleMisu extends LinearOpMode {
                     Modules.OUTCLAW.setState(OUTCLAW.State.RELEASE);
                     Modules.INBRAT.setState(INBRAT.State.DOWN);
                     if(timer.milliseconds()>200)
-                        Modules.OUTBRAT.setState(OUTBRAT.State.TRANSFER);
+                        Modules.OUTBRAT.setState(OUTBRAT.State.MID);
                     if(timer.milliseconds()>550)
                     {
-                        Modules.LINKEAGE.setState(LINKEAGE.State.CLOSED);
-                        Modules.OUTROTATIE.setState(OUTROTATIE.State.COLLECT);
+                        Modules.INTUR.setangle(INTUR.FRONT);
+                        Modules.LINKEAGE.setState(LINKEAGE.State.TRANSFER);
+                        Modules.OUTROTATIE.setState(OUTROTATIE.State.TRANSFERNOU);
                         Modules.INCLAW.setState(INCLAW.State.SECURE);
                         Modules.LIFT.setState(LIFT.State.TRANSFER);
                         if(timer.milliseconds()>750)
                         {
 
-                            Modules.INBRAT.setState(INBRAT.State.UP);
+                            Modules.INBRAT.setState(INBRAT.State.TRANSFERV2);
                             if (timer.milliseconds() > 850) {
-                                Modules.EXT.setState(EXT.State.MID);
-                                Modules.INTUR.setState(INTUR.State.TRANSFER);
+                                Modules.INTUR.setState(INTUR.State.FRONT);
                                 Modules.INROTATOR.setState(INROTATOR.State.THIRD);
                                 if(timer.milliseconds()>1150) {
-
-                                    Modules.OUTBRAT.setState(OUTBRAT.State.MID);
-                                    if(Modules.LIFT.getRealCurrentPosition() < 4 && Modules.EXT.atTarget())
+                                    if(Modules.LIFT.getRealCurrentPosition() < 4  && (Math.abs(Modules.INBRAT.inbrat.profile.getPosition() - INBRAT.transferv2) <= 0.02)) // && EXT.atTarget()
                                     {
                                         Modules.EXT.setState(EXT.State.START);
-                                        if(Modules.EXT.atTarget())
+                                        if(Modules.EXT.getRealCurrentPosition()<11) {
+                                            Modules.OUTBRAT.setState(OUTBRAT.State.TRANSFERV2);
                                             setNextState(State.TRANSFER);
+                                        }
                                     }
 
                                 }
@@ -312,8 +330,8 @@ public class SampleMisu extends LinearOpMode {
                     }
                     break;
                 case UP_3RD:
-                    Modules.LIFT.setState(LIFT.State.FULL);
-                    Modules.OUTBRAT.setState(OUTBRAT.State.SAMPLE);
+                    Modules.LIFT.setState(LIFT.State.FULLAUTO);
+                    Modules.OUTBRAT.setState(OUTBRAT.State.SAMPLEAUTO);
                     Modules.OUTROTATIE.setState(OUTROTATIE.State.SCORESMAPLE);
                     Modules.INTUR.setangle(INTUR.FRONT);
 
@@ -345,10 +363,15 @@ public class SampleMisu extends LinearOpMode {
                     }
                     break;
                 case GO_TO_SUB_PREP:
+                    Modules.OUTBRAT.setState(OUTBRAT.State.SCORESPECITELE);
+                    Modules.INBRAT.setState(INBRAT.State.UP);
+                    Modules.EXT.setAuto(11*EXT.TICKSCM);
+                    Modules.EXT.setState(EXT.State.AUTO);
                     Drive.setTarget(SUB_PREP);
                     Modules.LIFT.setState(LIFT.State.TRANSFER);
                     if(Drive.reachedTarget(20))
                     {
+                        Modules.EXT.setState(EXT.State.ZERO);
                         setNextState(State.GO_TO_SUB);
                     }
                     break;
@@ -360,7 +383,7 @@ public class SampleMisu extends LinearOpMode {
                     }
                     break;
                 case DETECT:
-                    Pose2d sex=camera.getdistanceVector(0,"red",0.8);
+                    Pose2d sex=camera.getdistanceVector(0,"yellow",0.8);
                     if (sex.getY() != 0 && sex.getX() != 0) {
 
                         Modules.INTUR.setState(INTUR.State.FRONT);
@@ -370,9 +393,9 @@ public class SampleMisu extends LinearOpMode {
                         y = sex.getY() + 13;
                         punct = new Pose(x, y);
                         unghi = Math.toDegrees(Math.asin(punct.getY() / lbrat));
-                        if (camera.isLateral("red") == 1 || camera.isLateral("red") == 0) {
+                        if (camera.isLateral("yellow") == 1 || camera.isLateral("yellow") == 0) {
                             Modules.INROTATOR.setAngle(unghi);
-                            if (camera.isLateral("red") == 0)
+                            if (camera.isLateral("yellow") == 0)
                                 x = sex.getX();
                         } else {
                             Modules.INROTATOR.setAngle(unghi - 90);
@@ -396,31 +419,35 @@ public class SampleMisu extends LinearOpMode {
                 case COLLECT:
                     if(timer.milliseconds()>250) {
                         Modules.INBRAT.setState(INBRAT.State.DOWN);
-                        Modules.OUTBRAT.setState(OUTBRAT.State.TRANSFER);
+
 
                     }
                     if(timer.milliseconds()>550)
                     {
-                        Modules.LINKEAGE.setState(LINKEAGE.State.CLOSED);
-                        Modules.OUTROTATIE.setState(OUTROTATIE.State.COLLECT);
+                        Modules.LINKEAGE.setState(LINKEAGE.State.TRANSFER);
+                        Modules.OUTROTATIE.setState(OUTROTATIE.State.TRANSFERNOU);
                         Modules.INCLAW.setState(INCLAW.State.SECURE);
                         Modules.LIFT.setState(LIFT.State.TRANSFER);
                         if(timer.milliseconds()>750)
                         {
-                            Modules.INBRAT.setState(INBRAT.State.UP);
+                              Modules.INBRAT.setState(INBRAT.State.TRANSFERV2);
                             if (timer.milliseconds() > 850) {
-                                Modules.EXT.setState(EXT.State.MID);
-                                Modules.INTUR.setState(INTUR.State.TRANSFER);
+
 
                                 Drive.setTarget(BASKET);
                                 if(timer.milliseconds()>1150) {
+                                    Modules.INTUR.setState(INTUR.State.FRONT);
                                     Modules.INROTATOR.setState(INROTATOR.State.THIRD);
-                                    Modules.OUTBRAT.setState(OUTBRAT.State.MID);
-                                    if(Modules.LIFT.getRealCurrentPosition() < 4 && Modules.EXT.atTarget())
+
+                                    if(Modules.LIFT.getRealCurrentPosition() < 4 && (Math.abs(Modules.INBRAT.inbrat.profile.getPosition() - INBRAT.transferv2) <= 0.02))
                                     {
+                                        Modules.OUTBRAT.setState(OUTBRAT.State.MID);
                                         Modules.EXT.setState(EXT.State.START);
-                                        if(Modules.EXT.atTarget())
+                                        if( Modules.EXT.getRealCurrentPosition()<13){
+                                            Modules.EXT.setState(EXT.State.START);
+                                            Modules.OUTBRAT.setState(OUTBRAT.State.TRANSFERV2);
                                             setNextState(State.TRANSFER_AND_GO_TO_BASKET);
+                                        }
                                     }
 
                                 }
@@ -437,13 +464,13 @@ public class SampleMisu extends LinearOpMode {
                         Modules.OUTCLAW.setState(OUTCLAW.State.SECURE);
                     if (timer.milliseconds() > 180) {
                         Modules.INCLAW.setState(INCLAW.State.RELEASE);
-                        Modules.OUTBRAT.setState(OUTBRAT.State.TRANSFER);
+                        Modules.OUTBRAT.setState(OUTBRAT.State.TRANSFERV2);
                     }
                     if(timer.milliseconds()>500)
                     {
                         Modules.INTUR.setState(INTUR.State.FRONT);
-                        Modules.LIFT.setState(LIFT.State.FULL);
-                        Modules.OUTBRAT.setState(OUTBRAT.State.SAMPLE);
+                        Modules.LIFT.setState(LIFT.State.FULLAUTO);
+                        Modules.OUTBRAT.setState(OUTBRAT.State.SAMPLEAUTO);
                         if(Math.abs(Modules.OUTBRAT.outst.profile.getPosition() - OUTBRAT.samplepos) <= 0.1){
                             Modules.LINKEAGE.setState(LINKEAGE.State.OPEN);
                         }
@@ -476,7 +503,7 @@ public class SampleMisu extends LinearOpMode {
                 case GO_TO_PARK:
                     break;
                 case WINDOWS_OK_ERROR:
-                    Modules.LIFT.setState(LIFT.State.FULL);
+                    Modules.LIFT.setState(LIFT.State.FULLAUTO);
                     Modules.OUTBRAT.setState(OUTBRAT.State.TRANSFER);
 
                     Drive.setTarget(OH_SHIT_POSE);

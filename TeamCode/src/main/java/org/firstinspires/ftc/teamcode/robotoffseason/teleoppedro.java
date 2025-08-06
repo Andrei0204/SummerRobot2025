@@ -52,6 +52,7 @@ public class teleoppedro extends OpMode {
         modules.INBRAT.setState(INBRAT.State.MIDDLE);
         Timer = new ElapsedTime();
         stickyGamepad1 = new StickyGamepad(gamepad1);
+        modules.OUTBRAT.setState(OUTBRAT.State.MID);
     }
 
     /**
@@ -74,7 +75,8 @@ public class teleoppedro extends OpMode {
      **/
     @Override
     public void start() {
-        modules.OUTBRAT.setState(OUTBRAT.State.MID);
+        modules.update();
+        modules.OUTBRAT.setState(OUTBRAT.State.SPECIMEN);
         follower.startTeleopDrive();
     }
 

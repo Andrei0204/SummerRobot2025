@@ -20,6 +20,7 @@ public class OUTBRAT implements IStateBasedModule, IRobotModule {
     public static  double scorespecipos = 0.68;
 //    public static final double scorespecipos = 0.71;
     public static  double samplepos = 0.29 ;
+    public static  double sampleposauto = 0.29 ;
     public static final double midpos = 0.8;
 
 
@@ -74,6 +75,11 @@ public class OUTBRAT implements IStateBasedModule, IRobotModule {
                 outdr.isProfiled=false;
                 OutbratState = State.SAMPLE;
                 break;
+            case SAMPLEAUTO:
+                outst.isProfiled=true;
+                outdr.isProfiled=true;
+                OutbratState = State.SAMPLEAUTO;
+                break;
             case SCORESPECI:
                 OutbratState = State.SCORESPECI;
                 break;
@@ -112,6 +118,9 @@ public class OUTBRAT implements IStateBasedModule, IRobotModule {
             case SAMPLE:
                 rotpose = samplepos;
                 break;
+            case SAMPLEAUTO:
+                rotpose = sampleposauto;
+                break;
             case SCORESPECI:
                 rotpose = scorespecipos;
                 break;
@@ -143,7 +152,8 @@ public class OUTBRAT implements IStateBasedModule, IRobotModule {
         AUTOSPECI(auto),
         TRANSFERV2(transfnou),
         SPECIMEN(specimenpos),
-        SAMPLE(samplepos);
+        SAMPLE(samplepos),
+        SAMPLEAUTO(sampleposauto);
 
         public final State nextState;
         public double position;

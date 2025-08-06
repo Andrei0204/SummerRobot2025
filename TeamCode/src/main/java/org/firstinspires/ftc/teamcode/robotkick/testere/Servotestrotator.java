@@ -10,10 +10,10 @@ import com.qualcomm.robotcore.hardware.Servo;
 @TeleOp
 public class Servotestrotator extends LinearOpMode {
     Servo test;
-    public static double pos =0.4;
+    public static double pos =0.73;
     @Override
     public void runOpMode() throws InterruptedException {
-        test =hardwareMap.get(Servo.class,"outrotatie");
+        test =hardwareMap.get(Servo.class,"outbrat");
 
         test.setPosition(pos);
         waitForStart();
