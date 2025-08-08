@@ -41,7 +41,27 @@ public class Follower {
         backLeft = new CoolMotor(hardwareMap.get(DcMotorEx.class, "BL"), CoolMotor.RunMode.RUN, backLeftMotorReversed);
         backRight = new CoolMotor(hardwareMap.get(DcMotorEx.class, "BR"), CoolMotor.RunMode.RUN, backRightMotorReversed);
     }
+    public Follower(HardwareMap hardwareMap) {
+        lateralmultiplier=1;
+        this.odo=null;
+        frontLeft = new CoolMotor(hardwareMap.get(DcMotorEx.class, "FL"), CoolMotor.RunMode.RUN, frontLeftMotorReversed);
+        frontRight = new CoolMotor(hardwareMap.get(DcMotorEx.class, "FR"), CoolMotor.RunMode.RUN, frontRightMotorReversed);
+        backLeft = new CoolMotor(hardwareMap.get(DcMotorEx.class, "BL"), CoolMotor.RunMode.RUN, backLeftMotorReversed);
+        backRight = new CoolMotor(hardwareMap.get(DcMotorEx.class, "BR"), CoolMotor.RunMode.RUN, backRightMotorReversed);
+    }
+    public void setTargetVectorAndSlows(Vector vector, double slowTurn, boolean slowBack, boolean slowForward) {
 
+        double yComp = 0, xComp = 0;
+
+        if (slowBack) yComp = -0.2;
+        if (slowForward) yComp = 0.2;
+
+        if (Math.abs(slowTurn) > 0.05) {
+            xComp = 0.4 * (slowTurn / Math.abs(slowTurn));
+        }
+
+        this.target = new Pose(xComp != 0 ? xComp : vector.getX() * 1.1, yComp != 0 ? yComp : vector.getY(), vector.getZ());
+    }
 
     public boolean reachedTarget(double tolerance) {
         return getDistance(localization, target) <= tolerance;// && stopped();
@@ -80,6 +100,21 @@ public class Follower {
         updateMotors();
 
     }
+    public void updateteleop() {
+        double x = target.getX(),
+                y = target.getY(),
+                rot = target.getHeading();
+
+        frontLeft.setPower(y + x + rot);
+        frontRight.setPower(y - x - rot);
+        backLeft.setPower(y - x + rot);
+        backRight.setPower(y + x - rot);
+        frontLeft.update();
+        frontRight.update();
+        backLeft.update();
+        backRight.update();
+    }
+
 
     public void updatePath() {
         odo.update();

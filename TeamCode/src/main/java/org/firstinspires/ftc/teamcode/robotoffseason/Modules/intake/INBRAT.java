@@ -13,7 +13,7 @@ public class INBRAT implements IStateBasedModule, IRobotModule {
     public static final double downpos = 0;
     public static  double BeforCollect = 0.13;
     public static final double uppos = 0.5;
-    public static final double middle = 0.35;
+    public static final double middle = 0.32;
     public static final double transferv2 = 0.97;
     public static double auto=0.28;
 

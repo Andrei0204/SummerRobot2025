@@ -347,7 +347,7 @@ public class SaibaControl implements IRobotModule {
 
             }
         }
-        if (timercollect.milliseconds() > 150 && waitfordown == 1) {
+        if (timercollect.milliseconds() > 100 && waitfordown == 1) {
 
 
             modules.INCLAW.setState(INCLAW.State.SECURE);
@@ -356,7 +356,7 @@ public class SaibaControl implements IRobotModule {
             intaketimer.reset();
         }
 
-        if (timercollect.milliseconds() > 60 && waitfordown == 2) {
+        if (timercollect.milliseconds() > 40 && waitfordown == 2) {
             modules.OUTCLAW.setState(OUTCLAW.State.SECURE);
             modules.INCLAW.setState(INCLAW.State.RELEASE);
             clawintake = 0;

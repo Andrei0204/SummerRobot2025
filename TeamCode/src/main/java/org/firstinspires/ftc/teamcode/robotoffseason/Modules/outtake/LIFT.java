@@ -14,11 +14,11 @@ import org.firstinspires.ftc.teamcode.roboDrive.Wrappers.IStateBasedModule;
 public class LIFT implements IStateBasedModule, IRobotModule {
 
     public static double TICKSCM = 724.35;    //test
-        public static double startpos = -1.5 * TICKSCM;
+        public static double startpos =  0*TICKSCM;
     public static final double finalpos = 63 * TICKSCM;
     public static final double finalposauto = 66 * TICKSCM;
-    public static final double transferpos = -1.5 * TICKSCM;
-    public static double scorespecipos = 30 * TICKSCM;
+    public static final double transferpos = 0 * TICKSCM;
+    public static double scorespecipos = 28.5 * TICKSCM;
     public static double scorespecipostele = 33* TICKSCM;
 //    public static double scorespecipos = 34 * TICKSCM;
     public static final double lowbasket = 16 * TICKSCM;
@@ -27,7 +27,7 @@ public class LIFT implements IStateBasedModule, IRobotModule {
     public static double target = 0; //cm
 
     public static double currentPosition = startpos;
-    public  double kP = 0.00018,kp2=0.0002, kI = 0.17, kD = 0.0000008, f = -0; //TODO Valori PID!!!!
+    public  double kP = 0.00017,kp2=0.0002, kI = 0.17, kD = 0.0000008, f = -0; //TODO Valori PID!!!!
     public  double kPjos = 0.000095 , kIjos = 0.1, kDjos = 0.000003; //TODO Valori PID!!!!
 
     private static boolean ENABLED = true;

@@ -10,7 +10,7 @@ public class INTUR implements IStateBasedModule, IRobotModule {
     public double rotpose;
         public static final double transfer = 0.03;
     public static final double diagonal = 0.37;
-    public static final double throwpos = 0.57;
+    public static final double throwpos = 0.6;
     public static final double FRONT = 0.71;
     public static double auto=0.69;
 

@@ -53,7 +53,7 @@ public class SPECIRED extends OpMode {
     public void autonomousPathUpdate() {
         switch (pathState) {
             case 1:
-                follower.setTarget(new Pose(82, 13, 0));
+                follower.setTarget(new Pose(82, 15, 0));
                 modules.LIFT.setState(LIFT.State.SCORESPECI);
                 modules.OUTROTATIE.setState(OUTROTATIE.State.SCORESPECI);
                 modules.OUTBRAT.setState(OUTBRAT.State.SCORESPECI);
@@ -77,7 +77,7 @@ public class SPECIRED extends OpMode {
                             modules.INTUR.setState(INTUR.State.FRONT);
                             modules.INBRAT.setState(INBRAT.State.SEMIDOWN);
 
-                            x = sex.getX()-2;
+                            x = sex.getX()-4;
                             y = sex.getY() + 14; //13
                             punct = new com.pedropathing.localization.Pose(x, y);
                             unghi = Math.toDegrees(Math.asin(punct.getY() / lbrat));
@@ -133,7 +133,7 @@ public class SPECIRED extends OpMode {
                 }
                 if (follower.reachedTarget(4)) {
                     modules.INTUR.setState(INTUR.State.DIAG);
-                    if (actionTimer.milliseconds() >70) {
+                    if (actionTimer.milliseconds() >80) {
                         modules.INCLAW.setState(INCLAW.State.RELEASE);
                         if (actionTimer.milliseconds() > 120)
                             modules.OUTCLAW.setState(OUTCLAW.State.SECURE);
@@ -148,12 +148,15 @@ public class SPECIRED extends OpMode {
                 modules.OUTROTATIE.setState(OUTROTATIE.State.SCORESPECI);
                 modules.LIFT.setState(LIFT.State.SCORESPECI);
                 follower.lateralmultiplier = i;
-                follower.setTarget(new Pose(91, 5.5, Math.toRadians(2)));
+                follower.setTarget(new Pose(90, 5.5, Math.toRadians(2)));
+                if(cycles==1)
+                    follower.setTarget(new Pose(90, 4, Math.toRadians(2)));
                 if (follower.localization.getY() > -50) {
                     modules.LINKEAGE.setState(LINKEAGE.State.OPEN);
                 }
                 if (follower.reachedTarget(2.5)) {
                     follower.lateralmultiplier = 1;
+
                     cycles++;
                     modules.OUTCLAW.setState(OUTCLAW.State.RELEASE);
                     modules.LINKEAGE.setState(LINKEAGE.State.CLOSED);
@@ -257,7 +260,7 @@ public class SPECIRED extends OpMode {
                 break;
             case 8://third
                 if (pathtimer.milliseconds() > 100) {
-                    follower.setTarget(new Pose(44, -116, -0.73));
+                    follower.setTarget(new Pose(44, -118, -0.73));
                     modules.INTUR.setState(INTUR.State.AUTOSPECI);
                     modules.INTUR.setangle(0);
                     modules.INROTATOR.setState(INROTATOR.State.SECOND);
@@ -312,13 +315,13 @@ public class SPECIRED extends OpMode {
                 modules.LIFT.setState(LIFT.State.SCORESPECI);
                 follower.lateralmultiplier = i;
                 if (cycles < 3)
-                    follower.setTarget(new Pose(89.2, 2.5, Math.toRadians(10)));
+                    follower.setTarget(new Pose(90, 2.5, Math.toRadians(10)));
                 else
-                    follower.setTarget(new Pose(90, 4, Math.toRadians(10)));
+                    follower.setTarget(new Pose(92, 4, Math.toRadians(10)));
                 if (follower.localization.getY() > -50) {
                     modules.LINKEAGE.setState(LINKEAGE.State.OPEN);
                 }
-                if (follower.reachedTarget(4) ||follower.localization.getX()>87) {
+                if (follower.reachedTarget(3.5) ||follower.localization.getX()>88 ||(follower.localization.getX()>89 && cycles>=3) ) {
                     cycles++;
                     modules.OUTCLAW.setState(OUTCLAW.State.RELEASE);
                     modules.LINKEAGE.setState(LINKEAGE.State.CLOSED);
