@@ -69,15 +69,13 @@ public class SPECIRED extends OpMode {
                     setPathState(-1);
                 }
                 break;
-            case -1:
-                if (follower.reachedTargetAndStopped(4.5) && follower.fullstop()) {
-                    follower.overallmulti = 1;
-                    modules.WEELIE.setState(WEELIE.State.NERIDICAT);
-                    modules.INROTATOR.setState(INROTATOR.State.CUSTOM);
+            case -1:                    
                     if (follower.reachedTargetAndStopped(4.5) && follower.fullstop()) {
+                        follower.overallmulti = 1;
+                        modules.WEELIE.setState(WEELIE.State.NERIDICAT);
+                        modules.INROTATOR.setState(INROTATOR.State.CUSTOM);
                         Pose2d sex = ll.getdistanceVector(0, "red", 0.7);
-                        if
-                        ((sex.getY() != 0 || sex.getX() != 0) && actionTimer.milliseconds() <= 1000) {
+                        if ((sex.getY() != 0 || sex.getX() != 0) && actionTimer.milliseconds() <= 1000) {
                             modules.INTUR.setState(INTUR.State.FRONT);
                             modules.INBRAT.setState(INBRAT.State.SEMIDOWN);
 
@@ -102,12 +100,10 @@ public class SPECIRED extends OpMode {
                             modules.INTUR.setangle(unghi);
                             setPathState(-2);
                         }
-                        else
-                               if (actionTimer.milliseconds() > 1000)
+                        else if (actionTimer.milliseconds() > 1000)
                             setPathState(-3);
                     } else
                         actionTimer.reset();
-                }
                 break;
             case -2:
                 if (modules.EXT.getRealCurrentPosition() > ext - 1.2 && actionTimer.milliseconds() > 200 && follower.reachedTargetAndStopped(3)) {
