@@ -50,6 +50,9 @@ public class SPECIRED extends OpMode {
     public void buildPaths() {
     }
 
+    int incercariDete = 0;
+    int totalMuie = 0; 
+
 
     public void autonomousPathUpdate() {
         switch (pathState) {
@@ -57,6 +60,8 @@ public class SPECIRED extends OpMode {
                 modules.WEELIE.setState(WEELIE.State.INTERIOR);
                 follower.overallmulti = 0.9;
                 follower.setTarget(new Pose(79, 16, 0));
+                modules.INTUR.setState(INTUR.State.FRONT);
+                modules.INBRAT.setState(INBRAT.State.UP);
                 modules.LIFT.setState(LIFT.State.SCORESPECI);
                 modules.OUTROTATIE.setState(OUTROTATIE.State.SCORESPECI);
                 modules.OUTBRAT.setState(OUTBRAT.State.SCORESPECI);
@@ -67,6 +72,7 @@ public class SPECIRED extends OpMode {
                     modules.LINKEAGE.setState(LINKEAGE.State.CLOSED);
                     modules.OUTROTATIE.setState(OUTROTATIE.State.SPECIMEN);
                     setPathState(-1);
+                    incercariDete = 0;
                 }
                 break;
             case -1:                    
@@ -75,6 +81,58 @@ public class SPECIRED extends OpMode {
                         modules.WEELIE.setState(WEELIE.State.NERIDICAT);
                         modules.INROTATOR.setState(INROTATOR.State.CUSTOM);
                         Pose2d sex = ll.getdistanceVector(0, "red", 0.7);
+                        if ((sex.getY() != 0 || sex.getX() != 0) && actionTimer.milliseconds() <= 1000) {
+                            modules.INTUR.setState(INTUR.State.FRONT);
+                            modules.INBRAT.setState(INBRAT.State.SEMIDOWN);
+
+                            x = sex.getX() - 2;
+                            y = sex.getY() + 14; //13
+                            punct = new com.pedropathing.localization.Pose(x, y);
+                            unghi = Math.toDegrees(Math.asin(punct.getY() / lbrat));
+                            if (ll.isLateral("red") == 1 || ll.isLateral("red") == 0) {
+                                modules.INROTATOR.setAngle(unghi);
+                                x = sex.getX();
+                            } else {
+                                modules.INROTATOR.setAngle(unghi - 90);
+                                x = sex.getX();
+
+                            }
+                            if (x > 24)
+                                x = sex.getX() + 2;
+                            ext = punct.getX() - Math.sqrt(lbrat * lbrat - punct.getY() * punct.getY());
+                            modules.EXT.setState(EXT.State.AUTO);
+                            modules.EXT.setAuto(ext * EXT.TICKSCM);
+                            modules.INTUR.setState(INTUR.State.AUTOSPECI);
+                            modules.INTUR.setangle(unghi);
+                            setPathState(-2);
+                        }
+                        else if (actionTimer.milliseconds() > 420 && incercariDete == 0) {
+                            modules.OUTBRAT.setState(OUTBRAT.State.SPECIMEN);
+                            incercariDete++;
+                            setPathState(69);
+                        }
+                    } else
+                        actionTimer.reset();
+                break;
+            case 69:
+                follower.setTarget(new Pose(79, 16, Math.toRadians(5));
+                if(follower.reachedHeading(Math.toRadians(2))
+                {
+                    setPathState(-1);
+                    totalMuie++;
+                    if(totalMuie == 3)
+                    {
+                        setPathState(6969);
+                    }
+                }
+                
+                break;
+            case 6969:                    
+                    if (follower.reachedTargetAndStopped(4.5) && follower.fullstop()) {
+                        follower.overallmulti = 1;
+                        modules.WEELIE.setState(WEELIE.State.NERIDICAT);
+                        modules.INROTATOR.setState(INROTATOR.State.CUSTOM);
+                        Pose2d sex = ll.getdistanceVector(0, "yellow", 0.7);
                         if ((sex.getY() != 0 || sex.getX() != 0) && actionTimer.milliseconds() <= 1000) {
                             modules.INTUR.setState(INTUR.State.FRONT);
                             modules.INBRAT.setState(INBRAT.State.SEMIDOWN);
@@ -173,6 +231,7 @@ public class SPECIRED extends OpMode {
                     modules.OUTBRAT.setState(OUTBRAT.State.SPECIMEN);
                     if (cycles == 1) {
                         setPathState(-1);
+                        incercariDete = 0;
                         x = 0;
                         y = 0;
                         ll.width = 0;
