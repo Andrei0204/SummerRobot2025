@@ -100,8 +100,10 @@ public class SPECIRED extends OpMode {
                             modules.INTUR.setangle(unghi);
                             setPathState(-2);
                         }
-                        else if (actionTimer.milliseconds() > 1000)
+                        else if (actionTimer.milliseconds() > 420) {
+                            modules.OUTBRAT.setState(OUTBRAT.State.SPECIMEN);
                             setPathState(-3);
+                        }
                     } else
                         actionTimer.reset();
                 break;
@@ -289,7 +291,9 @@ public class SPECIRED extends OpMode {
                 }
                 break;
             case 10:
-                follower.lateralmultiplier = 1.2;//1.3;
+                modules.INTUR.setAuto(0.92);
+                modules.INTUR.setState(INTUR.State.AUTOSPECI);
+                follower.lateralmultiplier = 1.1;//1.3;
                 if (modules.LIFT.getState() == LIFT.State.SCORESPECI && follower.localization.getX() < 70) {
                     modules.LIFT.setState(LIFT.State.START);
                     modules.OUTROTATIE.setState(OUTROTATIE.State.SPECIMEN);
