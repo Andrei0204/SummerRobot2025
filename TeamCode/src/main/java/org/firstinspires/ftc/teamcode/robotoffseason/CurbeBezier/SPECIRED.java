@@ -61,7 +61,8 @@ public class SPECIRED extends OpMode {
                 follower.overallmulti = 0.9;
                 follower.setTarget(new Pose(79, 16, 0));
                 modules.INTUR.setState(INTUR.State.FRONT);
-                modules.INBRAT.setState(INBRAT.State.UP);
+                modules.INROTATOR.setState(INROTATOR.State.THIRD);
+                modules.INBRAT.setState(INBRAT.State.MIDDLE);
                 modules.LIFT.setState(LIFT.State.SCORESPECI);
                 modules.OUTROTATIE.setState(OUTROTATIE.State.SCORESPECI);
                 modules.OUTBRAT.setState(OUTBRAT.State.SCORESPECI);
@@ -110,20 +111,22 @@ public class SPECIRED extends OpMode {
                             modules.OUTBRAT.setState(OUTBRAT.State.SPECIMEN);
                             incercariDete++;
                             setPathState(69);
+                            totalMuie++;
+                            if(totalMuie == 3)
+                            {
+                                setPathState(6969);
+                            }
                         }
                     } else
                         actionTimer.reset();
                 break;
             case 69:
-                follower.setTarget(new Pose(79, 16, Math.toRadians(5));
-                if(follower.reachedHeading(Math.toRadians(2))
+                follower.setTarget(new Pose(74, 16, Math.toRadians(20)));
+                if(  (follower.reachedHeading(Math.toRadians(5))  &&follower.reachedTargetAndStopped(4.5) )||actionTimer.milliseconds()>1000)
                 {
-                    setPathState(-1);
+                    setPathState(-3);
                     totalMuie++;
-                    if(totalMuie == 3)
-                    {
-                        setPathState(6969);
-                    }
+
                 }
                 
                 break;
@@ -345,27 +348,29 @@ public class SPECIRED extends OpMode {
                     modules.INBRAT.setState(INBRAT.State.MIDDLE);
                     modules.INTUR.setState(INTUR.State.THROW);
                     modules.INROTATOR.setState(INROTATOR.State.FOURTH);
-                    follower.setTarget(new Pose(8, -100, 0));
+                    follower.setTarget(new Pose(7, -100, 0));
                     setPathState(10);
                 }
                 break;
             case 10:
-                modules.INTUR.setAuto(0.92);
-                modules.INTUR.setState(INTUR.State.AUTOSPECI);
-                follower.lateralmultiplier = 1.1;//1.3;
+                follower.lateralmultiplier = 1.3;//1.3;
                 if (modules.LIFT.getState() == LIFT.State.SCORESPECI && follower.localization.getX() < 70) {
                     modules.LIFT.setState(LIFT.State.START);
                     modules.OUTROTATIE.setState(OUTROTATIE.State.SPECIMEN);
                 }
                 if (follower.reachedTarget(4)) {
-                    modules.INTUR.setState(INTUR.State.DIAG);
+                    if(modules.INTUR.getState()!= INTUR.State.AUTOSPECI)
+                        modules.INTUR.setState(INTUR.State.DIAG);
                     if (pathtimer.milliseconds() > 70) {
                         modules.INCLAW.setState(INCLAW.State.RELEASE);
                         modules.OUTCLAW.setState(OUTCLAW.State.SECURE);
 
                     }
-                    if (pathtimer.milliseconds() > 160)
+                    if (pathtimer.milliseconds() > 160) {
+                        modules.INTUR.setAuto(0.92);
+                        modules.INTUR.setState(INTUR.State.AUTOSPECI);
                         setPathState(11);
+                    }
                 } else
                     pathtimer.reset();
                 break;
@@ -387,7 +392,7 @@ public class SPECIRED extends OpMode {
                     modules.LINKEAGE.setState(LINKEAGE.State.CLOSED);
                     modules.OUTBRAT.setState(OUTBRAT.State.SPECIMEN);
 
-                    follower.setTarget(new Pose(8, -85, 0));
+                    follower.setTarget(new Pose(7, -85, 0));
                     setPathState(10);
                 }
                 break;
@@ -422,6 +427,9 @@ public class SPECIRED extends OpMode {
         telemetry.addData("heading", follower.reachedHeading(Math.toRadians(4)));
         telemetry.addData("ratie", ll.lenght / ll.width);
         telemetry.addData("distx", punct);
+        telemetry.addData("pathstate", pathState);
+        telemetry.addData("cycle", cycles);
+        telemetry.addData("muie", totalMuie);
         telemetry.update();
     }
 
