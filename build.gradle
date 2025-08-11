@@ -19,6 +19,9 @@ buildscript {
 // google() repository beginning with version 3.2 of the Android Gradle Plugin
 allprojects {
     repositories {
+        maven{
+            url = "https://mymaven.bylazar.com/dev"
+        }
         mavenCentral()
         google()
 

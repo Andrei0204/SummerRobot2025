@@ -55,7 +55,7 @@ public class SPECIRED extends OpMode {
         switch (pathState) {
             case 1:
                 modules.WEELIE.setState(WEELIE.State.INTERIOR);
-                follower.overallmulti=0.9;
+                follower.overallmulti = 0.9;
                 follower.setTarget(new Pose(79, 16, 0));
                 modules.LIFT.setState(LIFT.State.SCORESPECI);
                 modules.OUTROTATIE.setState(OUTROTATIE.State.SCORESPECI);
@@ -71,28 +71,29 @@ public class SPECIRED extends OpMode {
                 break;
             case -1:
                 if (follower.reachedTargetAndStopped(4.5) && follower.fullstop()) {
-                    follower.overallmulti=1;
+                    follower.overallmulti = 1;
                     modules.WEELIE.setState(WEELIE.State.NERIDICAT);
                     modules.INROTATOR.setState(INROTATOR.State.CUSTOM);
                     if (follower.reachedTargetAndStopped(4.5) && follower.fullstop()) {
                         Pose2d sex = ll.getdistanceVector(0, "red", 0.7);
-                        if (sex.getY() != 0 && sex.getX() != 0 || actionTimer.milliseconds()>1000) {
+                        if
+                        ((sex.getY() != 0 || sex.getX() != 0) && actionTimer.milliseconds() <= 1000) {
                             modules.INTUR.setState(INTUR.State.FRONT);
                             modules.INBRAT.setState(INBRAT.State.SEMIDOWN);
 
-                            x = sex.getX()-2;
+                            x = sex.getX() - 2;
                             y = sex.getY() + 14; //13
                             punct = new com.pedropathing.localization.Pose(x, y);
                             unghi = Math.toDegrees(Math.asin(punct.getY() / lbrat));
                             if (ll.isLateral("red") == 1 || ll.isLateral("red") == 0) {
                                 modules.INROTATOR.setAngle(unghi);
-                                x = sex.getX() ;
+                                x = sex.getX();
                             } else {
                                 modules.INROTATOR.setAngle(unghi - 90);
-                                x = sex.getX() ;
+                                x = sex.getX();
 
                             }
-                            if(x>24)
+                            if (x > 24)
                                 x = sex.getX() + 2;
                             ext = punct.getX() - Math.sqrt(lbrat * lbrat - punct.getY() * punct.getY());
                             modules.EXT.setState(EXT.State.AUTO);
@@ -101,6 +102,9 @@ public class SPECIRED extends OpMode {
                             modules.INTUR.setangle(unghi);
                             setPathState(-2);
                         }
+                        else
+                               if (actionTimer.milliseconds() > 1000)
+                            setPathState(-3);
                     } else
                         actionTimer.reset();
                 }
@@ -151,8 +155,8 @@ public class SPECIRED extends OpMode {
                 modules.LIFT.setState(LIFT.State.SCORESPECI);
                 follower.lateralmultiplier = i;
                 follower.setTarget(new Pose(92, 10, Math.toRadians(0)));
-                if(cycles==1)
-                    follower.setTarget(new Pose(92,  4, Math.toRadians(0)));
+                if (cycles == 1)
+                    follower.setTarget(new Pose(92, 4, Math.toRadians(0)));
                 if (follower.localization.getY() > -50) {
                     modules.LINKEAGE.setState(LINKEAGE.State.OPEN);
                 }
@@ -167,19 +171,18 @@ public class SPECIRED extends OpMode {
                 }
                 break;
             case -55:
-                if(pathtimer.milliseconds()>200) {
+                if (pathtimer.milliseconds() > 200) {
                     modules.OUTBRAT.setState(OUTBRAT.State.SPECIMEN);
                     if (cycles == 1) {
                         setPathState(-1);
-                        x=0;
-                        y=0;
-                        ll.width=0;
-                        ll.lenght=0;
-                        ll.distx=0;
-                        ll.disty=0;
+                        x = 0;
+                        y = 0;
+                        ll.width = 0;
+                        ll.lenght = 0;
+                        ll.distx = 0;
+                        ll.disty = 0;
 
-                    }
-                    else {
+                    } else {
 
                         setPathState(2);
                     }
@@ -319,7 +322,7 @@ public class SPECIRED extends OpMode {
                 if (follower.localization.getY() > -50) {
                     modules.LINKEAGE.setState(LINKEAGE.State.OPEN);
                 }
-                if (follower.reachedTarget(4) ||follower.localization.getX()>87) {
+                if (follower.reachedTarget(4) || follower.localization.getX() > 87) {
                     cycles++;
                     modules.OUTCLAW.setState(OUTCLAW.State.RELEASE);
                     modules.LINKEAGE.setState(LINKEAGE.State.CLOSED);

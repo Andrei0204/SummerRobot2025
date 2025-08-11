@@ -22,5 +22,5 @@ dependencies {
 //    implementation 'com.pedropathing:dev:1.1.0-dev3'
     implementation 'com.pedropathing:beta:1.0.9-beta2'
     implementation 'com.acmerobotics.dashboard:dashboard:0.4.16'
-
+    implementation "com.bylazar:fullpanels:0.0.26"
 }
