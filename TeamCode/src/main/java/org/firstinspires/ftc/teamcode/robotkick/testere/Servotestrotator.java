@@ -13,7 +13,7 @@ public class Servotestrotator extends LinearOpMode {
     public static double pos =0.73;
     @Override
     public void runOpMode() throws InterruptedException {
-        test =hardwareMap.get(Servo.class,"outbrat");
+        test =hardwareMap.get(Servo.class,"inrot");
 
         test.setPosition(pos);
         waitForStart();

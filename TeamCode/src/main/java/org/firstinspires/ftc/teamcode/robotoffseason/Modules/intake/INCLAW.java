@@ -9,10 +9,10 @@ import org.firstinspires.ftc.teamcode.roboDrive.Wrappers.IStateBasedModule;
 public class INCLAW implements IStateBasedModule, IRobotModule {
 
     public double clawpos;
-    public final double clawRelease = 1,
-            clawSecure = 0.65 ,
-            clawInterior=0.68,
-            semiopenpos=0.72 ;
+    public final double clawRelease = 0.5,
+            clawSecure = 0.18 ,
+            clawInterior=0.2,
+            semiopenpos=0.2 ;
 
                 //0.72 pt prindere
 

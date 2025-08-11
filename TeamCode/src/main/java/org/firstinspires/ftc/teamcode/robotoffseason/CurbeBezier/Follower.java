@@ -30,6 +30,7 @@ public class Follower {
     Vector power = new Vector(0,0);
     public static double velocityThreshold = 3.5 ;
     public static double lateralmultiplier = 1 ;
+    public static double overallmulti = 1 ;
 
     double headingPower = 0;
 
@@ -138,6 +139,7 @@ public class Follower {
         );
         double headingDiff = Angles.normalize(target.getHeading() - localization.getHeading());
         headingPower = hpid.calculate(-headingDiff);
+        power.scaleBy(overallmulti);
     }
 
     public void updateMotors() {

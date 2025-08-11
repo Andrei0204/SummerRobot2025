@@ -230,7 +230,7 @@ public class SaibaControl implements IRobotModule {
             }
 
 
-            if (sateOutSpeci == StateOutSpeci.SCORING  && (gamepad1.right_bumper || gamepad1.a)) {
+            if ( (gamepad1.right_bumper || gamepad1.a || gamepad2.dpad_right)) {
                 modules.OUTCLAW.setState(OUTCLAW.State.RELEASE);
 
                 modules.LINKEAGE.setState(LINKEAGE.State.CLOSED);

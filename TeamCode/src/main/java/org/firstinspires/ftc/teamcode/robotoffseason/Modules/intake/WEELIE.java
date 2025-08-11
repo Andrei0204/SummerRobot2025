@@ -13,7 +13,9 @@ public class WEELIE implements IStateBasedModule, IRobotModule {
     public final double RIDICATDR = 0.4;
     public final double RIDICATST = 0.6,
             NERIDICATDR = 0.78,
-            NERIDICATST = 0.23;
+            NERIDICATST = 0.23,
+            interiordr = 0.66,
+            interiorst = 0.35;
 
                 //0.72 pt prindere
 
@@ -39,10 +41,10 @@ public class WEELIE implements IStateBasedModule, IRobotModule {
             case NERIDICAT:
                 PICSTATE = State.NERIDICAT;
                 break;
-//            case INTERIOR:
-//                PICSTATE = State.INTERIOR;
-//                break;
-//
+            case INTERIOR:
+                PICSTATE = State.INTERIOR;
+                break;
+
 //            case SEMIOPEN:
 //                PICSTATE = State.SEMIOPEN;
 //                break;
@@ -66,9 +68,10 @@ public class WEELIE implements IStateBasedModule, IRobotModule {
                 posst = NERIDICATST;
                 posdr = NERIDICATDR;
                 break;
-//            case INTERIOR:
-//                clawpos = clawInterior;
-//                break;
+            case INTERIOR:
+                posst = interiorst;
+                posdr = interiordr;
+                break;
 //            case SEMIOPEN:
 //                clawpos = semiopenpos;
 //                break;
@@ -85,6 +88,7 @@ public class WEELIE implements IStateBasedModule, IRobotModule {
     public enum State {
         NERIDICAT,
         RIDICAT,
+        INTERIOR
         ;
     }
 }
