@@ -44,7 +44,7 @@ public class Pepoziti2 extends OpMode {
      * <p>
      * It is used by the pathUpdate method.
      */
-    public static double sex=1.2;
+    public static double piece=1.2;
     private int pathState;
     public StickyGamepad stickyGamepad1;
     Pose2d pozitie1 = new Pose2d(0, 0);

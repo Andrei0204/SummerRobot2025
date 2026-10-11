@@ -145,8 +145,8 @@ public class limelightautotest extends OpMode {
         telemetry.addData("x", follower.getPose().getX());
         telemetry.addData("y", follower.getPose().getY());
         telemetry.addData("heading", follower.getPose().getHeading());
-        telemetry.addData("sex", LL);
-        telemetry.addData("sex", fmm);
+        telemetry.addData("piece", LL);
+        telemetry.addData("piece", fmm);
         telemetry.update();
         modules.update();
     }

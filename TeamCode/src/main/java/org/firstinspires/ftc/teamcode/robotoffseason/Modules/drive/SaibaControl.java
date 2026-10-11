@@ -24,7 +24,7 @@ import org.firstinspires.ftc.teamcode.robotoffseason.Modules.outtake.PTO;
 @Config
 public class SaibaControl implements IRobotModule {
     public static double amp = 4;
-    public static double sex = 0.45;
+    public static double piece = 0.45;
     public final StickyGamepad stickyGamepad1, stickyGamepad2;
     private final Gamepad gamepad1, gamepad2;
     public SaibaModules modules;

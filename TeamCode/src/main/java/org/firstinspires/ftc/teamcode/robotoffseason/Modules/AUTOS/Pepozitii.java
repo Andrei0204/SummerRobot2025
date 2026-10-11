@@ -45,7 +45,7 @@ public class Pepozitii extends OpMode {
      * <p>
      * It is used by the pathUpdate method.
      */
-    public static double sex=0.85;
+    public static double piece=0.85;
     private int pathState;
     public StickyGamepad stickyGamepad1;
     Pose2d pozitie1 = new Pose2d(0, 0);
@@ -218,7 +218,7 @@ public class Pepozitii extends OpMode {
                 .addPath(
                         new BezierCurve(new Point(scorePose),new Point(30,38),new Point(30,38),new Point(COLLECTWALL)))
                 .setConstantHeadingInterpolation(0)
-//                .setGlobalDeceleration(sex)
+//                .setGlobalDeceleration(piece)
                 .build();
 //        gotohuman=new Path(new BezierCurve(new Point(scorePose),new Point(30,38),new Point(30,38),new Point(COLLECTWALL)));
 //        gotohuman.setConstantHeadingInterpolation(0);

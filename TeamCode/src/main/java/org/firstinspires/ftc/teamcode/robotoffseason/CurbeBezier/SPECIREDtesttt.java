@@ -73,25 +73,25 @@ public class SPECIREDtesttt extends OpMode {
 
                     modules.INROTATOR.setState(INROTATOR.State.CUSTOM);
                     if (follower.reachedTargetAndStopped(4.5) && follower.fullstop()) {
-                        Pose2d sex = ll.getdistanceVector(0, "red", 0.7);
-                        if (sex.getY() != 0 && sex.getX() != 0 || actionTimer.milliseconds()>1000) {
+                        Pose2d piece = ll.getdistanceVector(0, "red", 0.7);
+                        if (piece.getY() != 0 && piece.getX() != 0 || actionTimer.milliseconds()>1000) {
                             modules.INTUR.setState(INTUR.State.FRONT);
                             modules.INBRAT.setState(INBRAT.State.SEMIDOWN);
 
-                            x = sex.getX()-2;
-                            y = sex.getY() + 14; //13
+                            x = piece.getX()-2;
+                            y = piece.getY() + 14; //13
                             punct = new com.pedropathing.localization.Pose(x, y);
                             unghi = Math.toDegrees(Math.asin(punct.getY() / lbrat));
                             if (ll.isLateral("red") == 1 || ll.isLateral("red") == 0) {
                                 modules.INROTATOR.setAngle(unghi);
-                                x = sex.getX() ;
+                                x = piece.getX() ;
                             } else {
                                 modules.INROTATOR.setAngle(unghi - 90);
-                                x = sex.getX() ;
+                                x = piece.getX() ;
 
                             }
                             if(x>24)
-                                x = sex.getX() + 2;
+                                x = piece.getX() + 2;
                             ext = punct.getX() - Math.sqrt(lbrat * lbrat - punct.getY() * punct.getY());
                             modules.EXT.setState(EXT.State.AUTO);
                             modules.EXT.setAuto(ext * EXT.TICKSCM);

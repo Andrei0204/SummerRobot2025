@@ -66,14 +66,14 @@ public class kinematicstestfollower extends OpMode {
                 modules.INROTATOR.setState(INROTATOR.State.CUSTOM);
                 if(follower.reachedTargetAndStopped(2.5) )
                 {
-                    Pose2d sex=ll.getdistanceVector(0,"red");
+                    Pose2d piece=ll.getdistanceVector(0,"red");
 
-                    if(sex.getY()!=0 &&sex.getX()!=0) {
+                    if(piece.getY()!=0 &&piece.getX()!=0) {
                         modules.INTUR.setState(INTUR.State.FRONT);
                         modules.INBRAT.setState(INBRAT.State.SEMIDOWN);
 
-                        x = sex.getX() - 2;
-                        y = sex.getY() + 13;
+                        x = piece.getX() - 2;
+                        y = piece.getY() + 13;
 
                         if(ll.isLateral("red") ==1)
                         {
@@ -82,10 +82,10 @@ public class kinematicstestfollower extends OpMode {
                         else {
 
                             modules.INROTATOR.setAngle(unghi - 90);
-                            x = sex.getX() + 3;
+                            x = piece.getX() + 3;
                         }
                         if(x<24)
-                            x = sex.getX() - 3;
+                            x = piece.getX() - 3;
 
                         punct = new Pose(x, y);
                         unghi = Math.toDegrees(Math.asin(punct.getY() / lbrat));

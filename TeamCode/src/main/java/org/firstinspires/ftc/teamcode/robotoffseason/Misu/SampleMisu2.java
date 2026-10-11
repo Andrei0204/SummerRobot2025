@@ -354,27 +354,27 @@ public class SampleMisu2 extends LinearOpMode {
                     }
                     break;
                 case DETECT:
-                    Pose2d sex=camera.getdistanceVector(0,"red",0.8);
-                    if (sex.getY() != 0 && sex.getX() != 0) {
+                    Pose2d piece=camera.getdistanceVector(0,"red",0.8);
+                    if (piece.getY() != 0 && piece.getX() != 0) {
 
                         Modules.INTUR.setState(INTUR.State.FRONT);
                         Modules.INBRAT.setState(INBRAT.State.SEMIDOWN);
 
-                        x = sex.getX()-2;
-                        y = sex.getY() + 13;
+                        x = piece.getX()-2;
+                        y = piece.getY() + 13;
                         punct = new Pose(x, y);
                         unghi = Math.toDegrees(Math.asin(punct.getY() / lbrat));
                         if (camera.isLateral("red") == 1 || camera.isLateral("red") == 0) {
                             Modules.INROTATOR.setAngle(unghi);
                             if (camera.isLateral("red") == 0)
-                                x = sex.getX();
+                                x = piece.getX();
                         } else {
                             Modules.INROTATOR.setAngle(unghi - 90);
-                            x = sex.getX() ;
+                            x = piece.getX() ;
 
                         }
 //                        if (x < 24)
-//                            x = sex.getX() - 3;
+//                            x = piece.getX() - 3;
                         ext = punct.getX() - Math.sqrt(lbrat * lbrat - punct.getY() * punct.getY());
                         Modules.EXT.setState(EXT.State.AUTO);
                         Modules.EXT.setAuto(ext * EXT.TICKSCM);

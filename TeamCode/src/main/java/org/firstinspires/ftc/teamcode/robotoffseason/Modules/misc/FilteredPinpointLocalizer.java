@@ -11,7 +11,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode.roboDrive.math.LowPassFilter;
 import org.firstinspires.ftc.teamcode.roboDrive.math.Vector;
 
-public class PLMLocalizer {
+public class FilteredPinpointLocalizer {
 
     private final boolean ENABLED = true;
     protected Pose2d currentPosition, currentPredictedPosition;
@@ -31,7 +31,7 @@ public class PLMLocalizer {
 
     goBildaPPModified ppOdometry;
 
-    public PLMLocalizer(HardwareMap hwMap){
+    public FilteredPinpointLocalizer(HardwareMap hwMap){
         ppOdometry = hwMap.get(goBildaPPModified.class,"odo");
 
         ppOdometry.setOffsets(

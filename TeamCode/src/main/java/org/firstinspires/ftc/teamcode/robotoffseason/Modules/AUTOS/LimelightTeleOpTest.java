@@ -26,8 +26,8 @@ import pedroPathing.constants.LConstants;
 @Disabled
 
 @Config
-@TeleOp(name = "pl m", group = "11Saiba")
-public class plm extends OpMode {
+@TeleOp(name = "Limelight TeleOp Test", group = "11Saiba")
+public class LimelightTeleOpTest extends OpMode {
     private SaibaModules modules = null;
     private Follower follower;
     private Timer opmodeTimer;
@@ -157,7 +157,7 @@ public class plm extends OpMode {
         telemetry.addData("y", follower.getPose().getY());
         telemetry.addData("y", y);
         telemetry.addData("heading", follower.getPose().getHeading());
-        telemetry.addData("sex", LL);
+        telemetry.addData("piece", LL);
         telemetry.update();
         modules.update();
     }
